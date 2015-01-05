@@ -1,0 +1,1 @@
+./all_noras_must_die; export APPNAME=nora_prime; cf push $APPNAME -s windows --no-start; cf set-env $APPNAME DIEGO_BETA true ; cf set-env $APPNAME DIEGO_RUN_BETA true ; cf start $APPNAME
