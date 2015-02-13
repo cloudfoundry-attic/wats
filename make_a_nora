@@ -1,1 +1,9 @@
-./all_noras_must_die; export APPNAME=nora_prime; cf push $APPNAME -s windows --no-start; cf set-env $APPNAME DIEGO_BETA true ; cf set-env $APPNAME DIEGO_RUN_BETA true ; cf start $APPNAME
+#!/usr/bin/env bash
+set -ue
+
+./all_noras_must_die
+export APPNAME=nora_prime
+cf push $APPNAME -s windows -b java_buildpack -p ./FixtureNora/ --no-start
+cf set-env $APPNAME DIEGO_BETA true 
+cf set-env $APPNAME DIEGO_RUN_BETA true 
+cf start $APPNAME
