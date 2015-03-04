@@ -28,7 +28,7 @@ namespace nora.Tests.Controllers
             {
                 it["should return hello i am nora"] = () =>
                 {
-                    IHttpActionResult response = instancesController.Root();
+                    var response = instancesController.Root();
                     String resp = null;
                     response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
                     resp.should_be("hello i am nora");
@@ -39,7 +39,7 @@ namespace nora.Tests.Controllers
             {
                 it["should get the instance id from the VCAP_APPLICATION json"] = () =>
                 {
-                    IHttpActionResult response = instancesController.Id();
+                    var response = instancesController.Id();
                     String resp = null;
                     response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
                     resp.should_be("A123F285-26B4-45F1-8C31-816DC5F53ECF");
@@ -50,7 +50,7 @@ namespace nora.Tests.Controllers
             {
                 it["should return a list of ENV VARS"] = () =>
                 {
-                    IHttpActionResult response = instancesController.Env();
+                    var response = instancesController.Env();
                     Hashtable resp = null;
                     response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
                     resp.should_be(Environment.GetEnvironmentVariables());
