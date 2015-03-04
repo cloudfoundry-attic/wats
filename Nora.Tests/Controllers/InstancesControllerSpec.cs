@@ -56,6 +56,20 @@ namespace nora.Tests.Controllers
                     resp.should_be(Environment.GetEnvironmentVariables());
                 };
             };
+
+            describe["Get /env/:name"] = () =>
+            {
+                it["should return the desired named ENV VAR"] = () =>
+                {
+                    Environment.SetEnvironmentVariable("FRED", "JANE");
+
+                    var response = instancesController.EnvName("FRED");
+                    String resp = null;
+                    response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
+
+                    resp.should_be("JANE");
+                };
+            };
         }
     }
 }

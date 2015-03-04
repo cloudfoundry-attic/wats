@@ -26,5 +26,12 @@ namespace nora.Controllers
         {
             return Ok(Environment.GetEnvironmentVariables());
         }
+
+        [Route("~/env/:name")]
+        [HttpGet]
+        public IHttpActionResult EnvName(string name)
+        {
+            return Ok(Environment.GetEnvironmentVariable(name));
+        }
     }
 }
