@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -ue
 
-./all_noras_must_die
-export APPNAME=nora_prime
-cf push $APPNAME -s windows -b java_buildpack -p ./FixtureNora/ --no-start
+export APPNAME=kora
+
+## Remove existing
+cf apps |grep $APPNAME |awk '{print $1}'|xargs -n 1 cf d -f
+
+## Push new
+cf push $APPNAME -s windows2 -b java_buildpack -p ../windows-circus/WebAppServer.Tests/Fixtures/Nora/ --no-start
 cf set-env $APPNAME DIEGO_BETA true 
 cf set-env $APPNAME DIEGO_RUN_BETA true 
 cf start $APPNAME
