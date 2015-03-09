@@ -13,7 +13,6 @@ namespace nora.Tests.Controllers
         private void describe_()
         {
             InstancesController instancesController = null;
-            String ID = null;
 
             before = () =>
             {
