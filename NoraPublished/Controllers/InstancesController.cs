@@ -12,6 +12,13 @@ namespace nora.Controllers
             return Ok(String.Format("hello i am nora running on {0}", Request.RequestUri.AbsoluteUri));
         }
 
+        [Route("~/headers")]
+        [HttpGet]
+        public IHttpActionResult Headers()
+        {
+            return Ok(Request.Headers);
+        }
+
         [Route("~/id")]
         [HttpGet]
         public IHttpActionResult Id()
