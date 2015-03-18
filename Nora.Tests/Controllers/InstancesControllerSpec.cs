@@ -18,19 +18,19 @@ namespace nora.Tests.Controllers
             {
                 instancesController = new InstancesController
                 {
-                    Request = new HttpRequestMessage(),
+                    Request = new HttpRequestMessage(HttpMethod.Get, "http://example.com"),
                     Configuration = new HttpConfiguration()
                 };
             };
 
             describe["Get /"] = () =>
             {
-                it["should return hello i am nora"] = () =>
+                it["should return the hello message"] = () =>
                 {
                     var response = instancesController.Root();
                     String resp = null;
                     response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
-                    resp.should_be("hello i am nora");
+                    resp.should_be("hello i am nora running on http://example.com/");
                 };
             };
 
