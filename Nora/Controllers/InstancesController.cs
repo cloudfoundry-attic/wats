@@ -9,7 +9,7 @@ namespace nora.Controllers
         [HttpGet]
         public IHttpActionResult Root()
         {
-            return Ok("hello i am nora");
+            return Ok(String.Format("hello i am nora running on {0}", Request.RequestUri.AbsoluteUri));
         }
 
         [Route("~/id")]
