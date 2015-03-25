@@ -19,6 +19,14 @@ namespace nora.Controllers
             return Ok(Request.Headers);
         }
 
+        [Route("~/print/{output}")]
+        [HttpGet]
+        public IHttpActionResult Print(string output)
+        {
+            System.Console.WriteLine(output);
+            return Ok(Request.Headers);
+        }
+
         [Route("~/id")]
         [HttpGet]
         public IHttpActionResult Id()
@@ -34,7 +42,7 @@ namespace nora.Controllers
             return Ok(Environment.GetEnvironmentVariables());
         }
 
-        [Route("~/env/:name")]
+        [Route("~/env/{name}")]
         [HttpGet]
         public IHttpActionResult EnvName(string name)
         {
