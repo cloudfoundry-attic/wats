@@ -1,4 +1,5 @@
 # Windows Acceptance Tests (WATs)
+![Angkor Wat](http://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Buddhist_monks_in_front_of_the_Angkor_Wat.jpg/640px-Buddhist_monks_in_front_of_the_Angkor_Wat.jpg)
 
 ## Running the tests
 
