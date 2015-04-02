@@ -50,18 +50,18 @@ var _ = Describe("Application Lifecycle", func() {
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("404"))
 			})
 
-			// By("setting an environment variable", func() {
-			// 	Eventually(cf.Cf("set-env", appName, "FOO", "bar")).Should(Exit(0))
-			// })
+			By("setting an environment variable", func() {
+				Eventually(cf.Cf("set-env", appName, "FOO", "bar")).Should(Exit(0))
+			})
 
 			By("starting it", func() {
 				Eventually(cf.Cf("start", appName), CF_PUSH_TIMEOUT).Should(Exit(0))
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
-			// By("checking custom env variables are available", func() {
-			// 	Ω(helpers.CurlApp(appName, "/env/FOO")).Should(ContainSubstring("bar"))
-			// })
+			By("checking custom env variables are available", func() {
+				Ω(helpers.CurlApp(appName, "/env/FOO")).Should(ContainSubstring("bar"))
+			})
 
 			By("scaling it", func() {
 				Eventually(cf.Cf("scale", appName, "-i", "2")).Should(Exit(0))
