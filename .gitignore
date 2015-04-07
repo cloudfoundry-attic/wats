@@ -13,6 +13,8 @@
 x64/
 build/
 [Bb]in/
+# make sure we preserve everything in the NoraPublished directory
+!assets/nora/NoraPublished/bin/
 [Oo]bj/
 results/
 
