@@ -4,6 +4,7 @@ cd `dirname $0`
 
 export GOPATH=$PWD/..
 export GOBIN=$GOPATH/bin
+export PATH=$GOBIN:$PATH
 
 go get github.com/onsi/ginkgo/ginkgo
 # The following line will fail with the || echo, since tests don't
