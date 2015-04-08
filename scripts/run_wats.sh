@@ -10,7 +10,7 @@ go get github.com/onsi/ginkgo/ginkgo
 # have a binary and go get will try to build one
 go get -t ../tests/... 2>/dev/null || echo "Installed dependencies"
 
-tempfile=`mktemp -t wats`
+tempfile=`mktemp -t watsXXXXX`
 trap "rm -f $tempfile" EXIT
 cat > $tempfile <<HERE
 {
