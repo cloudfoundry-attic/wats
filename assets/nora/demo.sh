@@ -1,58 +1,100 @@
 #!/usr/bin/env bash
 set -ue
 
-APPNAME=${1:-"nora"}
-STACK=${2:-"windows2012R2"}
+LOGOUTPUT=${1:-"hello_world!"}
+APPNAME=${2:-"nora"}
+STACK=${3:-"windows2012R2"}
 GREEN='\033[0;32m'
+CF_COLOR='\033[0;35m'
 NC='\033[0m'
 
-cf d -f $APPNAME
-echo -e "${GREEN}showing ${APPNAME} is not deployed...${NC}"
-cf apps
+echo -e "${GREEN}First, we delete the app named ${APPNAME}.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}pushing an app...${NC}"
+echo -e "${CF_COLOR}cf d -f ${APPNAME} ${NC}"
+cf d -f $APPNAME
+echo -e "${CF_COLOR}cf apps ${NC}"
+cf apps
+echo -e "${GREEN}As we can see, there is now no app named ${APPNAME}. Next, we will push an app named ${APPNAME}.${NC}"
+read -p "Press [Enter] key to continue..."
+echo -e "${CF_COLOR}cf push $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start -f ${APPNAME} ${NC}"
 cf push $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start
 cf set-env $APPNAME DIEGO_BETA true
 cf set-env $APPNAME DIEGO_RUN_BETA true
+echo -e "${CF_COLOR}cf enable-diego ${APPNAME} ${NC}"
 cf enable-diego $APPNAME || echo "enable diego plugin doesn't exist. follow the instructions in the README to install it"
+echo -e "${CF_COLOR}cf start ${APPNAME} ${NC}"
 cf start $APPNAME
-echo -e "${GREEN}app pushed${NC}"
+echo -e "${GREEN}Notice that we are associating the app with a java buildpack. This is an artifact of our implementation that will go away in the near future.
+
+Now that ${APPNAME} has been pushed, we will attempt to connect to it.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}showing app is running...${NC}"
 URL=`cf app $APPNAME | grep urls | awk '{print $2}'`
+echo -e "${CF_COLOR}curl ${URL} ${NC}"
 curl $URL
 echo ''
+echo -e "${GREEN}We can also view ${APPNAME} in the browser.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}outputing env variables...${NC}"
+open "http://${URL}"
+echo -e "${GREEN}Next, we can view ${APPNAME}'s env variables. Notice the INSTANCE_INDEX variable.${NC}"
+read -p "Press [Enter] key to continue..."
+echo -e "${CF_COLOR}curl ${URL}/env | jsonpp ${NC}"
 curl $URL/env | jsonpp
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}scaling app to 2 instances...${NC}"
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
+printf  "INSTANCE_INDEX:  " 
+curl $URL/env/INSTANCE_INDEX
+echo ""
+echo -e "${GREEN}Next, we will scale ${APPNAME} to 2 instances.${NC}"
+read -p "Press [Enter] key to continue..."
+echo -e "${CF_COLOR}cf scale -i 2 ${APPNAME} ${NC}"
 cf scale -i 2 $APPNAME
 sleep 3
+echo -e "${GREEN} We will now send 10 requests for INSTANCE_INDEX to ${APPNAME}. We should see responses from both instances, showing that app has been scaled.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}printing app instances given 10 requests...${NC}"
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${CF_COLOR}curl ${URL}/env/INSTANCE_INDEX ${NC}"
 curl  $URL/env/INSTANCE_INDEX
 echo ""
+echo -e "${GREEN}Now, we will look at ${APPNAME}'s logs.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${GREEN}printing logs of ${APPNAME}...${NC}"
+echo -e "${CF_COLOR}cf logs ${APPNAME} --recent ${NC}"
 cf logs $APPNAME --recent
+echo -e "${GREEN}An app can write to the logs by printing to standard out. For example, we can have ${APPNAME} write to stdout using a defined endpoint.${NC}"
+read -p "Press [Enter] key to continue..."
+echo -e "${CF_COLOR}curl ${URL}/print/${LOGOUTPUT}${NC}"
+curl  $URL/print/$LOGOUTPUT
+echo -e "${GREEN}Now if we grep the logs, we can see ${LOGOUTPUT} in the output."
+read -p "Press [Enter] key to continue..."
+echo -e "${CF_COLOR}cf logs ${APPNAME} --recent | grep ${LOGOUTPUT}${NC}"
+cf logs $APPNAME --recent | grep $LOGOUTPUT
+echo -e "${GREEN} Notice that the logs are categorized. Any logs outputted by ${APPNAME} with be tagged with [APP]."
+read -p "Press [Enter] key to continue..."
