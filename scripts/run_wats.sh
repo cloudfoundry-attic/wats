@@ -2,7 +2,7 @@ set -e
 
 cd `dirname $0`
 
-export GOPATH=$PWD/..
+export GOPATH=$PWD/../../../../
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
 
