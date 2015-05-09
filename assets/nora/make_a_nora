@@ -9,7 +9,9 @@ cf d -f $APPNAME
 
 ## Push new
 cf push $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
-cf set-env $APPNAME DIEGO_BETA true
-cf set-env $APPNAME DIEGO_RUN_BETA true
-cf enable-diego $APPNAME || echo "enable diego plugin doesn't exist. follow the instructions in the README to install it"
+if ! cf enable-diego $APPNAME; then
+    cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
+    cf install-plugin Diego-Beta -r CF-Community
+    cf enable-diego $APPNAME
+fi
 cf start $APPNAME
