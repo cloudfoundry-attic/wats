@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Results;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Nora.helpers;
@@ -65,7 +68,16 @@ namespace nora.Controllers
         [HttpGet]
         public IHttpActionResult Users()
         {
+            if (services.UserProvided.Count == 0)
+            {
+                var msg = new HttpResponseMessage();
+                msg.StatusCode = HttpStatusCode.NotFound;
+                msg.Content = new StringContent("No services found");
+                return new ResponseMessageResult(msg);
+            }
+
             var service = services.UserProvided[0];
+
             var creds = service.Credentials;
             var username = creds["username"];
             var password = creds["password"];
@@ -73,6 +85,8 @@ namespace nora.Controllers
 
 
             var connString = String.Format("server={0};uid={1};pwd={2};database=mysql", host, username, password);
+
+            Console.WriteLine("Connecting to mysql using {0}", connString);
 
             var users = new List<string>();
 
