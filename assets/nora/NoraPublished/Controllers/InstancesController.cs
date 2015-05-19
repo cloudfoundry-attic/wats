@@ -69,18 +69,21 @@ namespace nora.Controllers
             req.Timeout = 1000;
             try
             {
-                var resp = (HttpWebResponse) req.GetResponse();
+                var resp = (HttpWebResponse)req.GetResponse();
                 return Json(new
                 {
                     stdout = new StreamReader(resp.GetResponseStream()).ReadToEnd(),
-                    return_code = resp.StatusCode == HttpStatusCode.OK ? 0 : 1,
+                    return_code = 0,
                 });
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 return Json(new
                 {
-                    return_code = 1,
+                    stderr = ex.Message,
+                    // ex.Response != null if the response status code wasn't a success, 
+                    // null if the operation timedout
+                    return_code = ex.Response != null ? 0 : 1,
                 });
             }
         }
