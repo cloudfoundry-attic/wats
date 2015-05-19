@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -17,7 +18,10 @@ namespace nora.Controllers
         static InstancesController()
         {
             var env = Environment.GetEnvironmentVariable("VCAP_SERVICES");
-            services = JsonConvert.DeserializeObject<Services>(env);
+            if (env != null)
+            {
+                services = JsonConvert.DeserializeObject<Services>(env);
+            }
         }
 
         [Route("~/")]
@@ -55,6 +59,30 @@ namespace nora.Controllers
         public IHttpActionResult Env()
         {
             return Ok(Environment.GetEnvironmentVariables());
+        }
+
+        [Route("~/curl/{host}/{port}")]
+        [HttpGet]
+        public IHttpActionResult Curl(string host, int port)
+        {
+            var req = WebRequest.Create("http://" + host + ":" + port);
+            req.Timeout = 1000;
+            try
+            {
+                var resp = (HttpWebResponse) req.GetResponse();
+                return Json(new
+                {
+                    stdout = new StreamReader(resp.GetResponseStream()).ReadToEnd(),
+                    return_code = resp.StatusCode == HttpStatusCode.OK ? 0 : 1,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    return_code = 1,
+                });
+            }
         }
 
         [Route("~/env/{name}")]
