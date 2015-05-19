@@ -60,7 +60,7 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("checking custom env variables are available", func() {
-				Ω(helpers.CurlApp(appName, "/env/FOO")).Should(ContainSubstring("bar"))
+				Eventually(helpers.CurlApp(appName, "/env/FOO")).Should(ContainSubstring("bar"))
 			})
 
 			By("scaling it", func() {
