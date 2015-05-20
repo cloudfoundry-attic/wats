@@ -97,7 +97,7 @@ namespace nora.Controllers
 
         [Route("~/users")]
         [HttpGet]
-        public IHttpActionResult Users()
+        public IHttpActionResult CupsUsers()
         {
             if (services.UserProvided.Count == 0)
             {
@@ -109,13 +109,37 @@ namespace nora.Controllers
 
             var service = services.UserProvided[0];
 
+            var users = UsersFromService(service);
+            return Ok(users);
+        }
+
+        [Route("~/pmysql")]
+        [HttpGet]
+        public IHttpActionResult PMysqlUsers()
+        {
+            if (services.PMySQL.Count == 0)
+            {
+                var msg = new HttpResponseMessage();
+                msg.StatusCode = HttpStatusCode.NotFound;
+                msg.Content = new StringContent("No services found");
+                return new ResponseMessageResult(msg);
+            }
+
+            var service = services.PMySQL[0];
+
+            var users = UsersFromService(service);
+
+            return Ok(users);
+        }
+
+        private static List<string> UsersFromService(Service service)
+        {
             var creds = service.Credentials;
             var username = creds["username"];
             var password = creds["password"];
-            var host = creds["host"];
-
-
-            var connString = String.Format("server={0};uid={1};pwd={2};database=mysql", host, username, password);
+            var host = creds.ContainsKey("host") ? creds["host"] : creds["hostname"];
+            var dbname = creds.ContainsKey("name") ? creds["name"] : "mysql";
+            var connString = String.Format("server={0};uid={1};pwd={2};database={3}", host, username, password, dbname);
 
             Console.WriteLine("Connecting to mysql using {0}", connString);
 
@@ -125,19 +149,28 @@ namespace nora.Controllers
             {
                 conn.ConnectionString = connString;
                 conn.Open();
-                using (var cmd = new MySqlCommand("select user from mysql.user where user <> ''", conn))
+
+                new MySqlCommand(
+                    "CREATE TABLE IF NOT EXISTS Hits(Id INT PRIMARY KEY AUTO_INCREMENT, CreatedAt DATETIME) ENGINE=INNODB;", conn)
+                    .ExecuteNonQuery();
+
+                new MySqlCommand(
+                    "INSERT INTO Hits(CreatedAt)VALUES(now());", conn)
+                    .ExecuteNonQuery();
+
+                using (var cmd = new MySqlCommand("select CreatedAt from Hits order by id desc limit 10", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
+                        var colIdx = reader.GetOrdinal("CreatedAt");
                         while (reader.Read())
                         {
-                            var colIdx = reader.GetOrdinal("User");
                             users.Add(reader.GetString(colIdx));
                         }
                     }
                 }
             }
-            return Ok(users);
+            return users;
         }
     }
 }
