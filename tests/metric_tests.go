@@ -52,8 +52,10 @@ var _ = Describe("Metrics", func() {
 			Consistently(errorChan).ShouldNot(Receive())
 
 			sipTheStream := func() string {
-				envelope := <-msgChan
-				return *envelope.Origin
+				if envelope, ok := <-msgChan; ok {
+					return *envelope.Origin
+				}
+				return ""
 			}
 			Eventually(sipTheStream, "1m", "5ms").Should(Equal("garden-windows"))
 		})
