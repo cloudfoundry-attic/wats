@@ -8,7 +8,7 @@ STACK=${2:-"windows2012R2"}
 cf d -f $APPNAME
 
 ## Push new
-cf push $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
+cf push -m 2g $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
 if ! cf enable-diego $APPNAME; then
     echo "**************** Couldn't run cf enable-diego, trying to install plugin ****************"
     cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/ || \
