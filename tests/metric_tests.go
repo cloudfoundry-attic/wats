@@ -21,7 +21,7 @@ func getOauthToken() string {
 	authToken := strings.Split(out, "\n")[3]
 	Expect(authToken).To(HavePrefix("bearer"))
 	return authToken
-
+}
 
 func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan error) {
 	connection := noaa.NewConsumer(dopplerUrl, &tls.Config{InsecureSkipVerify: true}, nil)
@@ -43,9 +43,6 @@ func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan
 var _ = Describe("Metrics", func() {
 	It("garden-windows emits metrics to the firehose", func() {
 		doppler := os.Getenv("DOPPLER_URL")
-
-		// config := helpers.LoadConfig()
-		// context := helpers.NewContext(config)
 
 		duration, _ := time.ParseDuration("5s")
 		cf.AsUser(context.AdminUserContext(), duration, func() {
