@@ -1,4 +1,4 @@
-package diego
+package wats
 
 import (
 	"strings"
