@@ -17,7 +17,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
-var _ = FDescribe("Security Groups", func() {
+var _ = Describe("Security Groups", func() {
 	type NoraCurlResponse struct {
 		Stdout     string
 		Stderr     string
