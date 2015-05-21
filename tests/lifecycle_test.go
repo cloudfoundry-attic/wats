@@ -1,6 +1,8 @@
 package wats
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -60,7 +62,9 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("checking custom env variables are available", func() {
-				Eventually(helpers.CurlApp(appName, "/env/FOO")).Should(ContainSubstring("bar"))
+				Eventually(func() {
+					helpers.CurlAppWithTimeout(appName, "/env/FOO", 4*time.Second)
+				}).Should(ContainSubstring("bar"))
 			})
 
 			By("scaling it", func() {
