@@ -29,7 +29,7 @@ var _ = Describe("Application Lifecycle", func() {
 		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
-	FDescribe("An app staged on Diego and running on Diego", func() {
+	Describe("An app staged on Diego and running on Diego", func() {
 		It("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
 				Eventually(cf.Cf("push", appName, "-p", "../assets/nora/NoraPublished", "--no-start", "-b", "java_buildpack", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
