@@ -5,6 +5,7 @@
 /src/
 /pkg/
 *.test
+tests/*.exe
 
 # User-specific files
 *.suo
