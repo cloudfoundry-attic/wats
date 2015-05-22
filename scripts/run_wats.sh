@@ -23,4 +23,4 @@ cat > $tempfile <<HERE
   "skip_ssl_validation": true
 }
 HERE
-CONFIG=$tempfile ginkgo -noColor -r -failFast -slowSpecThreshold=120 $@ ../tests
+CONFIG=$tempfile ginkgo -noColor -r -failFast -slowSpecThreshold=120 $@ ../wats
