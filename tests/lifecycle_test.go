@@ -1,7 +1,6 @@
 package wats
 
 import (
-	"errors"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -13,28 +12,6 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
-
-func pushNora(appName string) func() error {
-	return runCf(
-		"push", appName,
-		"-p", "../assets/nora/NoraPublished",
-		"--no-start",
-		"-m", "2g",
-		"-b", "java_buildpack",
-		"-s", "windows2012R2")
-}
-
-func runCf(values ...string) func() error {
-	return func() error {
-		session := cf.Cf(values...)
-		session.Wait()
-		if session.ExitCode() == 0 {
-			return nil
-		}
-
-		return errors.New("non zero exit code")
-	}
-}
 
 var _ = Describe("Application Lifecycle", func() {
 	var appName string
