@@ -10,7 +10,6 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -31,8 +30,8 @@ var _ = Describe("Security Groups", func() {
 	})
 
 	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
+		Eventually(runCf("logs", appName, "--recent")).Should(Succeed())
+		Eventually(runCf("delete", appName, "-f")).Should(Succeed())
 	})
 
 	// this test assumes the default running security groups block access to the DEAs
@@ -40,11 +39,11 @@ var _ = Describe("Security Groups", func() {
 	//  are discoverable via the cc api and nora's myip endpoint
 	It("allows traffic and then blocks traffic", func() {
 		By("pushing it")
-		Eventually(cf.Cf("push", appName, "-p", "../assets/nora/NoraPublished", "--no-start", "-b", "java_buildpack", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
+		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 		By("staging and running it on Diego")
 		enableDiego(appName)
-		Eventually(cf.Cf("start", appName), CF_PUSH_TIMEOUT).Should(Exit(0))
+		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 		By("verifying it's up")
 		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
@@ -75,20 +74,20 @@ var _ = Describe("Security Groups", func() {
 		securityGroupName := fmt.Sprintf("DATS-SG-%s", generator.RandomName())
 
 		cf.AsUser(context.AdminUserContext(), time.Minute, func() {
-			Eventually(cf.Cf("create-security-group", securityGroupName, rulesPath)).Should(Exit(0))
+			Eventually(runCf("create-security-group", securityGroupName, rulesPath)).Should(Succeed())
 			Eventually(
-				cf.Cf("bind-security-group",
+				runCf("bind-security-group",
 					securityGroupName,
 					context.RegularUserContext().Org,
-					context.RegularUserContext().Space)).Should(Exit(0))
+					context.RegularUserContext().Space)).Should(Succeed())
 		})
 		defer func() {
 			cf.AsUser(context.AdminUserContext(), time.Minute, func() {
-				Eventually(cf.Cf("delete-security-group", securityGroupName, "-f")).Should(Exit(0))
+				Eventually(runCf("delete-security-group", securityGroupName, "-f")).Should(Succeed())
 			})
 		}()
 
-		Eventually(cf.Cf("restart", appName), CF_PUSH_TIMEOUT).Should(Exit(0))
+		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
@@ -97,14 +96,14 @@ var _ = Describe("Security Groups", func() {
 		// unapply security group
 		cf.AsUser(context.AdminUserContext(), time.Minute, func() {
 			Eventually(
-				cf.Cf("unbind-security-group",
+				runCf("unbind-security-group",
 					securityGroupName, context.RegularUserContext().Org,
 					context.RegularUserContext().Space)).
-				Should(Exit(0))
+				Should(Succeed())
 		})
 
 		By("restarting it - without security group")
-		Eventually(cf.Cf("restart", appName), CF_PUSH_TIMEOUT).Should(Exit(0))
+		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
