@@ -10,7 +10,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
-var _ = Describe("A standalone webapp", func() {
+var _ = XDescribe("A standalone webapp", func() {
 	var appName string
 
 	BeforeEach(func() {
