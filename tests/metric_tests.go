@@ -41,7 +41,7 @@ func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan
 }
 
 var _ = Describe("Metrics", func() {
-	XIt("garden-windows emits metrics to the firehose", func() {
+	It("garden-windows emits metrics to the firehose", func() {
 		doppler := os.Getenv("DOPPLER_URL")
 
 		duration, _ := time.ParseDuration("5s")
