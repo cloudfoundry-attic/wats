@@ -12,7 +12,7 @@ func pushNora(appName string) func() error {
 		"-p", "../assets/nora/NoraPublished",
 		"--no-start",
 		"-m", "2g",
-		"-b", "java_buildpack",
+		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
 		"-s", "windows2012R2")
 }
 
