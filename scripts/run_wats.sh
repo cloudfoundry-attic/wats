@@ -1,4 +1,10 @@
 set -e
+: ${API?"Must set api url (e.g. api.10.244.0.34.xip.io)"}
+: ${ADMIN_USER?"Must set admin username (e.g. admin)"}
+: ${ADMIN_PASSWORD?"Must set admin password (e.g. admin)"}
+: ${APPS_DOMAIN?"Must set app domain url (e.g. 10.244.0.34.xip.io)"}
+: ${SECURE_ADDRESS?"Must set secure address [ip address of Diego ETCD cluster] (e.g. 10.244.16.2:4001)"}
+: ${DOPPLER_URL?"Must set doppler websocket url (e.g. wss://doppler.hello.cf-app.com:4443)"}
 
 cd `dirname $0`
 
