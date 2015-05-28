@@ -12,10 +12,10 @@ export GOPATH=$PWD/../../../../../
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
 
-go get github.com/onsi/ginkgo/ginkgo
+go install github.com/onsi/ginkgo/ginkgo
 # The following line will fail with the || echo, since tests don't
 # have a binary and go get will try to build one
-go get -t ../tests/... 2>/dev/null || echo "Installed dependencies"
+go install -t ../tests/... 2>/dev/null || echo "Installed dependencies"
 
 tempfile=`mktemp -t watsXXXXX`
 trap "rm -f $tempfile" EXIT
