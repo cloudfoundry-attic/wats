@@ -10,7 +10,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
-var _ = XDescribe("A standalone webapp", func() {
+var _ = Describe("A standalone webapp", func() {
 	var appName string
 
 	BeforeEach(func() {
@@ -25,7 +25,7 @@ var _ = XDescribe("A standalone webapp", func() {
 	Describe("staged on Diego and running on Diego", func() {
 		It("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
-				Eventually(cf.Cf("push", appName, "-p", "../assets/webapp", "--no-start", "-b", "java_buildpack", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
+				Eventually(cf.Cf("push", appName, "-p", "../assets/webapp", "--no-start", "-b", "https://github.com/ryandotsmith/null-buildpack.git", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
 			})
 
 			By("staging and running it on Diego", func() {
