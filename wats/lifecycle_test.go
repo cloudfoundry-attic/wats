@@ -40,8 +40,6 @@ var _ = Describe("Application Lifecycle", func() {
 				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
-			// FIXME: Something about stdout logging
-
 			By("verifying it's up", func() {
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 			})
