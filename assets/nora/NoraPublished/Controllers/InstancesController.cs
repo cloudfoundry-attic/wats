@@ -50,7 +50,7 @@ namespace nora.Controllers
         [HttpGet]
         public IHttpActionResult Id()
         {
-            const string uuid = "A123F285-26B4-45F1-8C31-816DC5F53ECF";
+            var uuid = Environment.GetEnvironmentVariable("INSTANCE_GUID");
             return Ok(uuid);
         }
 

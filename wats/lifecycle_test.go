@@ -29,6 +29,27 @@ var _ = Describe("Application Lifecycle", func() {
 		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
+	reportedIDs := func(instances int) map[string]bool {
+		seenIDs := map[string]bool{}
+		for len(seenIDs) != instances {
+			seenIDs[helpers.CurlApp(appName, "/id")] = true
+		}
+
+		return seenIDs
+	}
+
+	differentIDsFrom := func(idsBefore map[string]bool) []string {
+		differentIDs := []string{}
+
+		for id, _ := range reportedIDs(len(idsBefore)) {
+			if !idsBefore[id] {
+				differentIDs = append(differentIDs, id)
+			}
+		}
+
+		return differentIDs
+	}
+
 	Describe("An app staged on Diego and running on Diego", func() {
 		It("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
@@ -69,13 +90,13 @@ var _ = Describe("Application Lifecycle", func() {
 				Eventually(apps).Should(Say("2/2"))
 			})
 
-			// By("restarting an instance", func() {
-			// 	idsBefore := reportedIDs(2)
-			// 	Eventually(cf.Cf("restart-app-instance", appName, "1")).Should(Exit(0))
-			// 	Eventually(func() []string {
-			// 		return differentIDsFrom(idsBefore)
-			// 	}).Should(HaveLen(1))
-			// })
+			By("restarting an instance", func() {
+				idsBefore := reportedIDs(2)
+				Eventually(cf.Cf("restart-app-instance", appName, "1")).Should(Exit(0))
+				Eventually(func() []string {
+					return differentIDsFrom(idsBefore)
+				}).Should(HaveLen(1))
+			})
 		})
 	})
 })
