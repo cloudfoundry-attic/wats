@@ -30,8 +30,16 @@ var _ = Describe("Application Lifecycle", func() {
 	})
 
 	reportedIDs := func(instances int) map[string]bool {
+		timer := time.NewTimer(time.Second * 60)
+		defer timer.Stop()
+		run := true
+		go func() {
+			<-timer.C
+			run = false
+		}()
+
 		seenIDs := map[string]bool{}
-		for len(seenIDs) != instances {
+		for len(seenIDs) != instances && run == true {
 			seenIDs[helpers.CurlApp(appName, "/id")] = true
 		}
 
