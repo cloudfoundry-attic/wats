@@ -16,8 +16,8 @@ echo -e "${CF_COLOR}cf apps ${NC}"
 cf apps
 echo -e "${GREEN}As we can see, there is now no app named ${APPNAME}. Next, we will push an app named ${APPNAME}.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${CF_COLOR}cf push $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start -f ${APPNAME} ${NC}"
-cf push $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start
+echo -e "${CF_COLOR}cf push -m 2G $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start -f ${APPNAME} ${NC}"
+cf push $APPNAME -m 2G -s $STACK -b java_buildpack -p NoraPublished --no-start
 cf set-env $APPNAME DIEGO_BETA true
 cf set-env $APPNAME DIEGO_RUN_BETA true
 echo -e "${CF_COLOR}cf enable-diego ${APPNAME} ${NC}"
