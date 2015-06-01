@@ -19,7 +19,7 @@ credentials and URLs as appropriate for your environment.
 
 ### Running the tests
 
-`CONFIG=$PWD/scripts/bosh_lite_config.json ginkgo tests`
+`CONFIG=$PWD/scripts/bosh_lite_config.json ginkgo wats`
 
 ### Self signed certificates
 
