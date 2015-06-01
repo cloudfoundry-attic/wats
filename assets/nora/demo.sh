@@ -16,17 +16,15 @@ echo -e "${CF_COLOR}cf apps ${NC}"
 cf apps
 echo -e "${GREEN}As we can see, there is now no app named ${APPNAME}. Next, we will push an app named ${APPNAME}.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${CF_COLOR}cf push -m 2G $APPNAME -s $STACK -b java_buildpack -p NoraPublished --no-start -f ${APPNAME} ${NC}"
-cf push $APPNAME -m 2G -s $STACK -b java_buildpack -p NoraPublished --no-start
+echo -e "${CF_COLOR}cf push -m 2G $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start -f ${APPNAME} ${NC}"
+cf push $APPNAME -m 2G -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
 cf set-env $APPNAME DIEGO_BETA true
 cf set-env $APPNAME DIEGO_RUN_BETA true
 echo -e "${CF_COLOR}cf enable-diego ${APPNAME} ${NC}"
 cf enable-diego $APPNAME || echo "enable diego plugin doesn't exist. follow the instructions in the README to install it"
 echo -e "${CF_COLOR}cf start ${APPNAME} ${NC}"
 cf start $APPNAME
-echo -e "${GREEN}Notice that we are associating the app with a java buildpack. This is an artifact of our implementation that will go away in the near future.
-
-Now that ${APPNAME} has been pushed, we will attempt to connect to it.${NC}"
+echo -e "${GREEN}Now that ${APPNAME} has been pushed, we will attempt to connect to it.${NC}"
 read -p "Press [Enter] key to continue..."
 URL=`cf app $APPNAME | grep urls | awk '{print $2}'`
 echo -e "${CF_COLOR}curl ${URL} ${NC}"
@@ -98,3 +96,4 @@ echo -e "${CF_COLOR}cf logs ${APPNAME} --recent | grep ${LOGOUTPUT}${NC}"
 cf logs $APPNAME --recent | grep $LOGOUTPUT
 echo -e "${GREEN} Notice that the logs are categorized. Any logs outputted by ${APPNAME} with be tagged with [APP]."
 read -p "Press [Enter] key to continue..."
+echo -e "${GREEN} The End!"
