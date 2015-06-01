@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -ue
 
-LOGOUTPUT=${1:-"hello_world!"}
-APPNAME=${2:-"nora"}
+APPNAME=${1:-"nora"}
+LOGOUTPUT=${2:-"hello_world!"}
 STACK=${3:-"windows2012R2"}
 GREEN='\033[0;32m'
 CF_COLOR='\033[0;35m'
@@ -16,8 +16,8 @@ echo -e "${CF_COLOR}cf apps ${NC}"
 cf apps
 echo -e "${GREEN}As we can see, there is now no app named ${APPNAME}. Next, we will push an app named ${APPNAME}.${NC}"
 read -p "Press [Enter] key to continue..."
-echo -e "${CF_COLOR}cf push -m 2G $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start -f ${APPNAME} ${NC}"
-cf push $APPNAME -m 2G -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
+echo -e "${CF_COLOR}cf push -m 1G $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start -f ${APPNAME} ${NC}"
+cf push $APPNAME -m 1G -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
 cf set-env $APPNAME DIEGO_BETA true
 cf set-env $APPNAME DIEGO_RUN_BETA true
 echo -e "${CF_COLOR}cf enable-diego ${APPNAME} ${NC}"
@@ -90,6 +90,7 @@ echo -e "${GREEN}An app can write to the logs by printing to standard out. For e
 read -p "Press [Enter] key to continue..."
 echo -e "${CF_COLOR}curl ${URL}/print/${LOGOUTPUT}${NC}"
 curl  $URL/print/$LOGOUTPUT
+echo
 echo -e "${GREEN}Now if we grep the logs, we can see ${LOGOUTPUT} in the output."
 read -p "Press [Enter] key to continue..."
 echo -e "${CF_COLOR}cf logs ${APPNAME} --recent | grep ${LOGOUTPUT}${NC}"
