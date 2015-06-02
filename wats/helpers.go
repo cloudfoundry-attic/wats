@@ -2,8 +2,10 @@ package wats
 
 import (
 	"errors"
+	"os"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
 func pushNora(appName string) func() error {
@@ -26,4 +28,12 @@ func runCf(values ...string) func() error {
 
 		return errors.New("non zero exit code")
 	}
+}
+
+func DopplerUrl(c Config) string {
+	doppler := os.Getenv("DOPPLER_URL")
+	if doppler == "" {
+		doppler = "wss://doppler." + c.AppsDomain
+	}
+	return doppler
 }

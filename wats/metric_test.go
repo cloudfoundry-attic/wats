@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry/noaa"
 	"github.com/cloudfoundry/noaa/events"
 	. "github.com/onsi/ginkgo"
@@ -42,12 +43,12 @@ func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan
 
 var _ = Describe("Metrics", func() {
 	It("garden-windows emits metrics to the firehose", func() {
-		doppler := os.Getenv("DOPPLER_URL")
+		config := helpers.LoadConfig()
 
 		duration, _ := time.ParseDuration("5s")
 		cf.AsUser(context.AdminUserContext(), duration, func() {
 			authToken := getOauthToken()
-			msgChan, errorChan := createNoaaClient(doppler, authToken)
+			msgChan, errorChan := createNoaaClient(DopplerUrl(config), authToken)
 
 			Consistently(errorChan).ShouldNot(Receive())
 
