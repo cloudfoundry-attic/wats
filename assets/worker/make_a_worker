@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if ! GOARCH=amd64 GOOS=windows go build -o worker.exe worker.go; then
+   echo "Cross compiling failed. If you're on MacOS, run `brew reinstall go --with-cc-common`"
+   exit 1
+fi
+APPNAME=${1:-"worker"}
+../make_an_app . $APPNAME -c ./worker.exe
+cf set-health-check worker none
+cf start $APPNAME
+cf logs worker --recent

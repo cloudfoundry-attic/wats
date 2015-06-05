@@ -1,27 +1,6 @@
 #!/usr/bin/env bash
 set -uex
 
-function disable_ssh {
-    space=`cf target | grep Space | awk '{print $2}' | tr -d '\n'`
-
-    cf curl /v2/apps/$(cf app $1 --guid) -X PUT -d '{"enable_ssh": false}'
-    # cf curl /v2/spaces/$(cf space $space --guid) -X PUT -d '{"allow_ssh": false}'
-}
-
 APPNAME=${1:-"nora"}
-STACK=${2:-"windows2012R2"}
-
-## Remove existing
-cf d -f $APPNAME
-
-## Push new
-cf push $APPNAME -m 2g -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git -p NoraPublished --no-start
-if ! cf enable-diego $APPNAME; then
-    echo "**************** Couldn't run cf enable-diego, trying to install plugin ****************"
-    cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/ || \
-        echo "**************** Can't add repo. Assuming repo exists ****************"
-    cf install-plugin Diego-Beta -r CF-Community
-    cf enable-diego $APPNAME
-fi
-disable_ssh $APPNAME
+../make_an_app NoraPublished $APPNAME
 cf start $APPNAME
