@@ -47,6 +47,11 @@ func disableDiego(appName string) {
 	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"diego": false}`)).Should(Exit(0))
 }
 
+func disableHealthCheck(appName string) {
+	disable := cf.Cf("set-health-check", appName, "none")
+	Expect(disable.Wait()).To(Exit(0))
+}
+
 func TestApplications(t *testing.T) {
 	RegisterFailHandler(Fail)
 

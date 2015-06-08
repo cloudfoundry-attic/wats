@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	for {
-		fmt.Println("Running Worker")
+	for i := 1; ; i++ {
+		fmt.Println("Running Worker", i)
 		time.Sleep(time.Second)
 	}
 }
