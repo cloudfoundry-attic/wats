@@ -48,8 +48,8 @@ func disableDiego(appName string) {
 }
 
 func disableHealthCheck(appName string) {
-	disable := cf.Cf("set-health-check", appName, "none")
-	Expect(disable.Wait()).To(Exit(0))
+	guid := guidForAppName(appName)
+	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"health_check_type":"none"}`)).Should(Exit(0))
 }
 
 func TestApplications(t *testing.T) {
