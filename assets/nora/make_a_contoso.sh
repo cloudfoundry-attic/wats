@@ -2,10 +2,6 @@
 
 set -eu
 
-# secrets-hurt.c9a9owfndn3b.us-east-1.rds.amazonaws.com
-# secrets
-# 912ff38a-d244-487b-b85a-db9274f0c7f2
-
 function disable_ssh {
     space=`cf target | grep Space | awk '{print $2}' | tr -d '\n'`
 
