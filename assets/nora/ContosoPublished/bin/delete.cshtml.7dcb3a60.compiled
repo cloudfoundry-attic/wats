@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="2" virtualPath="/Views/Department/Delete.cshtml" hash="ffffffffd86d5c2d" filehash="4139a5a0e975" flags="110000" assembly="ContosoPublished" type="ASP._Page_Views_Department_Delete_cshtml">
+  <filedeps>
+    <filedep name="/Views/Department/Delete.cshtml" />
+  </filedeps>
+</preserve>

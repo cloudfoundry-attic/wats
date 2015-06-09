@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="2" virtualPath="/Views/Department/Index.cshtml" hash="ffffffffd86d5c2d" filehash="17a7febae553" flags="110000" assembly="ContosoPublished" type="ASP._Page_Views_Department_Index_cshtml">
+  <filedeps>
+    <filedep name="/Views/Department/Index.cshtml" />
+  </filedeps>
+</preserve>

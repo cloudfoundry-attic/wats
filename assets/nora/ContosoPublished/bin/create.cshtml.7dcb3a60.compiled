@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<preserve resultType="2" virtualPath="/Views/Department/Create.cshtml" hash="ffffffffd86d5c2d" filehash="2af1c7a43d87" flags="110000" assembly="ContosoPublished" type="ASP._Page_Views_Department_Create_cshtml">
+  <filedeps>
+    <filedep name="/Views/Department/Create.cshtml" />
+  </filedeps>
+</preserve>
