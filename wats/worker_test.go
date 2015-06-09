@@ -17,6 +17,7 @@ import (
 
 // Copied from : cf-test-helpers/runner/run.go
 const timeFormat = "2006-01-02 15:04:05.00 (MST)"
+
 func Run(executable string, env []string, args ...string) *gexec.Session {
 	cmd := exec.Command(executable, args...)
 	cmd.Env = env
@@ -30,13 +31,7 @@ func Run(executable string, env []string, args ...string) *gexec.Session {
 	return sess
 }
 
-func compileExecutable() {
-	env := []string{"GOARCH=amd64", "GOOS=windows"}
-	Run("go", env, "build", "-o", "../assets/worker/worker.exe", "../assets/worker/worker.go")
-}
-
 func pushWorker(appName string) func() error {
-	compileExecutable()
 	return runCf(
 		"push", appName,
 		"-p", "../assets/worker",
