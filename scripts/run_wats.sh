@@ -8,6 +8,14 @@ set -e
 
 cd `dirname $0`
 
+if [[ "$(uname)" = "Darwin" ]]; then
+  ln -sf cf-darwin ../bin/cf
+else
+  ln -sf cf-linux ../bin/cf
+fi
+
+export PATH=$PWD/../bin:$PATH
+
 export GOPATH=$PWD/../../../../../
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
