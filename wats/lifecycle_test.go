@@ -1,6 +1,8 @@
 package wats
 
 import (
+	"regexp"
+	"strconv"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -71,6 +73,23 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("verifying it's up", func() {
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+			})
+
+			By("veriying reported disk/memory usage", func() {
+				// #0   running   2015-06-10 02:22:39 PM   0.0%   48.7M of 2G   14M of 1G
+				var metrics = regexp.MustCompile(`running.*(?:[\d\.]+)%\s+([\d\.]+)[MG]? of (?:[\d\.]+)[MG]\s+([\d\.]+)[MG]? of (?:[\d\.]+)[MG]`)
+				memdisk := func() (mem, disk float64) {
+					output, err := runCfWithOutput("app", appName)
+					Expect(err).ToNot(HaveOccurred())
+					arr := metrics.FindStringSubmatch(string(output.Contents()))
+					mem, err = strconv.ParseFloat(arr[1], 64)
+					Expect(err).ToNot(HaveOccurred())
+					disk, err = strconv.ParseFloat(arr[2], 64)
+					Expect(err).ToNot(HaveOccurred())
+					return
+				}
+				Eventually(func() float64 { m, _ := memdisk(); return m }).Should(BeNumerically(">", 0.0))
+				Expect(func() float64 { _, d := memdisk(); return d }()).Should(BeNumerically(">", 0.0))
 			})
 
 			By("stopping it", func() {

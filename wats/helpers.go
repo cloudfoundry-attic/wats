@@ -6,6 +6,7 @@ import (
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/onsi/gomega/gbytes"
 )
 
 func pushNora(appName string) func() error {
@@ -18,15 +19,20 @@ func pushNora(appName string) func() error {
 		"-s", "windows2012R2")
 }
 
+func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
+	session := cf.Cf(values...)
+	session.Wait()
+	if session.ExitCode() == 0 {
+		return session.Out, nil
+	}
+
+	return nil, errors.New("non zero exit code")
+}
+
 func runCf(values ...string) func() error {
 	return func() error {
-		session := cf.Cf(values...)
-		session.Wait()
-		if session.ExitCode() == 0 {
-			return nil
-		}
-
-		return errors.New("non zero exit code")
+		_, err := runCfWithOutput(values...)
+		return err
 	}
 }
 
