@@ -10,7 +10,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry/noaa"
-	"github.com/cloudfoundry/noaa/events"
+	"github.com/cloudfoundry/sonde-go/events"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -31,7 +31,7 @@ func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan
 
 	go func() {
 		defer close(msgChan)
-		go connection.Firehose("firehose-a", authToken, msgChan, errorChan, nil)
+		go connection.Firehose("firehose-a", authToken, msgChan, errorChan)
 
 		for err := range errorChan {
 			fmt.Fprintf(os.Stderr, "%v\n", err.Error())

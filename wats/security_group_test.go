@@ -43,6 +43,7 @@ var _ = Describe("Security Groups", func() {
 
 		By("staging and running it on Diego")
 		enableDiego(appName)
+		disableSsh(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 		By("verifying it's up")

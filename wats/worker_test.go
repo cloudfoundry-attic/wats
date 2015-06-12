@@ -51,6 +51,7 @@ var _ = Describe("apps without a port", func() {
 
 		Eventually(pushWorker(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
+		disableSsh(appName)
 		disableHealthCheck(appName)
 		logs = cf.Cf("logs", appName)
 		// if healthcheck ran, the following will fail. `cf start` will wait
