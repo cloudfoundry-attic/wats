@@ -11,8 +11,6 @@ cd `dirname $0`
 : ${SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST:?"Must set address [ip address of Diego ETCD cluster] (e.g. 10.244.16.2:4001)"}
 : ${DOPPLER_URL:?"Must set doppler websocket url (e.g. wss://doppler.hello.cf-app.com:4443)"}
 
-cd `dirname $0`
-
 if [[ "$(uname)" = "Darwin" ]]; then
   ln -sf cf-darwin ../bin/cf
 else
