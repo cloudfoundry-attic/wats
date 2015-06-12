@@ -2,6 +2,8 @@
 
 set -ex
 
+cd `dirname $0`
+
 : ${API:?"Must set api url (e.g. api.10.244.0.34.xip.io)"}
 : ${ADMIN_USER:?"Must set admin username (e.g. admin)"}
 : ${ADMIN_PASSWORD:?"Must set admin password (e.g. admin)"}
