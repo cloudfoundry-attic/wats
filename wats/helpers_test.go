@@ -21,7 +21,7 @@ func pushNora(appName string) func() error {
 
 func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
 	session := cf.Cf(values...)
-	session.Wait()
+	session.Wait(CF_PUSH_TIMEOUT)
 	if session.ExitCode() == 0 {
 		return session.Out, nil
 	}
