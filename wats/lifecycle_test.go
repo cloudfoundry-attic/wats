@@ -32,7 +32,7 @@ var _ = Describe("Application Lifecycle", func() {
 	})
 
 	reportedIDs := func(instances int) map[string]bool {
-		timer := time.NewTimer(time.Second * 60)
+		timer := time.NewTimer(time.Second * 120)
 		defer timer.Stop()
 		run := true
 		go func() {
@@ -120,10 +120,11 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("restarting an instance", func() {
 				idsBefore := reportedIDs(2)
+				Expect(len(idsBefore)).To(Equal(2))
 				Eventually(cf.Cf("restart-app-instance", appName, "1")).Should(Exit(0))
 				Eventually(func() []string {
 					return differentIDsFrom(idsBefore)
-				}).Should(HaveLen(1))
+				}, time.Second*120).Should(HaveLen(1))
 			})
 		})
 	})
