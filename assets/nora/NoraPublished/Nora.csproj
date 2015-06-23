@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="JobBreakoutTest.exe" />
     <Content Include="mmapleak.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -155,6 +156,7 @@
   <Target Name="GatherAllFilesToPublish">
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /y $(SOLUTIONDIR)bin\mmapleak.exe $(TARGETDIR)</PreBuildEvent>
+    <PreBuildEvent>xcopy /y $(SOLUTIONDIR)bin\mmapleak.exe $(TARGETDIR)
+xcopy /y $(SOLUTIONDIR)bin\JobBreakoutTest.exe $(TARGETDIR)</PreBuildEvent>
   </PropertyGroup>
 </Project>
