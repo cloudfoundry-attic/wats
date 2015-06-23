@@ -142,6 +142,20 @@ namespace nora.Controllers
             return Ok();
         }
 
+        [Route("~/breakout/{subprocess?}")]
+        [HttpGet]
+        public IHttpActionResult Breakout(string subprocess = "notepad")
+        {
+            var st = new ProcessStartInfo();
+            
+            var workingDir = HttpContext.Current.Request.MapPath("~/bin");
+            st.FileName = Path.Combine(HttpContext.Current.Request.MapPath("~/bin"), "JobBreakoutTest.exe");
+            st.Arguments = String.Concat("powershell -c cd ", workingDir, " ; ", subprocess);
+            Process.Start(st);
+
+            return Ok();
+        }
+
         private static List<string> UsersFromService(Service service)
         {
             var creds = service.Credentials;
