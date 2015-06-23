@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Nora.helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using Nora.helpers;
-using System.IO.MemoryMappedFiles;
 
 namespace nora.Controllers
 {
@@ -138,7 +138,7 @@ namespace nora.Controllers
         [HttpGet]
         public IHttpActionResult MmapLeak()
         {
-            Process.Start("mmapleak.exe");
+            Process.Start(Path.Combine(HttpContext.Current.Request.MapPath("~/bin"), "mmapleak.exe"));
             return Ok();
         }
 
