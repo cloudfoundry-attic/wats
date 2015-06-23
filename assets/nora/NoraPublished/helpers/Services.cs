@@ -20,5 +20,8 @@ namespace Nora.helpers
     {
         [JsonProperty("user-provided")]
         public List<Service> UserProvided { get; private set; }
+
+        [JsonProperty("p-mysql")]
+        public List<Service> PMySQL { get; private set; }
     }
 }
