@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -137,27 +138,8 @@ namespace nora.Controllers
         [HttpGet]
         public IHttpActionResult MmapLeak()
         {
-            var initialSize = 1024 * 1024 * 1024;
-            var minSize = 32;
-            var sections = new List<MemoryMappedFile>();
-
-            while (true)
-            {
-                try
-                {
-                    var x = MemoryMappedFile.CreateNew(Guid.NewGuid().ToString(), initialSize, MemoryMappedFileAccess.ReadWrite);
-                    sections.Add(x);
-                }
-                catch
-                {
-                    if (initialSize > minSize)
-                    {
-                        initialSize = initialSize/2;
-                    }
-                }
-
-
-            }
+            Process.Start("mmapleak.exe");
+            return Ok();
         }
 
         private static List<string> UsersFromService(Service service)
