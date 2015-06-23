@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nora", "Nora\Nora.csproj", "{29FA7814-C57E-46C9-9A62-DA717985A1BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42} = {45548488-DBD0-4D73-A03D-029BD9FD5B42}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nora.Tests", "Nora.Tests\Nora.Tests.csproj", "{720E2871-0BBE-4315-AFFB-BAC410356252}"
 EndProject
@@ -14,20 +17,48 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1FEC80
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmapleak", "mmapleak\mmapleak.vcxproj", "{45548488-DBD0-4D73-A03D-029BD9FD5B42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{29FA7814-C57E-46C9-9A62-DA717985A1BB}.Release|Win32.ActiveCfg = Release|Any CPU
 		{720E2871-0BBE-4315-AFFB-BAC410356252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{720E2871-0BBE-4315-AFFB-BAC410356252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{720E2871-0BBE-4315-AFFB-BAC410356252}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720E2871-0BBE-4315-AFFB-BAC410356252}.Release|Any CPU.Build.0 = Release|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{720E2871-0BBE-4315-AFFB-BAC410356252}.Release|Win32.ActiveCfg = Release|Any CPU
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Debug|Win32.ActiveCfg = Debug|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Debug|Win32.Build.0 = Debug|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Release|Any CPU.ActiveCfg = Release|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Release|Win32.ActiveCfg = Release|Win32
+		{45548488-DBD0-4D73-A03D-029BD9FD5B42}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,9 @@
+---
+applications:
+- name: nora
+  memory: 128M
+  stack: windows2
+  buildpack: java_buildpack
+  env:
+    DIEGO_BETA: true
+    DIEGO_RUN_BETA: true
