@@ -8,6 +8,7 @@ using System.Web.Http.Results;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Nora.helpers;
+using System.IO.MemoryMappedFiles;
 
 namespace nora.Controllers
 {
@@ -130,6 +131,33 @@ namespace nora.Controllers
             var users = UsersFromService(service);
 
             return Ok(users);
+        }
+
+        [Route("~/mmapleak")]
+        [HttpGet]
+        public IHttpActionResult MmapLeak()
+        {
+            var initialSize = 1024 * 1024 * 1024;
+            var minSize = 32;
+            var sections = new List<MemoryMappedFile>();
+
+            while (true)
+            {
+                try
+                {
+                    var x = MemoryMappedFile.CreateNew(Guid.NewGuid().ToString(), initialSize, MemoryMappedFileAccess.ReadWrite);
+                    sections.Add(x);
+                }
+                catch
+                {
+                    if (initialSize > minSize)
+                    {
+                        initialSize = initialSize/2;
+                    }
+                }
+
+
+            }
         }
 
         private static List<string> UsersFromService(Service service)
