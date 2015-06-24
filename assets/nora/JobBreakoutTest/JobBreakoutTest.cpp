@@ -56,6 +56,7 @@ bool InjectExe(LPCSTR lpName)
 			return false;
 		}
 
+		// TODO: on a sunny day replace WinExec with CreateProcess
 		LPVOID pWinExec = GetProcAddress(GetModuleHandle(L"kernel32"), "WinExec");
 
 		HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pWinExec, pBuf, 0, NULL);
