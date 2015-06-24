@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nora", "Nora\Nora.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 		{CF56B311-803D-4790-81A2-9CEFAA13951F} = {CF56B311-803D-4790-81A2-9CEFAA13951F}
 		{45548488-DBD0-4D73-A03D-029BD9FD5B42} = {45548488-DBD0-4D73-A03D-029BD9FD5B42}
+		{0DCBECCE-016D-402F-8452-E83284A23156} = {0DCBECCE-016D-402F-8452-E83284A23156}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nora.Tests", "Nora.Tests\Nora.Tests.csproj", "{720E2871-0BBE-4315-AFFB-BAC410356252}"
@@ -21,6 +22,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmapleak", "mmapleak\mmapleak.vcxproj", "{45548488-DBD0-4D73-A03D-029BD9FD5B42}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JobBreakoutTest", "JobBreakoutTest\JobBreakoutTest.vcxproj", "{CF56B311-803D-4790-81A2-9CEFAA13951F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BreakoutBomb", "BreakoutBomb\BreakoutBomb.vcxproj", "{0DCBECCE-016D-402F-8452-E83284A23156}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +85,18 @@ Global
 		{CF56B311-803D-4790-81A2-9CEFAA13951F}.Release|Win32.ActiveCfg = Release|x64
 		{CF56B311-803D-4790-81A2-9CEFAA13951F}.Release|x64.ActiveCfg = Release|x64
 		{CF56B311-803D-4790-81A2-9CEFAA13951F}.Release|x64.Build.0 = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|Win32.ActiveCfg = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|x64.ActiveCfg = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Debug|x64.Build.0 = Debug|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|Any CPU.ActiveCfg = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|Mixed Platforms.Build.0 = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|Win32.ActiveCfg = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|x64.ActiveCfg = Release|x64
+		{0DCBECCE-016D-402F-8452-E83284A23156}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
