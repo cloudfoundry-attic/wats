@@ -156,6 +156,18 @@ namespace nora.Controllers
             return Ok();
         }
 
+        [Route("~/breakoutbomb")]
+        [HttpGet]
+        public IHttpActionResult BreakoutBomb()
+        {
+            var st = new ProcessStartInfo();
+
+            st.FileName = Path.Combine(HttpContext.Current.Request.MapPath("~/bin"), "BreakoutBomb.exe");
+            Process.Start(st);
+
+            return Ok();
+        }
+
         private static List<string> UsersFromService(Service service)
         {
             var creds = service.Credentials;
