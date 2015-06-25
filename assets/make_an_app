@@ -5,7 +5,7 @@ set -uex
 function disable_ssh {
     space=`cf target | grep Space | awk '{print $2}' | tr -d '\n'`
 
-    cf curl /v2/apps/$(cf app $1 --guid) -X PUT -d '{"enable_ssh": false}'
+    cf curl "v2/apps/$(cf app $1 --guid)" -X PUT -d '{"enable_ssh": false}'
     # cf curl /v2/spaces/$(cf space $space --guid) -X PUT -d '{"allow_ssh": false}'
 }
 

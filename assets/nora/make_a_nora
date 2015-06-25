@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -uex
 
+dir=${0%/*}
 APPNAME=${1:-"nora"}
-../make_an_app NoraPublished $APPNAME
+$dir/../make_an_app $dir/NoraPublished $APPNAME
 cf start $APPNAME
