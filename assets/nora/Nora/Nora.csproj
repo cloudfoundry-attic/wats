@@ -83,12 +83,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BreakoutBomb.exe" />
     <Content Include="Global.asax" />
-    <Content Include="JobBreakoutTest.exe" />
-    <Content Include="mmapleak.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
