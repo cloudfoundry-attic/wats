@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	CF_PUSH_TIMEOUT = 15 * time.Minute
+	CF_PUSH_TIMEOUT = 3 * time.Minute
 )
 
 var context helpers.SuiteContext

@@ -40,4 +40,4 @@ cat > $tempfile <<HERE
   "skip_ssl_validation": true
 }
 HERE
-CONFIG=$tempfile ginkgo -r -failFast -slowSpecThreshold=120 $@ ../wats
+CONFIG=$PWD/"bosh_lite_config.json" ginkgo -r -v -failFast -slowSpecThreshold=120 $@ ../wats
