@@ -2,8 +2,6 @@
 
 set -ex
 
-cd `dirname $0`
-
 if [ -f "$1" ]; then
   CONFIG_FILE=$PWD/$1
 else
@@ -29,6 +27,7 @@ cat > $CONFIG_FILE <<HERE
 HERE
 fi
 
+cd `dirname $0`
 if [[ "$(uname)" = "Darwin" ]]; then
   ln -sf cf-darwin ../bin/cf
 else
