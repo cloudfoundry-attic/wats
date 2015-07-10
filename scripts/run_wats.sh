@@ -45,4 +45,4 @@ go install github.com/onsi/ginkgo/ginkgo
 # have a binary and go get will try to build one
 go install -t ../tests/... 2>/dev/null || echo "Installed dependencies"
 
-CONFIG=$CONFIG_FILE ginkgo -r -v -failFast -slowSpecThreshold=120 $@ ../wats
+CONFIG=$CONFIG_FILE ginkgo -r -v -slowSpecThreshold=120 $@ ../wats

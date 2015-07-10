@@ -39,7 +39,7 @@ func runCf(values ...string) func() error {
 func DopplerUrl(c Config) string {
 	doppler := os.Getenv("DOPPLER_URL")
 	if doppler == "" {
-		doppler = "wss://doppler." + c.AppsDomain
+		doppler = "wss://doppler." + c.AppsDomain + ":4443"
 	}
 	return doppler
 }
