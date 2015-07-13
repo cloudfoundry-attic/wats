@@ -36,14 +36,17 @@ namespace nora.Tests.Controllers
 
             describe["GET /id"] = () =>
             {
-                it["should get the instance id from the VCAP_APPLICATION json"] = () =>
+                it["should get the instance id from the INSTANCE_GUID"] = () =>
                 {
+                    var instanceGuid = Guid.NewGuid().ToString();
+                    Environment.SetEnvironmentVariable("INSTANCE_GUID", instanceGuid);
+
                     var response = instancesController.Id();
                     String resp = null;
                     response.ExecuteAsync(new CancellationToken()).Result.TryGetContentValue(out resp);
-                    resp.should_be("A123F285-26B4-45F1-8C31-816DC5F53ECF");
+                    resp.should_be(instanceGuid);
                 };
-            };
+            }; 
 
             describe["Get /env"] = () =>
             {
