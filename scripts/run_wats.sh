@@ -4,6 +4,7 @@ set -ex
 
 if [ -f "$1" ]; then
   CONFIG_FILE=$PWD/$1
+: ${NUM_WIN_CELLS:?"Must provide the number of windows cells in this deploy (e.g. 2)"}
 else
   CONFIG_FILE=`mktemp -t watsXXXXX`
   trap "rm -f $CONFIG_FILE" EXIT
