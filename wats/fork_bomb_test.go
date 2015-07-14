@@ -37,7 +37,7 @@ var _ = Describe("Application Lifecycle", func() {
 
 		seenComputerNames := map[string]bool{}
 		for len(seenComputerNames) != instances && run == true {
-			seenComputerNames[helpers.CurlApp(appName, "/ENV/COMPUTER_NAME")] = true
+			seenComputerNames[helpers.CurlApp(appName, "/ENV/CF_INSTANCE_IP")] = true
 		}
 
 		return seenComputerNames
