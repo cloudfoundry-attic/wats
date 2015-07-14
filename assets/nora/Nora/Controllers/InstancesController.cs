@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.IO.MemoryMappedFiles;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Nora.helpers;
 using System;
@@ -167,6 +169,34 @@ namespace nora.Controllers
 
             return Ok();
         }
+
+        [Route("~/commitcharge")]
+        [HttpGet]
+        public IHttpActionResult GetCommitCharge()
+        {
+            var p = new PerformanceCounter("Memory", "Committed Bytes");
+            return Ok(p.RawValue);
+        }
+
+        private static MemoryMappedFile MmapFile = null;
+
+        [Route("~/mmapleak/{maxbytes}")]
+        [HttpGet]
+        public IHttpActionResult MmapLeakMax(long maxbytes)
+        {
+            if (MmapFile != null)
+            {
+                MmapFile.Dispose();
+            }
+
+            MmapFile = MemoryMappedFile.CreateNew(
+                Guid.NewGuid().ToString(),
+                maxbytes,
+                MemoryMappedFileAccess.ReadWrite);
+
+            return Ok();
+        }
+
 
         private static List<string> UsersFromService(Service service)
         {
