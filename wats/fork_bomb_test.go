@@ -44,7 +44,7 @@ var _ = Describe("Application Lifecycle", func() {
 	}
 
 	Describe("An app staged on Diego and running on Diego", func() {
-		It("attempts to forkbomb the environment", func() {
+		XIt("attempts to forkbomb the environment", func() {
 			numWinCells, err := strconv.Atoi(os.Getenv("NUM_WIN_CELLS"))
 			Expect(err).NotTo(HaveOccurred())
 
