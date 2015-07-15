@@ -7,6 +7,9 @@
 *.test
 wats/*.exe
 
+# ignore config files for running wats on external environments for developer testing
+scripts/*_config.json
+
 # User-specific files
 *.suo
 *.user
