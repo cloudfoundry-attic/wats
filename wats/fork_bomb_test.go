@@ -64,6 +64,7 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("storing the current computer names")
 			computerNames := reportedComputerNames(numWinCells)
+			Expect(len(computerNames)).To(Equal(numWinCells))
 
 			By("Running fork bomb", func() {
 				helpers.CurlApp(appName, "/breakoutbomb")
