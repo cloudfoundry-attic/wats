@@ -116,6 +116,7 @@ var _ = Describe("Application Lifecycle", func() {
 			By("scaling it", func() {
 				Eventually(runCf("scale", appName, "-i", "2")).Should(Succeed())
 				Eventually(apps).Should(Say("2/2"))
+				Expect(cf.Cf("app", appName).Wait()).ToNot(Say("insufficient resources"))
 			})
 
 			By("restarting an instance", func() {
