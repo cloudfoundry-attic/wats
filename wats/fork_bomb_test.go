@@ -44,18 +44,17 @@ var _ = Describe("Application Lifecycle", func() {
 	}
 
 	Describe("An app staged on Diego and running on Diego", func() {
-		XIt("attempts to forkbomb the environment", func() {
+		It("attempts to forkbomb the environment", func() {
 			numWinCells, err := strconv.Atoi(os.Getenv("NUM_WIN_CELLS"))
 			Expect(err).NotTo(HaveOccurred())
 
 			By("pushing it", func() {
-				Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Eventually(pushNoraWithOptions(appName, numWinCells*2, "1G"), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
 			By("staging and running it on Diego", func() {
 				enableDiego(appName)
 				disableSsh(appName)
-				Eventually(runCf("scale", appName, "-i", strconv.Itoa(numWinCells*3), "-m", "512M")).Should(Succeed())
 				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
@@ -68,8 +67,9 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("Running fork bomb", func() {
 				helpers.CurlApp(appName, "/breakoutbomb")
-				time.Sleep(3 * time.Second)
 			})
+
+			time.Sleep(3 * time.Second)
 
 			By("Making sure the bomb did not take down the machine", func() {
 				newComputerNames := reportedComputerNames(numWinCells)

@@ -3,20 +3,26 @@ package wats
 import (
 	"errors"
 	"os"
+	"strconv"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/onsi/gomega/gbytes"
 )
 
-func pushNora(appName string) func() error {
+func pushNoraWithOptions(appName string, instances int, memory string) func() error {
 	return runCf(
 		"push", appName,
 		"-p", "../assets/nora/NoraPublished",
 		"--no-start",
-		"-m", "2g",
+		"-i", strconv.Itoa(instances),
+		"-m", memory,
 		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
 		"-s", "windows2012R2")
+}
+
+func pushNora(appName string) func() error {
+	return pushNoraWithOptions(appName, 1, "2g")
 }
 
 func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
