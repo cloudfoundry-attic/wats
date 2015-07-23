@@ -197,6 +197,14 @@ namespace nora.Controllers
             return Ok();
         }
 
+        [Route("~/exit")]
+        [HttpGet]
+        public IHttpActionResult Exit()
+        {
+            Process.GetCurrentProcess().Kill();
+            return Ok();
+        }
+
 
         private static List<string> UsersFromService(Service service)
         {
