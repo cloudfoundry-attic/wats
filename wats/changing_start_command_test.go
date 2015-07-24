@@ -23,7 +23,7 @@ var _ = Describe("Changing an app's start command", func() {
 	})
 
 	Describe("staged on Diego and running on Diego", func() {
-		It("exercises the app through its lifecycle", func() {
+		XIt("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
 				Eventually(cf.Cf(
 					"push", appName,
