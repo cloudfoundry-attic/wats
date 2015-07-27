@@ -7,6 +7,8 @@ import (
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 )
 
@@ -48,4 +50,17 @@ func DopplerUrl(c Config) string {
 		doppler = "wss://doppler." + c.AppsDomain + ":4443"
 	}
 	return doppler
+}
+
+func pushAndStartNora(appName string) {
+	By("pushing it")
+	Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+
+	By("staging and running it on Diego")
+	enableDiego(appName)
+	disableSsh(appName)
+	Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+
+	By("verifying it's up")
+	Eventually(CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 }

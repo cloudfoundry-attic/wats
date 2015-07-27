@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	DEFAULT_TIMEOUT = 45 * time.Second
 	CF_PUSH_TIMEOUT = 3 * time.Minute
 )
 
