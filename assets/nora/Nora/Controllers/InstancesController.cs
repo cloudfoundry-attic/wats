@@ -99,6 +99,18 @@ namespace nora.Controllers
             return Ok(Environment.GetEnvironmentVariable(name));
         }
 
+        [Route("~/logspew/{kbytes}")]
+        [HttpGet]
+        public IHttpActionResult LogSpew(int kbytes)
+        {
+            var kb = new string('1', 1024);
+            for (var i = 0; i < kbytes; i++)
+            {
+                Console.WriteLine(kb);
+            }
+            return Ok(String.Format("Just wrote {0} kbytes to the log", kbytes));
+        }
+
         [Route("~/users")]
         [HttpGet]
         public IHttpActionResult CupsUsers()
