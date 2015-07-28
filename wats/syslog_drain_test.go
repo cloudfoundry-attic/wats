@@ -79,7 +79,7 @@ var _ = Describe("Logging", func() {
 			drainListener.Stop()
 		})
 
-		It("forwards app messages to registered syslog drains", func() {
+		XIt("forwards app messages to registered syslog drains", func() {
 			randomMessage := "random-message-" + generator.RandomName()
 
 			Eventually(func() bool {

@@ -27,7 +27,7 @@ var _ = Describe("An application printing a bunch of output", func() {
 		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
-	It("doesn't die when printing 32MB", func() {
+	XIt("doesn't die when printing 32MB", func() {
 		beforeId := helpers.CurlApp(appName, "/id")
 
 		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", DEFAULT_TIMEOUT)).
