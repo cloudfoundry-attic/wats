@@ -30,7 +30,6 @@ var _ = Describe("Application Lifecycle", func() {
 			By("pushing it", func() {
 				Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 				enableDiego(appName)
-				disableSsh(appName)
 				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 

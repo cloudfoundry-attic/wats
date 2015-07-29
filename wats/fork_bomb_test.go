@@ -54,7 +54,6 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("staging and running it on Diego", func() {
 				enableDiego(appName)
-				disableSsh(appName)
 				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 

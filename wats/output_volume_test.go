@@ -18,7 +18,6 @@ var _ = Describe("An application printing a bunch of output", func() {
 
 		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
-		disableSsh(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})
 

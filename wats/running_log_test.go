@@ -22,7 +22,6 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
-		disableSsh(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})
 
