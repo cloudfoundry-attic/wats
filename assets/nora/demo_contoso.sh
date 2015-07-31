@@ -21,8 +21,8 @@ if [ "x$HOST" == "x" ]; then
     exit 1
 fi
 
-if [ "x$USER" == "x" ]; then
-    echo "USER environment variable must be set"
+if [ "x$DB_USER" == "x" ]; then
+    echo "DB_USER environment variable must be set"
     exit 1
 fi
 
@@ -53,7 +53,7 @@ echo -e "${CF_COLOR}cf enable-diego ${appname} ${NC}"
 cf enable-diego $appname
 
 host=$HOST
-user=$USER
+user=$DB_USER
 pass=$PASS
 
 echo -e "${GREEN}Now that ${appname} has been pushed, we will create a user provided service..${NC}"
