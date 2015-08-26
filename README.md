@@ -17,9 +17,9 @@ credentials and URLs as appropriate for your environment.
 **NOTE**: The secure_address must be some inaccessible endpoint from
   any container, e.g., an etcd endpoint
 
-### Running the tests
+### Running the tests against a bosh-lite
 
-`CONFIG=$PWD/scripts/bosh_lite_config.json ginkgo wats`
+`./scripts/bosh_lite_run_wats.sh`
 
 ### Self signed certificates
 
