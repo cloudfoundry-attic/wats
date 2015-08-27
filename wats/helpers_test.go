@@ -13,14 +13,7 @@ import (
 )
 
 func pushNoraWithOptions(appName string, instances int, memory string) func() error {
-	return runCf(
-		"push", appName,
-		"-p", "../assets/nora/NoraPublished",
-		"--no-start",
-		"-i", strconv.Itoa(instances),
-		"-m", memory,
-		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
-		"-s", "windows2012R2")
+	return pushApp(appName, "../assets/nora/NoraPublished", instances, memory)
 }
 
 func pushNora(appName string) func() error {
@@ -62,4 +55,15 @@ func pushAndStartNora(appName string) {
 
 	By("verifying it's up")
 	Eventually(CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+}
+
+func pushApp(appName, path string, instances int, memory string) func() error {
+	return runCf(
+		"push", appName,
+		"-p", path,
+		"--no-start",
+		"-i", strconv.Itoa(instances),
+		"-m", memory,
+		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
+		"-s", "windows2012R2")
 }

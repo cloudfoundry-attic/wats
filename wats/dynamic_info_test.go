@@ -2,7 +2,6 @@ package wats
 
 import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 
 	. "github.com/onsi/ginkgo"
@@ -11,10 +10,7 @@ import (
 )
 
 var _ = Describe("A running application", func() {
-	var appName string
-
 	BeforeEach(func() {
-		appName = generator.RandomName()
 		pushAndStartNora(appName)
 	})
 

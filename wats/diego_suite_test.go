@@ -10,6 +10,7 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -18,7 +19,10 @@ const (
 	CF_PUSH_TIMEOUT = 3 * time.Minute
 )
 
-var context helpers.SuiteContext
+var (
+	context helpers.SuiteContext
+	appName string
+)
 
 func guidForAppName(appName string) string {
 	cfApp := cf.Cf("app", appName, "--guid")
@@ -69,6 +73,10 @@ func TestApplications(t *testing.T) {
 
 	AfterSuite(func() {
 		environment.Teardown()
+	})
+
+	BeforeEach(func() {
+		appName = generator.RandomName()
 	})
 
 	componentName := "Diego"

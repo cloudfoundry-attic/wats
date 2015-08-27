@@ -11,7 +11,6 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -44,15 +43,9 @@ func lastAppUsageEvent(appName string, state string) (bool, AppUsageEvent) {
 }
 
 var _ = Describe("Application Lifecycle", func() {
-	var appName string
-
 	apps := func() *Session {
 		return cf.Cf("apps").Wait()
 	}
-
-	BeforeEach(func() {
-		appName = generator.RandomName()
-	})
 
 	AfterEach(func() {
 		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())

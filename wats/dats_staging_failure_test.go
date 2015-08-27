@@ -6,19 +6,15 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("When staging fails", func() {
-	var appName string
-
 	Context("due to insufficient resources", func() {
 		BeforeEach(func() {
 			context.SetRunawayQuota()
 
-			appName = generator.RandomName()
 			Eventually(cf.Cf("push", appName, "--no-start",
 				"-m", helpers.RUNAWAY_QUOTA_MEM_LIMIT,
 				"-p", "../assets/nora/NoraPublished",

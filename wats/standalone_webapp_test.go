@@ -6,16 +6,10 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
 var _ = Describe("A standalone webapp", func() {
-	var appName string
-
-	BeforeEach(func() {
-		appName = generator.RandomName()
-	})
 
 	AfterEach(func() {
 		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())

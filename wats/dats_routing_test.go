@@ -11,10 +11,7 @@ import (
 )
 
 var _ = Describe("Adding and removing routes", func() {
-	var appName string
-
 	BeforeEach(func() {
-		appName = generator.RandomName()
 		pushAndStartNora(appName)
 		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 	})

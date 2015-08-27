@@ -12,7 +12,6 @@ import (
 	"github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 )
 
 // Copied from : cf-test-helpers/runner/run.go
@@ -32,23 +31,13 @@ func Run(executable string, env []string, args ...string) *gexec.Session {
 }
 
 func pushWorker(appName string) func() error {
-	return runCf(
-		"push", appName,
-		"-p", "../assets/worker",
-		"--no-start",
-		"--no-route",
-		"-m", "2g",
-		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
-		"-s", "windows2012R2")
+	return pushApp(appName, "../assets/worker", 1, "2g")
 }
 
 var _ = Describe("apps without a port", func() {
-	var appName string
 	var logs *gexec.Session
 
 	BeforeEach(func() {
-		appName = generator.RandomName()
-
 		Eventually(pushWorker(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		disableHealthCheck(appName)

@@ -6,16 +6,12 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
 var _ = Describe("An application printing a bunch of output", func() {
-	var appName string
 
 	BeforeEach(func() {
-		appName = generator.RandomName()
-
 		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())

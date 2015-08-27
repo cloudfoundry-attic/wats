@@ -2,7 +2,6 @@ package wats
 
 import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -11,11 +10,7 @@ import (
 )
 
 var _ = Describe("Getting instance information", func() {
-	var appName string
-
 	BeforeEach(func() {
-		appName = generator.RandomName()
-
 		Eventually(cf.Cf("push", appName, "-m", "2Gb", "-p", "../assets/webapp", "--no-start", "-b", "https://github.com/ryandotsmith/null-buildpack.git", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
 		enableDiego(appName)
 		session := cf.Cf("start", appName)

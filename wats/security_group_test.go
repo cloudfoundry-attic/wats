@@ -23,12 +23,6 @@ var _ = Describe("Security Groups", func() {
 		ReturnCode int `json:"return_code"`
 	}
 
-	var appName string
-
-	BeforeEach(func() {
-		appName = generator.RandomName()
-	})
-
 	AfterEach(func() {
 		Eventually(runCf("logs", appName, "--recent")).Should(Succeed())
 		Eventually(runCf("delete", appName, "-f")).Should(Succeed())
