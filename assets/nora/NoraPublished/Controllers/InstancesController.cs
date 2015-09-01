@@ -217,6 +217,20 @@ namespace nora.Controllers
             return Ok();
         }
 
+        private static List<IntPtr> _leakedPointers;
+        [Route("~/leakmemory/{mb}")]
+        [HttpGet]
+        public IHttpActionResult Memory(int mb)
+        {
+            if (_leakedPointers == null)
+                _leakedPointers = new List<IntPtr>();
+
+            var bytes = mb * 1024 * 1024;
+            _leakedPointers.Add(System.Runtime.InteropServices.Marshal.AllocHGlobal(bytes));
+            return Ok();
+        }
+
+
 
         private static List<string> UsersFromService(Service service)
         {
