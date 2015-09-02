@@ -9,7 +9,7 @@ import (
 var _ = Describe("ASP classic applications", func() {
 	It("exercises the app through its lifecycle", func() {
 		By("pushing it")
-		Eventually(pushApp(appName, "../assets/asp-classic", 1, "2g")).Should(Succeed())
+		Eventually(pushApp(appName, "../assets/asp-classic", 1, "1g")).Should(Succeed())
 
 		By("staging and running it on Diego")
 		enableDiego(appName)

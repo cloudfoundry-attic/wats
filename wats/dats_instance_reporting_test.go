@@ -2,7 +2,6 @@ package wats
 
 import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -25,7 +24,7 @@ var _ = Describe("Getting instance information", func() {
 	Context("scaling memory", func() {
 		BeforeEach(func() {
 			context.SetRunawayQuota()
-			scale := cf.Cf("scale", appName, "-m", helpers.RUNAWAY_QUOTA_MEM_LIMIT, "-f")
+			scale := cf.Cf("scale", appName, "-m", EXCEED_CELL_MEMORY, "-f")
 			Eventually(scale, CF_PUSH_TIMEOUT).Should(Say("insufficient resources"))
 			scale.Kill()
 		})

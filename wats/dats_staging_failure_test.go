@@ -6,8 +6,11 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/onsi/gomega/gbytes"
+)
+
+const (
+	EXCEED_CELL_MEMORY = "900g"
 )
 
 var _ = Describe("When staging fails", func() {
@@ -16,7 +19,7 @@ var _ = Describe("When staging fails", func() {
 			context.SetRunawayQuota()
 
 			Eventually(cf.Cf("push", appName, "--no-start",
-				"-m", helpers.RUNAWAY_QUOTA_MEM_LIMIT,
+				"-m", EXCEED_CELL_MEMORY,
 				"-p", "../assets/nora/NoraPublished",
 				"-s", "windows2012R2",
 				"-b", "https://github.com/ryandotsmith/null-buildpack.git",
@@ -34,7 +37,6 @@ var _ = Describe("When staging fails", func() {
 
 			start := cf.Cf("start", appName)
 			Eventually(start, CF_PUSH_TIMEOUT).Should(Exit(1))
-			Expect(start.Out).To(gbytes.Say("InsufficientResources"))
 
 			Eventually(logs.Out).Should(gbytes.Say("Failed to stage application: insufficient resources"))
 

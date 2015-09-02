@@ -47,4 +47,5 @@ go install github.com/onsi/ginkgo/ginkgo
 # have a binary and go get will try to build one
 go install -t ../tests/... 2>/dev/null || echo "Installed dependencies"
 
+shift
 NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo -r -slowSpecThreshold=120 $@ ../wats
