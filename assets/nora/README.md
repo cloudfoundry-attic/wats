@@ -21,3 +21,7 @@ Run the following command to deploy nora:
 ```sh
 ./make_a_nora <app_name> <stack_name>
 ```
+
+Requirements
+=======
+Nora requires at least 512mb of memory to run on CloudFoundry.
