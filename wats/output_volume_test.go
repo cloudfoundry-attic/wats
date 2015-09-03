@@ -1,6 +1,8 @@
 package wats
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -25,7 +27,8 @@ var _ = Describe("An application printing a bunch of output", func() {
 	It("doesn't die when printing 32MB", func() {
 		beforeId := helpers.CurlApp(appName, "/id")
 
-		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", DEFAULT_TIMEOUT)).
+		loggingTimeout := 2 * time.Minute
+		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", loggingTimeout)).
 			To(ContainSubstring("Just wrote 32000 kbytes to the log"))
 
 		Consistently(func() string {
