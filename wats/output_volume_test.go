@@ -1,8 +1,6 @@
 package wats
 
 import (
-	"time"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -14,7 +12,7 @@ import (
 var _ = Describe("An application printing a bunch of output", func() {
 
 	BeforeEach(func() {
-		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})
@@ -27,8 +25,7 @@ var _ = Describe("An application printing a bunch of output", func() {
 	It("doesn't die when printing 32MB", func() {
 		beforeId := helpers.CurlApp(appName, "/id")
 
-		loggingTimeout := 2 * time.Minute
-		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", loggingTimeout)).
+		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", DEFAULT_TIMEOUT)).
 			To(ContainSubstring("Just wrote 32000 kbytes to the log"))
 
 		Consistently(func() string {
