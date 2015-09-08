@@ -2,13 +2,6 @@
 
 set -eu
 
-function disable_ssh {
-    space=`cf target | grep Space | awk '{print $2}' | tr -d '\n'`
-
-    cf curl /v2/apps/$(cf app $1 --guid) -X PUT -d '{"enable_ssh": false}'
-    # cf curl /v2/spaces/$(cf space $space --guid) -X PUT -d '{"allow_ssh": false}'
-}
-
 appname=${1:-"contoso"}
 service=${2:-"rds"}
 catalog=${3:-"ContosoUniversity2"}
@@ -98,7 +91,6 @@ cf create-security-group $service $service-security-group.json
 rm $service-security-group.json
 echo -e "${CF_COLOR}cf bind-security-group ${service} ${org} ${space} ${NC}"
 cf bind-security-group $service $org $space
-disable_ssh $appname
 echo -e "${GREEN}Now, we will start ${appname}. ${NC}"
 read -p "Press [Enter] key to continue..."
 echo -e "${CF_COLOR}cf start ${appname} ${NC}"

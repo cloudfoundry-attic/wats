@@ -44,12 +44,7 @@ func guidForSpaceName(spaceName string) string {
 
 func enableDiego(appName string) {
 	guid := guidForAppName(appName)
-	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"diego": true, "enable_ssh": false}`)).Should(Exit(0))
-}
-
-func disableDiego(appName string) {
-	guid := guidForAppName(appName)
-	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"diego": false}`)).Should(Exit(0))
+	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"diego": true}`)).Should(Exit(0))
 }
 
 func disableHealthCheck(appName string) {

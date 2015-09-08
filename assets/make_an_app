@@ -2,13 +2,6 @@
 
 set -uex
 
-function disable_ssh {
-    space=`cf target | grep Space | awk '{print $2}' | tr -d '\n'`
-
-    cf curl "v2/apps/$(cf app $1 --guid)" -X PUT -d '{"enable_ssh": false}'
-    # cf curl /v2/spaces/$(cf space $space --guid) -X PUT -d '{"allow_ssh": false}'
-}
-
 DIR=$1
 APPNAME=$2
 if [ "x$DIR" == "x" -o "x$APPNAME" == "x" ]; then
@@ -30,4 +23,3 @@ if ! cf enable-diego $APPNAME; then
     cf install-plugin Diego-Beta -r CF-Community
     cf enable-diego $APPNAME
 fi
-disable_ssh $APPNAME
