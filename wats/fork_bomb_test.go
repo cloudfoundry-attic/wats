@@ -42,7 +42,7 @@ var _ = Describe("Application Lifecycle", func() {
 			Expect(err).NotTo(HaveOccurred(), "Please provide NUM_WIN_CELLS (The number of windows cells in tested deployment)")
 
 			By("pushing it", func() {
-				Eventually(pushNoraWithOptions(appName, numWinCells*2, "1G"), CF_PUSH_TIMEOUT).Should(Succeed())
+				Eventually(pushNoraWithOptions(appName, numWinCells*2, "2G"), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
 			By("staging and running it on Diego", func() {
