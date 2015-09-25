@@ -122,7 +122,7 @@ var _ = Describe("Application Lifecycle", func() {
 			By("makes system environment variables available", func() {
 				Eventually(func() string {
 					return helpers.CurlApp(appName, "/env")
-				}, DEFAULT_TIMEOUT).Should(ContainSubstring(`"CF_STACK":"windows2012R2"`))
+				}, DEFAULT_TIMEOUT).Should(ContainSubstring(`"INSTANCE_GUID"`))
 			})
 
 			By("stopping it", func() {
