@@ -38,7 +38,7 @@ fi
 
 export PATH=$PWD/../bin:$PATH
 
-gopath=$(mktemp -d -t wats)
+gopath=$(mktemp -d /tmp/watsXXXX)
 function cleanup {
     rm -rf $gopath
 }
