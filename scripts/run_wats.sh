@@ -38,14 +38,19 @@ fi
 
 export PATH=$PWD/../bin:$PATH
 
-export GOPATH=$PWD/../../../../../
+gopath=$(mktemp -d -t wats)
+function cleanup {
+    rm -rf $gopath
+}
+trap cleanup EXIT
+
+export GOPATH=$gopath
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
+echo $GOPATH $GOBIN $PATH
 
-go install github.com/onsi/ginkgo/ginkgo
-# The following line will fail with the || echo, since tests don't
-# have a binary and go get will try to build one
-go install -t ../tests/... 2>/dev/null || echo "Installed dependencies"
+# go get github.com/onsi/ginkgo
+go get -t github.com/cloudfoundry-incubator/wats/...
 
 shift || true
 NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo -r -slowSpecThreshold=120 $@ ../wats
