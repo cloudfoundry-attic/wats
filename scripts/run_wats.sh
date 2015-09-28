@@ -49,7 +49,7 @@ export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
 echo $GOPATH $GOBIN $PATH
 
-# go get github.com/onsi/ginkgo
+go get github.com/onsi/ginkgo/ginkgo
 go get -t github.com/cloudfoundry-incubator/wats/...
 
 shift || true
