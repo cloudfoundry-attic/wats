@@ -1,5 +1,5 @@
 :loop
 
-echo "Hi there!!!"
+echo %1
 
 goto loop

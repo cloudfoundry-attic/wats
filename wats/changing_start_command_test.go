@@ -25,7 +25,7 @@ var _ = Describe("Changing an app's start command", func() {
 					"--no-route",
 					"-b", "https://github.com/ryandotsmith/null-buildpack.git",
 					"-s", "windows2012R2",
-					"-c", "loop.bat"), CF_PUSH_TIMEOUT).Should(Exit(0))
+					"-c", "loop.bat \"Hi there!!!\""), CF_PUSH_TIMEOUT).Should(Exit(0))
 			})
 
 			By("staging and running it on Diego", func() {

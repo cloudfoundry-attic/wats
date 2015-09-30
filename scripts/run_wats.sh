@@ -38,7 +38,16 @@ fi
 
 export PATH=$PWD/../bin:$PATH
 
-gopath=$(mktemp -d /tmp/watsXXXX)
+uname_s=$(uname -s | cut -d_ -f1)
+win_uname="MINGW32"
+if [ "x${uname_s}" == "x${win_uname}" ]; then
+    gopath=/tmp/watsgopath
+    rm -rf $gopath
+    ginkgo_args="-noColor"
+else
+    gopath=$(mktemp -d /tmp/watsXXXX)
+fi
+
 function cleanup {
     rm -rf $gopath
 }
@@ -53,4 +62,4 @@ go get github.com/onsi/ginkgo/ginkgo
 go get -t github.com/cloudfoundry-incubator/wats/...
 
 shift || true
-NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo -r -slowSpecThreshold=120 $@ ../wats
+NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ ../wats
