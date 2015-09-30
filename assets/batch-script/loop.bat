@@ -1,5 +1,5 @@
 :loop
 
-echo %1
+echo %*
 
 goto loop

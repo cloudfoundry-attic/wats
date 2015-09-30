@@ -25,7 +25,7 @@ var _ = Describe("Changing an app's start command", func() {
 					"--no-route",
 					"-b", "https://github.com/ryandotsmith/null-buildpack.git",
 					"-s", "windows2012R2",
-					"-c", "loop.bat \"Hi there!!!\""), CF_PUSH_TIMEOUT).Should(Exit(0))
+					"-c", "loop.bat Hi there!!!"), CF_PUSH_TIMEOUT).Should(Exit(0))
 			})
 
 			By("staging and running it on Diego", func() {
@@ -41,7 +41,8 @@ var _ = Describe("Changing an app's start command", func() {
 					Eventually(session).Should(Exit(0))
 					return session.Out
 				}
-				Eventually(output).Should(Say("Hi there!!!"))
+				// OUT... to make sure we don't match the Launcher line: Running `loop.bat Hi there!!!'
+				Eventually(output).Should(Say("OUT Hi there!!!"))
 			})
 		})
 	})
