@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<preserve resultType="8" virtualPath="/global.asax" hash="ffffffffd86d5c2d" filehash="2fa264492e6c" flags="150000" assembly="ContosoPublished" type="ASP.global_asax">
-  <filedeps>
-    <filedep name="/global.asax" />
-  </filedeps>
-</preserve>
