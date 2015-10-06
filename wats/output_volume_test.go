@@ -12,7 +12,7 @@ import (
 var _ = Describe("An application printing a bunch of output", func() {
 
 	BeforeEach(func() {
-		Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
+		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})

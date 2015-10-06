@@ -17,7 +17,7 @@ func pushNoraWithOptions(appName string, instances int, memory string) func() er
 }
 
 func pushNora(appName string) func() error {
-	return pushNoraWithOptions(appName, 1, "2g")
+	return pushNoraWithOptions(appName, 1, "256m")
 }
 
 func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {

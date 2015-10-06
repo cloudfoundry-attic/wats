@@ -31,7 +31,7 @@ func Run(executable string, env []string, args ...string) *gexec.Session {
 }
 
 func pushWorker(appName string) func() error {
-	return pushApp(appName, "../assets/worker", 1, "2g")
+	return pushApp(appName, "../assets/worker", 1, "256m")
 }
 
 var _ = Describe("apps without a port", func() {

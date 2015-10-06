@@ -40,8 +40,8 @@ echo -e "${GREEN}Note that this is a completely stock version of the Contoso Uni
 read -p "Press [Enter] key to continue..."
 buildpack=https://github.com/ryandotsmith/null-buildpack.git
 
-echo -e "${CF_COLOR}cf push ${appname} -m 2g -s windows2012R2 -b ${buildpack} -p contosopublished --no-start ${NC}"
-cf push $appname -m 2g -s windows2012R2 -b $buildpack -p contosopublished --no-start
+echo -e "${CF_COLOR}cf push ${appname} -s windows2012R2 -b ${buildpack} -p contosopublished --no-start ${NC}"
+cf push $appname -s windows2012R2 -b $buildpack -p contosopublished --no-start
 echo -e "${CF_COLOR}cf enable-diego ${appname} ${NC}"
 cf enable-diego $appname
 

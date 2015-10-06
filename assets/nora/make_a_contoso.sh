@@ -27,7 +27,7 @@ cf delete-security-group -f $service
 
 buildpack=https://github.com/ryandotsmith/null-buildpack.git
 
-cf push $appname -m 2g -s windows2012R2 -b $buildpack -p contosopublished --no-start
+cf push $appname -s windows2012R2 -b $buildpack -p contosopublished --no-start
 cf enable-diego $appname
 
 host=$HOST
