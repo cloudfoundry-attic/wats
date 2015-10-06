@@ -59,6 +59,8 @@ export PATH=$GOBIN:$PATH
 echo $GOPATH $GOBIN $PATH
 
 go get github.com/onsi/ginkgo/ginkgo
+mkdir -p $GOPATH/src/github.com/cloudfoundry-incubator/wats
+cp -R ../ $GOPATH/src/github.com/cloudfoundry-incubator/wats
 go get -t github.com/cloudfoundry-incubator/wats/...
 
 shift || true
