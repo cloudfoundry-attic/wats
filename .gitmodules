@@ -1,3 +1,0 @@
-[submodule "assets/greenhouse-security-fixtures"]
-	path = assets/greenhouse-security-fixtures
-	url = https://github.com/pivotal-cf/greenhouse-security-fixtures.git
