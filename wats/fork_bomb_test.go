@@ -2,6 +2,7 @@ package wats
 
 import (
 	"os"
+	"io"
 	"strconv"
 	"time"
 
@@ -41,6 +42,16 @@ var _ = Describe("Application Lifecycle", func() {
 			numWinCells, err := strconv.Atoi(os.Getenv("NUM_WIN_CELLS"))
 			Expect(err).NotTo(HaveOccurred(), "Please provide NUM_WIN_CELLS (The number of windows cells in tested deployment)")
 
+			src, err := os.Open("../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
+			Expect(err).NotTo(HaveOccurred())
+			defer src.Close()
+			dst, err := os.Create("../assets/nora/NoraPublished/bin/breakoutbomb.exe")
+			Expect(err).NotTo(HaveOccurred())
+			defer dst.Close()
+			_, err = io.Copy(dst, src)
+			Expect(err).NotTo(HaveOccurred())
+			dst.Close()
+
 			By("pushing it", func() {
 				Eventually(pushNoraWithOptions(appName, numWinCells*2, "2G"), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
@@ -59,7 +70,7 @@ var _ = Describe("Application Lifecycle", func() {
 			Expect(len(computerNames)).To(Equal(numWinCells))
 
 			By("Running fork bomb", func() {
-				helpers.CurlApp(appName, "/breakoutbomb")
+				helpers.CurlApp(appName, "/run", "-f", "-X", "POST", "-d", "bin/breakoutbomb.exe")
 			})
 
 			time.Sleep(3 * time.Second)
