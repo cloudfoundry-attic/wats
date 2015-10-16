@@ -148,24 +148,14 @@ namespace nora.Controllers
             return Ok(users);
         }
 
-        [Route("~/mmapleak")]
-        [HttpGet]
-        public IHttpActionResult MmapLeak()
+        [Route("~/run")]
+        [HttpPost]
+        public IHttpActionResult Run()
         {
-            Process.Start(Path.Combine(HttpContext.Current.Request.MapPath("~/bin"), "mmapleak.exe"));
-            return Ok();
-        }
-
-        [Route("~/breakoutbomb")]
-        [HttpGet]
-        public IHttpActionResult BreakoutBomb()
-        {
-            var st = new ProcessStartInfo();
-
-            st.FileName = Path.Combine(HttpContext.Current.Request.MapPath("~/bin"), "BreakoutBomb.exe");
-            Process.Start(st);
-
-            return Ok();
+            var result = Request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var path = HttpContext.Current.Request.MapPath(result);
+            Process.Start(path);
+            return Ok("Started: " + path);
         }
 
         [Route("~/commitcharge")]
