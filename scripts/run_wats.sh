@@ -14,7 +14,6 @@ else
 : ${ADMIN_PASSWORD:?"Must set admin password (e.g. admin)"}
 : ${APPS_DOMAIN:?"Must set app domain url (e.g. 10.244.0.34.xip.io)"}
 : ${SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST:?"Must set address [ip address of Diego ETCD cluster] (e.g. 10.244.16.2:4001)"}
-: ${DOPPLER_URL:?"Must set doppler websocket url (e.g. wss://doppler.hello.cf-app.com:4443)"}
 : ${NUM_WIN_CELLS:?"Must provide the number of windows cells in this deploy (e.g. 2)"}
 
 cat > $CONFIG_FILE <<HERE
