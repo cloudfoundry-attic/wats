@@ -64,6 +64,6 @@ func pushApp(appName, path string, instances int, memory string) func() error {
 		"--no-start",
 		"-i", strconv.Itoa(instances),
 		"-m", memory,
-		"-b", "https://github.com/ryandotsmith/null-buildpack.git",
+		"-b", "binary_buildpack",
 		"-s", "windows2012R2")
 }

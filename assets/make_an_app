@@ -15,5 +15,5 @@ STACK=${STACK:-"windows2012R2"}
 cf d -f $APPNAME
 
 ## Push new
-cf push $APPNAME -s $STACK -b https://github.com/ryandotsmith/null-buildpack.git --no-start "$@" -p $DIR
-cf curl -X PUT -d '{"diego": true}' /v2/apps/$(cf app $APPNAME --guid)
+cf push $APPNAME -s $STACK -b binary_buildpack --no-start "$@" -p $DIR
+cf curl -X PUT -d "{\"diego\": true}" /v2/apps/$(cf app $APPNAME --guid)

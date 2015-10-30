@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("Getting instance information", func() {
 	BeforeEach(func() {
-		Eventually(cf.Cf("push", appName, "-m", "2Gb", "-p", "../assets/webapp", "--no-start", "-b", "https://github.com/ryandotsmith/null-buildpack.git", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
+		Eventually(cf.Cf("push", appName, "-m", "2Gb", "-p", "../assets/webapp", "--no-start", "-b", "binary_buildpack", "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
 		enableDiego(appName)
 		session := cf.Cf("start", appName)
 		Eventually(session, CF_PUSH_TIMEOUT).Should(Exit(0))

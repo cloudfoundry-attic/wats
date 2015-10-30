@@ -23,7 +23,7 @@ var _ = Describe("Changing an app's start command", func() {
 					"-p", "../assets/batch-script",
 					"--no-start",
 					"--no-route",
-					"-b", "https://github.com/ryandotsmith/null-buildpack.git",
+					"-b", "binary_buildpack",
 					"-s", "windows2012R2",
 					"-c", "loop.bat Hi there!!!"), CF_PUSH_TIMEOUT).Should(Exit(0))
 			})
