@@ -25,7 +25,7 @@ var _ = Describe("Getting instance information", func() {
 		BeforeEach(func() {
 			context.SetRunawayQuota()
 			scale := cf.Cf("scale", appName, "-m", EXCEED_CELL_MEMORY, "-f")
-			Eventually(scale, CF_PUSH_TIMEOUT).Should(Say("insufficient resources"))
+			Eventually(scale, CF_PUSH_TIMEOUT).Should(Say("insufficient resources|down"))
 			scale.Kill()
 		})
 
