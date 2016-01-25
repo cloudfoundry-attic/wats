@@ -34,12 +34,6 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 			var message string
 			var logs *Session
 
-			By("logging health checks")
-			logs = cf.Cf("logs", appName, "--recent")
-			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say("\\[HEALTH/0\\]\\s+OUT healthcheck passed"))
-			Expect(logs.Out).To(Say("\\[HEALTH/0\\]\\s+OUT Exit status 0"))
-
 			By("logging application stdout")
 			message = "message-from-stdout"
 			helpers.CurlApp(appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))
