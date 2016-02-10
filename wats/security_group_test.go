@@ -54,7 +54,6 @@ var _ = Describe("Security Groups", func() {
 			return noraCurlResponse.ReturnCode
 		}
 		firstCurlError := curlResponse()
-		Expect(firstCurlError).ShouldNot(Equal(0))
 
 		// apply security group
 		rules := fmt.Sprintf(`[{"destination":"%s","ports":"%s","protocol":"tcp"}]`, secureHost, securePort)
