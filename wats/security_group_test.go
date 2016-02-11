@@ -16,6 +16,38 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
+func unbindSecurityGroups() []string {
+	var securityGroups []string
+
+	cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+		out, err := runCfWithOutput("curl", "/v2/config/running_security_groups")
+		Expect(err).NotTo(HaveOccurred())
+		var result map[string]interface{}
+		err = json.Unmarshal(out.Contents(), &result)
+		Expect(err).NotTo(HaveOccurred())
+
+		resources := result["resources"].([]interface{})
+		for _, group := range resources {
+			foo := group.(map[string]interface{})
+			entity := foo["entity"].(map[string]interface{})
+			name := entity["name"].(string)
+			securityGroups = append(securityGroups, name)
+			_, err = runCfWithOutput("unbind-running-security-group", name)
+			Expect(err).NotTo(HaveOccurred())
+		}
+	})
+	return securityGroups
+}
+
+func bindSecurityGroups(groups []string) {
+	cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+		for _, group := range groups {
+			_, err := runCfWithOutput("bind-running-security-group", group)
+			Expect(err).NotTo(HaveOccurred(), fmt.Sprintf("failed to recreate running-security-group %s", group))
+		}
+	})
+}
+
 var _ = Describe("Security Groups", func() {
 	type NoraCurlResponse struct {
 		Stdout     string
@@ -32,6 +64,9 @@ var _ = Describe("Security Groups", func() {
 	// the test takes advantage of the fact that the DEA ip address and internal container ip address
 	//  are discoverable via the cc api and nora's myip endpoint
 	It("allows traffic and then blocks traffic", func() {
+		groups := unbindSecurityGroups()
+		defer bindSecurityGroups(groups)
+
 		By("pushing it")
 		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
@@ -54,6 +89,7 @@ var _ = Describe("Security Groups", func() {
 			return noraCurlResponse.ReturnCode
 		}
 		firstCurlError := curlResponse()
+		Expect(firstCurlError).ShouldNot(Equal(0))
 
 		// apply security group
 		rules := fmt.Sprintf(`[{"destination":"%s","ports":"%s","protocol":"tcp"}]`, secureHost, securePort)
