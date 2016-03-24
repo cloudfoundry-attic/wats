@@ -1,0 +1,18 @@
+[submodule "vendor/github.com/cloudfoundry/sonde-go"]
+	path = vendor/github.com/cloudfoundry/sonde-go
+	url = https://github.com/cloudfoundry/sonde-go
+[submodule "vendor/github.com/cloudfoundry-incubator/cf-test-helpers"]
+	path = vendor/github.com/cloudfoundry-incubator/cf-test-helpers
+	url = https://github.com/cloudfoundry-incubator/cf-test-helpers
+[submodule "vendor/github.com/cloudfoundry/noaa"]
+	path = vendor/github.com/cloudfoundry/noaa
+	url = https://github.com/cloudfoundry/noaa
+[submodule "vendor/github.com/onsi/ginkgo"]
+	path = vendor/github.com/onsi/ginkgo
+	url = https://github.com/onsi/ginkgo
+[submodule "vendor/github.com/onsi/gomega"]
+	path = vendor/github.com/onsi/gomega
+	url = https://github.com/onsi/gomega
+[submodule "vendor/github.com/gogo/protobuf"]
+	path = vendor/github.com/gogo/protobuf
+	url = https://github.com/gogo/protobuf
