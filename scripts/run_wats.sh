@@ -28,12 +28,13 @@ cat > $CONFIG_FILE <<HERE
 HERE
 fi
 
-cd `dirname $0`
+pushd `dirname $0`
 if [[ "$(uname)" = "Darwin" ]]; then
   ln -sf cf-darwin ../bin/cf
 else
   ln -sf cf-linux ../bin/cf
 fi
+popd
 
 export PATH=$PWD/../bin:$PATH
 
@@ -47,20 +48,12 @@ else
     gopath=$(mktemp -d /tmp/watsXXXX)
 fi
 
-function cleanup {
-    rm -rf $gopath
-}
-trap cleanup EXIT
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-export GOPATH=$gopath
+export GOPATH=$DIR
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
-echo $GOPATH $GOBIN $PATH
-
-go get github.com/onsi/ginkgo/ginkgo
-mkdir -p $GOPATH/src/github.com/cloudfoundry-incubator/wats
-cp -R ../ $GOPATH/src/github.com/cloudfoundry-incubator/wats
-go get -t github.com/cloudfoundry-incubator/wats/...
+export GO15VENDOREXPERIMENT=1
 
 shift || true
 NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ ../wats
