@@ -41,11 +41,7 @@ export PATH=$PWD/../bin:$PATH
 uname_s=$(uname -s | cut -d_ -f1)
 win_uname="MINGW32"
 if [ "x${uname_s}" == "x${win_uname}" ]; then
-    gopath=/tmp/watsgopath
-    rm -rf $gopath
     ginkgo_args="-noColor"
-else
-    gopath=$(mktemp -d /tmp/watsXXXX)
 fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
