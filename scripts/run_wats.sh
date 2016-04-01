@@ -55,7 +55,7 @@ export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
 export GO15VENDOREXPERIMENT=1
 
-go install wats/vendor/github.com/onsi/ginkgo
+go install wats/vendor/github.com/onsi/ginkgo/ginkgo
 
 shift || true
 NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ ../wats
