@@ -20,7 +20,7 @@ var _ = Describe("Changing an app's start command", func() {
 			By("pushing it", func() {
 				Eventually(cf.Cf(
 					"push", appName,
-					"-p", "../assets/batch-script",
+					"-p", "../../assets/batch-script",
 					"--no-start",
 					"--no-route",
 					"-b", "binary_buildpack",

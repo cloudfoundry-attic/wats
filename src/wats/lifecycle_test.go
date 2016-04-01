@@ -167,7 +167,7 @@ var _ = Describe("Application Lifecycle", func() {
 				// in the BeforeEach and diego keeps that state across multiple pushes
 				Expect(cf.Cf(
 					"push", appName,
-					"-p", "../assets/webapp",
+					"-p", "../../assets/webapp",
 				).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hi i am a standalone webapp"))

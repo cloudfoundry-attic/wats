@@ -42,10 +42,10 @@ var _ = Describe("Application Lifecycle", func() {
 			numWinCells, err := strconv.Atoi(os.Getenv("NUM_WIN_CELLS"))
 			Expect(err).NotTo(HaveOccurred(), "Please provide NUM_WIN_CELLS (The number of windows cells in tested deployment)")
 
-			src, err := os.Open("../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
+			src, err := os.Open("../../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
 			Expect(err).NotTo(HaveOccurred())
 			defer src.Close()
-			dst, err := os.Create("../assets/nora/NoraPublished/bin/breakoutbomb.exe")
+			dst, err := os.Create("../../assets/nora/NoraPublished/bin/breakoutbomb.exe")
 			Expect(err).NotTo(HaveOccurred())
 			defer dst.Close()
 			_, err = io.Copy(dst, src)

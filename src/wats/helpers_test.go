@@ -13,7 +13,7 @@ import (
 )
 
 func pushNoraWithOptions(appName string, instances int, memory string) func() error {
-	return pushApp(appName, "../assets/nora/NoraPublished", instances, memory)
+	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory)
 }
 
 func pushNora(appName string) func() error {
