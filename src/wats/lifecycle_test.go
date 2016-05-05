@@ -116,7 +116,7 @@ var _ = Describe("Application Lifecycle", func() {
 					return mem, disk
 				}
 				Eventually(func() float64 { m, _ := memdisk(); return m }).Should(BeNumerically(">", 0.0))
-				Expect(func() float64 { _, d := memdisk(); return d }()).Should(BeNumerically(">", 0.0))
+				Eventually(func() float64 { _, d := memdisk(); return d }()).Should(BeNumerically(">", 0.0))
 			})
 
 			By("makes system environment variables available", func() {
