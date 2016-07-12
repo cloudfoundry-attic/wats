@@ -1,5 +1,4 @@
 ﻿using System.IO.MemoryMappedFiles;
-using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Nora.helpers;
@@ -50,6 +49,14 @@ namespace nora.Controllers
             return Ok(Request.Headers);
         }
 
+        [Route("~/print_err/{output}")]
+        [HttpGet]
+        public IHttpActionResult PrintErr(string output)
+        {
+            Console.Error.WriteLine(output);
+            return Ok(Request.Headers);
+        }
+
         [Route("~/id")]
         [HttpGet]
         public IHttpActionResult Id()
@@ -85,7 +92,7 @@ namespace nora.Controllers
                 return Json(new
                 {
                     stderr = ex.Message,
-                    // ex.Response != null if the response status code wasn't a success, 
+                    // ex.Response != null if the response status code wasn't a success,
                     // null if the operation timedout
                     return_code = ex.Response != null ? 0 : 1,
                 });
