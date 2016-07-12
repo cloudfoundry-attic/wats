@@ -46,21 +46,13 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 		})
 
-		XIt("captures stderr logs with the correct tag", func() {
+		It("captures stderr logs with the correct tag", func() {
 			var message string
 			var logs *Session
 
-			By("logging health checks")
-			logs = cf.Cf("logs", appName, "--recent")
-			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say("\\[HEALTH/0\\]\\s+OUT healthcheck passed"))
-			Expect(logs.Out).To(Say("\\[HEALTH/0\\]\\s+OUT Exit status 0"))
-
 			By("logging application stderr")
-			message = "messag-from-stderr"
-			By("logging application stderr")
-			message = "A message from stderr"
-			Eventually(helpers.CurlApp(appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))).Should(ContainSubstring(message))
+			message = "message-from-stderr"
+			helpers.CurlApp(appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))
 
 			logs = cf.Cf("logs", appName, "--recent")
 			Eventually(logs).Should(Exit(0))
