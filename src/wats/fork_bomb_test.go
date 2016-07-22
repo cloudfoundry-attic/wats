@@ -1,8 +1,8 @@
 package wats
 
 import (
-	"os"
 	"io"
+	"os"
 	"strconv"
 	"time"
 
@@ -77,7 +77,9 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("Making sure the bomb did not take down the machine", func() {
 				newComputerNames := reportedComputerNames(numWinCells)
-				Expect(newComputerNames).To(Equal(computerNames))
+				for k, v := range newComputerNames {
+					Expect(computerNames[k]).To(Equal(v))
+				}
 			})
 		})
 	})
