@@ -27,7 +27,7 @@ func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
 		return session.Out, nil
 	}
 
-	return nil, errors.New("non zero exit code")
+	return session.Out, errors.New("non zero exit code")
 }
 
 func runCf(values ...string) func() error {
