@@ -66,8 +66,7 @@ var _ = Describe("Application Lifecycle", func() {
 					}
 					return err
 				}
-
-				Expect(startApp(appName)).ToNot(HaveOccurred())
+				Expect(startApp(appName)).To(Succeed())
 			})
 
 			By("verifying it's up", func() {
