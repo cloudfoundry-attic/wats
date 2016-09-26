@@ -6,17 +6,11 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("A running application", func() {
 	BeforeEach(func() {
 		pushAndStartNora(appName)
-	})
-
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(gexec.Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(gexec.Exit(0))
 	})
 
 	It("can show crash events", func() {

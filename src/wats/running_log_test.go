@@ -20,11 +20,6 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})
 
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-	})
-
 	Context("when the app is running", func() {
 		BeforeEach(func() {
 			Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))

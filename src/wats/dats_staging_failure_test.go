@@ -27,11 +27,6 @@ var _ = Describe("When staging fails", func() {
 			enableDiego(appName)
 		})
 
-		AfterEach(func() {
-			Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-			Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-		})
-
 		It("informs the user in the CLI output and the logs", func() {
 			logs := cf.Cf("logs", appName)
 

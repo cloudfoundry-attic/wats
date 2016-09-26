@@ -55,11 +55,6 @@ var _ = Describe("Security Groups", func() {
 		ReturnCode int `json:"return_code"`
 	}
 
-	AfterEach(func() {
-		Eventually(runCf("logs", appName, "--recent")).Should(Succeed())
-		Eventually(runCf("delete", appName, "-f")).Should(Succeed())
-	})
-
 	// this test assumes the default running security groups block access to the DEAs
 	// the test takes advantage of the fact that the DEA ip address and internal container ip address
 	//  are discoverable via the cc api and nora's myip endpoint

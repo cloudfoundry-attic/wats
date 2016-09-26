@@ -6,18 +6,11 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
 
-	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
 var _ = Describe("Application Lifecycle", func() {
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-	})
-
 	Describe("An app staged on Diego and running on Diego", func() {
 		XIt("attempts to leak mmap", func() {
 			By("pushing it", func() {

@@ -47,11 +47,6 @@ var _ = Describe("apps without a port", func() {
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 	})
 
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(gexec.Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(gexec.Exit(0))
-	})
-
 	It("run (and don't run healthcheck)", func() {
 		Eventually(logs.Out).Should(Say("Running Worker 1"))
 		Eventually(logs.Out).Should(Say("Running Worker 10"))

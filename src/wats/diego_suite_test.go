@@ -7,6 +7,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
@@ -71,7 +72,13 @@ func TestApplications(t *testing.T) {
 	})
 
 	BeforeEach(func() {
+		Eventually(cf.Cf("apps").Out).Should(Say("No apps found"))
 		appName = generator.RandomName()
+	})
+
+	AfterEach(func() {
+		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
+		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
 	componentName := "Diego"

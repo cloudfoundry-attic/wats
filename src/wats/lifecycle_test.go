@@ -47,11 +47,6 @@ var _ = Describe("Application Lifecycle", func() {
 		return cf.Cf("apps").Wait()
 	}
 
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-	})
-
 	reportedIDs := func(instances int) map[string]bool {
 		timer := time.NewTimer(time.Second * 120)
 		defer timer.Stop()

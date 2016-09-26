@@ -3,9 +3,7 @@ package wats
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gexec"
 
-	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -15,11 +13,6 @@ var _ = Describe("An application printing a bunch of output", func() {
 		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
-	})
-
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
 	It("doesn't die when printing 32MB", func() {

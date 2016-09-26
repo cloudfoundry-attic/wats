@@ -16,11 +16,6 @@ var _ = Describe("Getting instance information", func() {
 		Eventually(session, CF_PUSH_TIMEOUT).Should(Exit(0))
 	})
 
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-	})
-
 	Context("scaling memory", func() {
 		BeforeEach(func() {
 			context.SetRunawayQuota()

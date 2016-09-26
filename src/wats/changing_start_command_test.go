@@ -10,11 +10,6 @@ import (
 )
 
 var _ = Describe("Changing an app's start command", func() {
-	AfterEach(func() {
-		Eventually(cf.Cf("logs", appName, "--recent")).Should(Exit())
-		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
-	})
-
 	Describe("staged on Diego and running on Diego", func() {
 		It("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
