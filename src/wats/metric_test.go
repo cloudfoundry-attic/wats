@@ -19,7 +19,7 @@ func getOauthToken() string {
 	session := cf.Cf("oauth-token")
 	session.Wait()
 	out := string(session.Out.Contents())
-	authToken := strings.Split(out, "\n")[3]
+	authToken := strings.Split(out, "\n")[0]
 	Expect(authToken).To(HavePrefix("bearer"))
 	return authToken
 }
