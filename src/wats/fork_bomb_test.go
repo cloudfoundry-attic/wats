@@ -1,7 +1,6 @@
 package wats
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -59,14 +58,7 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("staging and running it on Diego", func() {
 				enableDiego(appName)
-				startApp := func(name string) error {
-					out, err := runCfWithOutput("start", name)
-					if err != nil {
-						fmt.Println(string(out.Contents()))
-					}
-					return err
-				}
-				Expect(startApp(appName)).To(Succeed())
+				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
 			By("verifying it's up", func() {
