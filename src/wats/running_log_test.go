@@ -37,7 +37,7 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 			logs = cf.Cf("logs", appName, "--recent")
 			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP/0\\]\\s+OUT %s", message)))
+			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*OUT %s", message)))
 
 		})
 
@@ -51,7 +51,7 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 			logs = cf.Cf("logs", appName, "--recent")
 			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP/0\\]\\s+ERR %s", message)))
+			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*ERR %s", message)))
 		})
 	})
 })
