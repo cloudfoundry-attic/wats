@@ -85,7 +85,7 @@ var _ = Describe("WCF", func() {
 				return false
 			}
 
-			Expect(isServiceRunningOnTheSameCell(appName)).To(BeTrue())
+			Eventually(isServiceRunningOnTheSameCell(appName), CF_PUSH_TIMEOUT).Should(BeTrue())
 		})
 	})
 })
