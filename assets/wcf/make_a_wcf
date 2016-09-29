@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -uex
+
+dir=${0%/*}
+APPNAME=${1:-"wcf"}
+$dir/../make_an_app $dir/Hello.Service.IIS $APPNAME
+cf start $APPNAME

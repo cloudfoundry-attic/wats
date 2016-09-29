@@ -25,6 +25,8 @@ build/
 !assets/nora/NoraPublished/bin/
 [Oo]bj/
 results/
+# make sure we preserve everything in the NoraPublished directory
+!assets/wcf/Hello.Service.IIS/bin/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
