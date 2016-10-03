@@ -1,6 +1,7 @@
 package wats
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -34,6 +35,11 @@ var _ = Describe("Application Lifecycle", func() {
 		It("attempts to forkbomb the environment", func() {
 			numWinCells, err := strconv.Atoi(os.Getenv("NUM_WIN_CELLS"))
 			Expect(err).NotTo(HaveOccurred(), "Please provide NUM_WIN_CELLS (The number of windows cells in tested deployment)")
+
+			if numWinCells > 2 {
+				Skip(fmt.Sprintf("Fork bomb test cannot run on more than 2 cells: found: %d\n"+
+					"To run set the NUM_WIN_CELLS environment to 2 or less", numWinCells))
+			}
 
 			src, err := os.Open("../../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
 			Expect(err).NotTo(HaveOccurred())
