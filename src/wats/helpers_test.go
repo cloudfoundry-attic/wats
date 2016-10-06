@@ -2,8 +2,11 @@ package wats
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -18,6 +21,33 @@ func pushNoraWithOptions(appName string, instances int, memory string) func() er
 
 func pushNora(appName string) func() error {
 	return pushNoraWithOptions(appName, 1, "256m")
+}
+
+func appRunning(appName string, instances int, timeout time.Duration) func() error {
+	return func() error {
+		type StatsResponse map[string]struct {
+			State string `json:"state"`
+		}
+
+		buf, err := runCfWithOutput("app", appName, "--guid")
+		if err != nil {
+			return err
+		}
+		appGuid := strings.Replace(string(buf.Contents()), "\n", "", -1)
+
+		endpoint := fmt.Sprintf("/v2/apps/%s/stats", appGuid)
+
+		var response StatsResponse
+		cf.ApiRequest("GET", endpoint, &response, timeout)
+
+		err = nil
+		for k, v := range response {
+			if v.State != "RUNNING" {
+				err = errors.New(fmt.Sprintf("App %s instance %s is not running: State = %s", appName, k, v.State))
+			}
+		}
+		return err
+	}
 }
 
 func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {

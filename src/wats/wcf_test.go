@@ -36,6 +36,8 @@ var _ = Describe("WCF", func() {
 			Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 			By("verifying it's up")
+			Eventually(appRunning(appName, numWinCells+1, CF_PUSH_TIMEOUT), CF_PUSH_TIMEOUT).Should(Succeed())
+
 			type WCFResponse struct {
 				Msg          string
 				InstanceGuid string
