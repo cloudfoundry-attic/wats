@@ -61,6 +61,7 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("verifying it's up", func() {
+				Eventually(appRunning(appName, numWinCells*2, CF_PUSH_TIMEOUT), CF_PUSH_TIMEOUT).Should(Succeed())
 				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
