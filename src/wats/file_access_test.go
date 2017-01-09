@@ -3,6 +3,7 @@ package wats
 import (
 	"encoding/json"
 	"strings"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 
@@ -34,7 +35,9 @@ var _ = Describe("File ACLs", func() {
 
 	It("A Container user should not have permission to view sensitive files", func() {
 
-		response := helpers.CurlApp(appName, "/inaccessible_files")
+		// The 'inaccessible_files' endpoint walks the
+		// entire filesystem, which may take a while.
+		response := helpers.CurlAppWithTimeout(appName, "/inaccessible_files", 5*time.Minute)
 		var files []string
 		Expect(json.Unmarshal([]byte(strings.ToLower(response)), &files)).To(Succeed())
 		for _, inaccessibleFile := range inaccessibleFiles {
