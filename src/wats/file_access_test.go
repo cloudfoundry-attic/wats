@@ -19,10 +19,7 @@ var _ = Describe("File ACLs", func() {
 		"C:\\bosh",
 		"C:\\containerizer",
 		"C:\\var",
-		"C:\\Windows\\System32\\Sysprep\\Panther\\IE\\setupact.log",
-		"C:\\Windows\\System32\\Sysprep\\Panther\\IE\\setuperr.log",
-		"C:\\Windows\\System32\\Sysprep\\Panther\\setupact.log",
-		"C:\\Windows\\System32\\Sysprep\\Panther\\setuperr.log",
+		"C:\\Windows\\Panther\\Unattend",
 	}
 
 	var client = &http.Client{
