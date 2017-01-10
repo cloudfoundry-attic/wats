@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Security;
 
 namespace nora.Controllers
 {
@@ -25,6 +26,65 @@ namespace nora.Controllers
             {
                 services = JsonConvert.DeserializeObject<Services>(env);
             }
+        }
+
+        private static bool FileNotReadable(string filename)
+        {
+            try
+            {
+                var stream = File.OpenRead(filename);
+                stream.Close();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                // Ignore
+            }
+            return false;
+        }
+
+        // Recursively searches directory dirname for inaccessible files.
+        private static List<string> FindInaccessibleFiles(string dirname)
+        {
+            List<string> names = new List<string>();
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(dirname))
+                {
+                    if (FileNotReadable(file))
+                    {
+                        names.Add(file);
+                    }
+                }
+                var dirs = Directory.EnumerateDirectories(dirname);
+                foreach (var dir in dirs)
+                {
+                    names.AddRange(FindInaccessibleFiles(dir));
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                names.Add(dirname);
+            }
+            catch (SecurityException)
+            {
+                names.Add(dirname);
+            }
+            catch (Exception)
+            {
+                // Ignore
+            }
+            return names;
+        }
+
+        [Route("~/inaccessible_files")]
+        [HttpGet]
+        public IHttpActionResult InaccessibleFiles()
+        {
+            return Json(FindInaccessibleFiles("C:\\"));
         }
 
         [Route("~/")]
