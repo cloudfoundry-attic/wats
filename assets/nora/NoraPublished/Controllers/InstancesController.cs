@@ -28,63 +28,54 @@ namespace nora.Controllers
             }
         }
 
-        private static bool FileNotReadable(string filename)
+        private static string FileAccessStatus(string path)
         {
             try
             {
-                var stream = File.OpenRead(filename);
-                stream.Close();
+                Directory.EnumerateFiles(path);
+                return "ACCESS_ALLOWED";
             }
             catch (UnauthorizedAccessException)
             {
-                return true;
-            }
-            catch (Exception)
-            {
-                // Ignore
-            }
-            return false;
-        }
-
-        // Recursively searches directory dirname for inaccessible files.
-        private static List<string> FindInaccessibleFiles(string dirname)
-        {
-            List<string> names = new List<string>();
-            try
-            {
-                foreach (var file in Directory.EnumerateFiles(dirname))
-                {
-                    if (FileNotReadable(file))
-                    {
-                        names.Add(file);
-                    }
-                }
-                var dirs = Directory.EnumerateDirectories(dirname);
-                foreach (var dir in dirs)
-                {
-                    names.AddRange(FindInaccessibleFiles(dir));
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                names.Add(dirname);
+                return "ACCESS_DENIED";
             }
             catch (SecurityException)
             {
-                names.Add(dirname);
+                return "ACCESS_DENIED";
             }
             catch (Exception)
             {
-                // Ignore
+                if (File.Exists(path))
+                {
+                    return "ACCESS_ALLOWED";
+                }
+                try
+                {
+                    var stream = File.OpenRead(path);
+                    stream.Close();
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return "ACCESS_DENIED";
+                }
+                catch (FileNotFoundException)
+                {
+                    return "NOT_EXIST";
+                }
+                catch (Exception ex)
+                {
+                    return "EXCEPTION: " + ex.ToString();
+                }
+                return "ACCESS_ALLOWED";
             }
-            return names;
         }
 
-        [Route("~/inaccessible_files")]
-        [HttpGet]
+        [Route("~/inaccessible_file")]
+        [HttpPost]
         public IHttpActionResult InaccessibleFiles()
         {
-            return Json(FindInaccessibleFiles("C:\\"));
+            var result = Request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return Ok(FileAccessStatus(result));
         }
 
         [Route("~/")]

@@ -1,9 +1,11 @@
 package wats
 
 import (
-	"encoding/json"
+	"crypto/tls"
+	"io/ioutil"
+	"net/http"
+	"strconv"
 	"strings"
-	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 
@@ -23,25 +25,36 @@ var _ = Describe("File ACLs", func() {
 		"C:\\Windows\\System32\\Sysprep\\Panther\\setuperr.log",
 	}
 
+	var client = &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
 	BeforeEach(func() {
 		pushAndStartNora(appName)
 		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
-
-		// Windows file paths are case-insensitive
-		for i, s := range inaccessibleFiles {
-			inaccessibleFiles[i] = strings.ToLower(s)
-		}
 	})
 
-	It("A Container user should not have permission to view sensitive files", func() {
+	permission := func(path string) (string, error) {
+		uri := helpers.AppUri(appName, "/inaccessible_file")
+		res, err := client.Post(uri, "text/plain", strings.NewReader(path))
+		if err != nil {
+			return "", err
+		}
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		return string(body), err
+	}
 
-		// The 'inaccessible_files' endpoint walks the
-		// entire filesystem, which may take a while.
-		response := helpers.CurlAppWithTimeout(appName, "/inaccessible_files", 5*time.Minute)
-		var files []string
-		Expect(json.Unmarshal([]byte(strings.ToLower(response)), &files)).To(Succeed())
-		for _, inaccessibleFile := range inaccessibleFiles {
-			Expect(files).To(ContainElement(inaccessibleFile))
+	It("A Container user should not have permission to view sensitive files", func() {
+		for _, path := range inaccessibleFiles {
+			response, err := permission(path)
+			Expect(err).To(Succeed(), path)
+
+			response, err = strconv.Unquote(response)
+			Expect(err).To(Succeed())
+			Expect(response).To(Or(Equal("ACCESS_DENIED"), Equal("NOT_EXIST")), path)
 		}
 	})
 })
