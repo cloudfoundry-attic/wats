@@ -1,6 +1,7 @@
 package wats
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -78,7 +79,7 @@ func DopplerUrl(c Config) string {
 			DopplerLoggingEndpoint string `json:"doppler_logging_endpoint"`
 		}
 
-		err = json.NewDecoder(cfInfoBuffer).Decode(&cfInfo)
+		err = json.NewDecoder(bytes.NewReader(cfInfoBuffer.Contents())).Decode(&cfInfo)
 		Expect(err).NotTo(HaveOccurred())
 
 		doppler = cfInfo.DopplerLoggingEndpoint
