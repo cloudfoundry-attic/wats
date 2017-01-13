@@ -1,6 +1,8 @@
 package wats
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -70,7 +72,17 @@ func runCf(values ...string) func() error {
 func DopplerUrl(c Config) string {
 	doppler := os.Getenv("DOPPLER_URL")
 	if doppler == "" {
-		doppler = "wss://doppler." + c.AppsDomain + ":4443"
+		cfInfoBuffer, err := runCfWithOutput("curl", "/v2/info")
+		Expect(err).NotTo(HaveOccurred())
+
+		var cfInfo struct {
+			DopplerLoggingEndpoint string `json:"doppler_logging_endpoint"`
+		}
+
+		err = json.NewDecoder(bytes.NewReader(cfInfoBuffer.Contents())).Decode(&cfInfo)
+		Expect(err).NotTo(HaveOccurred())
+
+		doppler = cfInfo.DopplerLoggingEndpoint
 	}
 	return doppler
 }
