@@ -34,7 +34,7 @@ var _ = Describe("Application Lifecycle", func() {
 		It("attempts to forkbomb the environment", func() {
 			if config.GetNumWindowsCells() > 2 {
 				Skip(fmt.Sprintf("Fork bomb test cannot run on more than 2 cells: found: %d\n"+
-					"To run set the NUM_WIN_CELLS environment to 2 or less", config.GetNumWindowsCells()))
+					"To run set the 'num_windows_cells' in the integration config JSON to 2 or less", config.GetNumWindowsCells()))
 			}
 
 			src, err := os.Open("../../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
