@@ -1,6 +1,7 @@
 package wats
 
 import (
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
@@ -16,7 +17,7 @@ const (
 var _ = Describe("When staging fails", func() {
 	Context("due to insufficient resources", func() {
 		BeforeEach(func() {
-			context.SetRunawayQuota()
+			setTotalMemoryLimit(RUNAWAY_QUOTA_MEM_LIMIT)
 
 			Eventually(cf.Cf("push", appName, "--no-start",
 				"-m", EXCEED_CELL_MEMORY,
@@ -25,6 +26,10 @@ var _ = Describe("When staging fails", func() {
 				"-b", "binary_buildpack",
 			), CF_PUSH_TIMEOUT).Should(Exit(0))
 			enableDiego(appName)
+		})
+
+		AfterEach(func() {
+			setTotalMemoryLimit("10G")
 		})
 
 		It("informs the user in the CLI output and the logs", func() {

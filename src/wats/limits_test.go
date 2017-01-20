@@ -18,7 +18,7 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("attempting to leak more memory than allowed")
 			// leak 300mb
-			response := helpers.CurlApp(appName, "/leakmemory/300")
+			response := helpers.CurlApp(config, appName, "/leakmemory/300")
 			Expect(response).To(ContainSubstring("Insufficient memory"))
 		})
 	})

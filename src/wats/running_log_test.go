@@ -22,7 +22,7 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 	Context("when the app is running", func() {
 		BeforeEach(func() {
-			Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+			Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 		})
 
 		It("captures stdout logs with the correct tag", func() {
@@ -31,14 +31,13 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 			By("logging application stdout")
 			message = "message-from-stdout"
-			helpers.CurlApp(appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))
+			helpers.CurlApp(config, appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))
 			//TODO: make nora output message
 			//			Eventually(helpers.CurlApp(appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))).Should(ContainSubstring(message))
 
 			logs = cf.Cf("logs", appName, "--recent")
 			Eventually(logs).Should(Exit(0))
 			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*OUT %s", message)))
-
 		})
 
 		It("captures stderr logs with the correct tag", func() {
@@ -47,7 +46,7 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 			By("logging application stderr")
 			message = "message-from-stderr"
-			helpers.CurlApp(appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))
+			helpers.CurlApp(config, appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))
 
 			logs = cf.Cf("logs", appName, "--recent")
 			Eventually(logs).Should(Exit(0))

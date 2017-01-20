@@ -14,7 +14,7 @@ var _ = Describe("A running application", func() {
 	})
 
 	It("can show crash events", func() {
-		helpers.CurlApp(appName, "/exit")
+		helpers.CurlApp(config, appName, "/exit")
 
 		Eventually(func() string {
 			return string(cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT).Out.Contents())

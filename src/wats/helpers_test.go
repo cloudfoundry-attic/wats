@@ -11,10 +11,12 @@ import (
 	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	. "github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/onsi/gomega/gbytes"
+
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
 )
 
 func pushNoraWithOptions(appName string, instances int, memory string) func() error {
@@ -40,7 +42,7 @@ func appRunning(appName string, instances int, timeout time.Duration) func() err
 		endpoint := fmt.Sprintf("/v2/apps/%s/stats", appGuid)
 
 		var response StatsResponse
-		cf.ApiRequest("GET", endpoint, &response, timeout)
+		ApiRequest("GET", endpoint, &response, timeout)
 
 		err = nil
 		for k, v := range response {
@@ -69,7 +71,7 @@ func runCf(values ...string) func() error {
 	}
 }
 
-func DopplerUrl(c Config) string {
+func DopplerUrl() string {
 	doppler := os.Getenv("DOPPLER_URL")
 	if doppler == "" {
 		cfInfoBuffer, err := runCfWithOutput("curl", "/v2/info")
@@ -96,7 +98,7 @@ func pushAndStartNora(appName string) {
 	Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 	By("verifying it's up")
-	Eventually(CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+	Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 }
 
 func pushApp(appName, path string, instances int, memory string) func() error {
@@ -108,4 +110,29 @@ func pushApp(appName, path string, instances int, memory string) func() error {
 		"-m", memory,
 		"-b", "binary_buildpack",
 		"-s", "windows2012R2")
+}
+
+func setTotalMemoryLimit(memoryLimit string) {
+	type quotaDefinitions struct {
+		Resources []struct {
+			Entity struct {
+				Name string `json:"name"`
+			} `json:"entity"`
+		} `json:"resources"`
+	}
+
+	var response quotaDefinitions
+	ApiRequest("GET", "/v2/quota_definitions", &response, DEFAULT_TIMEOUT)
+
+	var quotaDefinitionName string
+	for _, r := range response.Resources {
+		if r.Entity.Name != "default" && r.Entity.Name != "runaway" {
+			quotaDefinitionName = r.Entity.Name
+		}
+	}
+	Expect(quotaDefinitionName).ToNot(BeEmpty())
+
+	AsUser(environment.AdminUserContext(), DEFAULT_TIMEOUT, func() {
+		cf.Cf("update-quota", quotaDefinitionName, "-m", memoryLimit)
+	})
 }

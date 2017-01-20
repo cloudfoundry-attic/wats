@@ -4,7 +4,6 @@ set -ex
 
 if [ -f "$1" ]; then
   CONFIG_FILE=$PWD/$1
-: ${NUM_WIN_CELLS:?"Must provide the number of windows cells in this deploy (e.g. 2)"}
 else
   CONFIG_FILE=`mktemp -t watsXXXXX`
   trap "rm -f $CONFIG_FILE" EXIT
@@ -23,6 +22,7 @@ cat > $CONFIG_FILE <<HERE
   "admin_password": "$ADMIN_PASSWORD",
   "apps_domain": "$APPS_DOMAIN",
   "secure_address": "$SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST",
+  "num_windows_cells": "$NUM_WIN_CELLS",
   "skip_ssl_validation": true
 }
 HERE
@@ -55,4 +55,4 @@ export CF_DIAL_TIMEOUT=30
 go install wats/vendor/github.com/onsi/ginkgo/ginkgo
 
 shift || true
-NUM_WIN_CELLS=$NUM_WIN_CELLS CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ $DIR
+CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ $DIR

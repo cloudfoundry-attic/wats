@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("Application environment", func() {
-	Describe("And app staged on Dieog and running on Diego", func() {
+	Describe("And app staged on Diego and running on Diego", func() {
 		It("should not have too many environment variable exposed", func() {
 			By("pushing it")
 			Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
@@ -37,7 +37,7 @@ var _ = Describe("Application environment", func() {
 				"VS120COMNTOOLS",
 				"WIX",
 			}
-			response := helpers.CurlApp(appName, "/env")
+			response := helpers.CurlApp(config, appName, "/env")
 			var env map[string]string
 			json.Unmarshal([]byte(response), &env)
 			for _, excludedKey := range excludedList {

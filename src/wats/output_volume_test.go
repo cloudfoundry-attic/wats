@@ -16,13 +16,13 @@ var _ = Describe("An application printing a bunch of output", func() {
 	})
 
 	It("doesn't die when printing 32MB", func() {
-		beforeId := helpers.CurlApp(appName, "/id")
+		beforeId := helpers.CurlApp(config, appName, "/id")
 
-		Expect(helpers.CurlAppWithTimeout(appName, "/logspew/32000", DEFAULT_TIMEOUT)).
+		Expect(helpers.CurlAppWithTimeout(config, appName, "/logspew/32000", DEFAULT_TIMEOUT)).
 			To(ContainSubstring("Just wrote 32000 kbytes to the log"))
 
 		Consistently(func() string {
-			return helpers.CurlApp(appName, "/id")
+			return helpers.CurlApp(config, appName, "/id")
 		}, "10s").Should(Equal(beforeId))
 	})
 })

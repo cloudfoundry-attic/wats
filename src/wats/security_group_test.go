@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
@@ -19,7 +19,7 @@ import (
 func unbindSecurityGroups() []string {
 	var securityGroups []string
 
-	cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+	AsUser(environment.AdminUserContext(), time.Minute, func() {
 		out, err := runCfWithOutput("curl", "/v2/config/running_security_groups")
 		Expect(err).NotTo(HaveOccurred())
 		var result map[string]interface{}
@@ -40,7 +40,7 @@ func unbindSecurityGroups() []string {
 }
 
 func bindSecurityGroups(groups []string) {
-	cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+	AsUser(environment.AdminUserContext(), time.Minute, func() {
 		for _, group := range groups {
 			_, err := runCfWithOutput("bind-running-security-group", group)
 			Expect(err).NotTo(HaveOccurred(), fmt.Sprintf("failed to recreate running-security-group %s", group))
@@ -70,16 +70,16 @@ var _ = Describe("Security Groups", func() {
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 		By("verifying it's up")
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
-		secureAddress := helpers.LoadConfig().SecureAddress
+		secureAddress := config.GetSecureAddress()
 		secureHost, securePort, err := net.SplitHostPort(secureAddress)
 		Expect(err).NotTo(HaveOccurred())
 
 		// test app egress rules
 		curlResponse := func() int {
 			var noraCurlResponse NoraCurlResponse
-			resp := helpers.CurlApp(appName, fmt.Sprintf("/curl/%s/%s", secureHost, securePort))
+			resp := helpers.CurlApp(config, appName, fmt.Sprintf("/curl/%s/%s", secureHost, securePort))
 			json.Unmarshal([]byte(resp), &noraCurlResponse)
 			return noraCurlResponse.ReturnCode
 		}
@@ -95,40 +95,40 @@ var _ = Describe("Security Groups", func() {
 		file.Close()
 
 		rulesPath := file.Name()
-		securityGroupName := fmt.Sprintf("DATS-SG-%s", generator.RandomName())
+		securityGroupName := fmt.Sprintf("DATS-SG-%s", generator.PrefixedRandomName(config.GetNamePrefix(), "SECURITY-GROUP"))
 
-		cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+		AsUser(environment.AdminUserContext(), time.Minute, func() {
 			Eventually(runCf("create-security-group", securityGroupName, rulesPath)).Should(Succeed())
 			Eventually(
 				runCf("bind-security-group",
 					securityGroupName,
-					context.RegularUserContext().Org,
-					context.RegularUserContext().Space)).Should(Succeed())
+					environment.RegularUserContext().Org,
+					environment.RegularUserContext().Space)).Should(Succeed())
 		})
 		defer func() {
-			cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+			AsUser(environment.AdminUserContext(), time.Minute, func() {
 				Eventually(runCf("delete-security-group", securityGroupName, "-f")).Should(Succeed())
 			})
 		}()
 
 		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
 		Eventually(curlResponse).Should(Equal(0))
 
 		// unapply security group
-		cf.AsUser(context.AdminUserContext(), time.Minute, func() {
+		AsUser(environment.AdminUserContext(), time.Minute, func() {
 			Eventually(
 				runCf("unbind-security-group",
-					securityGroupName, context.RegularUserContext().Org,
-					context.RegularUserContext().Space)).
+					securityGroupName, environment.RegularUserContext().Org,
+					environment.RegularUserContext().Space)).
 				Should(Succeed())
 		})
 
 		By("restarting it - without security group")
 		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
 		Eventually(curlResponse).Should(Equal(firstCurlError))

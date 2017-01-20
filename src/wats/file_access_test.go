@@ -30,11 +30,11 @@ var _ = Describe("File ACLs", func() {
 
 	BeforeEach(func() {
 		pushAndStartNora(appName)
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 	})
 
 	permission := func(path string) (string, error) {
-		uri := helpers.AppUri(appName, "/inaccessible_file")
+		uri := helpers.AppUri(appName, "/inaccessible_file", config)
 		res, err := client.Post(uri, "text/plain", strings.NewReader(path))
 		if err != nil {
 			return "", err

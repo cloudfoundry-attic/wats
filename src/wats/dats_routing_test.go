@@ -13,27 +13,27 @@ import (
 var _ = Describe("Adding and removing routes", func() {
 	BeforeEach(func() {
 		pushAndStartNora(appName)
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 	})
 
 	It("should be able to add and remove routes", func() {
-		secondHost := generator.RandomName()
+		secondHost := generator.PrefixedRandomName(config.GetNamePrefix(), "ROUTE")
 
 		By("changing the environment")
 		Eventually(cf.Cf("set-env", appName, "WHY", "force-app-update")).Should(Exit(0))
 
 		By("adding a route")
-		Eventually(cf.Cf("map-route", appName, helpers.LoadConfig().AppsDomain, "-n", secondHost)).Should(Exit(0))
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
-		Eventually(helpers.CurlingAppRoot(secondHost)).Should(ContainSubstring("hello i am nora"))
+		Eventually(cf.Cf("map-route", appName, config.GetAppsDomain(), "-n", secondHost)).Should(Exit(0))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(helpers.CurlingAppRoot(config, secondHost)).Should(ContainSubstring("hello i am nora"))
 
 		By("removing a route")
-		Eventually(cf.Cf("unmap-route", appName, helpers.LoadConfig().AppsDomain, "-n", secondHost)).Should(Exit(0))
-		Eventually(helpers.CurlingAppRoot(secondHost)).Should(ContainSubstring("404"))
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+		Eventually(cf.Cf("unmap-route", appName, config.GetAppsDomain(), "-n", secondHost)).Should(Exit(0))
+		Eventually(helpers.CurlingAppRoot(config, secondHost)).Should(ContainSubstring("404"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 		By("deleting the original route")
-		Eventually(cf.Cf("delete-route", helpers.LoadConfig().AppsDomain, "-n", appName, "-f")).Should(Exit(0))
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("404"))
+		Eventually(cf.Cf("delete-route", config.GetAppsDomain(), "-n", appName, "-f")).Should(Exit(0))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("404"))
 	})
 })

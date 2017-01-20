@@ -16,6 +16,6 @@ var _ = Describe("ASP classic applications", func() {
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
 
 		By("verifying it's up")
-		Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("Hello World!"))
+		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("Hello World!"))
 	})
 })

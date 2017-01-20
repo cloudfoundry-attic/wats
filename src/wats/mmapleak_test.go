@@ -20,20 +20,20 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("verifying it's up", func() {
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
 			By("requesting current memory commit charge")
-			commitCharge := helpers.CurlApp(appName, "/commitcharge")
+			commitCharge := helpers.CurlApp(config, appName, "/commitcharge")
 			commitChargeValue, err := strconv.ParseInt(commitCharge, 10, 64)
 			Expect(err).NotTo(HaveOccurred())
 
 			By("Running mmapleak (3Gb)", func() {
-				helpers.CurlApp(appName, fmt.Sprintf("/mmapleak/{%#v}", int64(3)*1024*1024*1024))
+				helpers.CurlApp(config, appName, fmt.Sprintf("/mmapleak/{%#v}", int64(3)*1024*1024*1024))
 			})
 
 			By("Commit Charge should not have changed by more than container max (2Gb)", func() {
-				newCommitCharge := helpers.CurlApp(appName, "/commitcharge")
+				newCommitCharge := helpers.CurlApp(config, appName, "/commitcharge")
 				newCommitChargeValue, err := strconv.ParseInt(newCommitCharge, 10, 64)
 				Expect(err).NotTo(HaveOccurred())
 

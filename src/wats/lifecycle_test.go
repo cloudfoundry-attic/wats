@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -29,8 +30,8 @@ type AppUsageEvents struct {
 
 func lastAppUsageEvent(appName string, state string) (bool, AppUsageEvent) {
 	var response AppUsageEvents
-	cf.AsUser(context.AdminUserContext(), DEFAULT_TIMEOUT, func() {
-		cf.ApiRequest("GET", "/v2/app_usage_events?order-direction=desc&page=1&results-per-page=150", &response, DEFAULT_TIMEOUT)
+	AsUser(environment.AdminUserContext(), DEFAULT_TIMEOUT, func() {
+		ApiRequest("GET", "/v2/app_usage_events?order-direction=desc&page=1&results-per-page=150", &response, DEFAULT_TIMEOUT)
 	})
 
 	for _, event := range response.Resources {
@@ -58,7 +59,7 @@ var _ = Describe("Application Lifecycle", func() {
 
 		seenIDs := map[string]bool{}
 		for len(seenIDs) != instances && run == true {
-			seenIDs[helpers.CurlApp(appName, "/id")] = true
+			seenIDs[helpers.CurlApp(config, appName, "/id")] = true
 			time.Sleep(time.Second)
 		}
 
@@ -68,7 +69,7 @@ var _ = Describe("Application Lifecycle", func() {
 	differentIDsFrom := func(idsBefore map[string]bool) []string {
 		differentIDs := []string{}
 
-		for id, _ := range reportedIDs(len(idsBefore)) {
+		for id := range reportedIDs(len(idsBefore)) {
 			if !idsBefore[id] {
 				differentIDs = append(differentIDs, id)
 			}
@@ -94,7 +95,7 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("verifying it's up", func() {
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
 			By("verifying reported disk/memory usage", func() {
@@ -116,13 +117,13 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("makes system environment variables available", func() {
 				Eventually(func() string {
-					return helpers.CurlApp(appName, "/env")
+					return helpers.CurlApp(config, appName, "/env")
 				}, DEFAULT_TIMEOUT).Should(ContainSubstring(`"INSTANCE_GUID"`))
 			})
 
 			By("stopping it", func() {
 				Eventually(runCf("stop", appName)).Should(Succeed())
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("404"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("404"))
 			})
 
 			By("setting an environment variable", func() {
@@ -131,12 +132,12 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("starting it", func() {
 				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
 			By("checking custom env variables are available", func() {
 				Eventually(func() string {
-					return helpers.CurlAppWithTimeout(appName, "/env/FOO", 30*time.Second)
+					return helpers.CurlAppWithTimeout(config, appName, "/env/FOO", 30*time.Second)
 				}).Should(ContainSubstring("bar"))
 			})
 
@@ -156,7 +157,7 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("updating, is reflected through another push", func() {
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hello i am nora"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 				// We don't have to set the stack, since that's already done for the app
 				// in the BeforeEach and diego keeps that state across multiple pushes
@@ -165,7 +166,7 @@ var _ = Describe("Application Lifecycle", func() {
 					"-p", "../../assets/webapp",
 				).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hi i am a standalone webapp"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hi i am a standalone webapp"))
 			})
 
 			By("removing it", func() {
@@ -175,7 +176,7 @@ var _ = Describe("Application Lifecycle", func() {
 				Expect(app).To(Say("not found"))
 
 				Eventually(func() string {
-					return helpers.CurlAppRoot(appName)
+					return helpers.CurlAppRoot(config, appName)
 				}, DEFAULT_TIMEOUT).Should(ContainSubstring("404"))
 
 				found, _ := lastAppUsageEvent(appName, "STOPPED")

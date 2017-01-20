@@ -24,7 +24,7 @@ var _ = Describe("A standalone webapp", func() {
 			})
 
 			By("verifying it's up", func() {
-				Eventually(helpers.CurlingAppRoot(appName)).Should(ContainSubstring("hi i am a standalone webapp"))
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hi i am a standalone webapp"))
 			})
 		})
 	})
