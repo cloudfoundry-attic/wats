@@ -55,7 +55,7 @@ func disableHealthCheck(appName string) {
 	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"health_check_type":"none"}`)).Should(Exit(0))
 }
 
-func TestApplications(t *testing.T) {
+func TestDiegoWindows(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	SetDefaultEventuallyTimeout(time.Minute)
@@ -63,9 +63,13 @@ func TestApplications(t *testing.T) {
 
 	var err error
 	config, err = LoadWatsConfig()
-	Expect(err).ToNot(HaveOccurred())
-	Expect(config.NumWindowsCells).ToNot(Equal(0),
-		"Please provide 'num_windows_cells' as a property in the integration config JSON (The number of windows cells in tested deployment)")
+	if err != nil {
+		t.Fatalf("could not load WATS config", err)
+	}
+
+	if config.NumWindowsCells == 0 {
+		t.Fatalf("Please provide 'num_windows_cells' as a property in the integration config JSON (The number of windows cells in tested deployment)")
+	}
 
 	environment = NewTestSuiteSetup(config)
 
