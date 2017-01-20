@@ -22,7 +22,7 @@ cat > $CONFIG_FILE <<HERE
   "admin_password": "$ADMIN_PASSWORD",
   "apps_domain": "$APPS_DOMAIN",
   "secure_address": "$SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST",
-  "num_windows_cells": "$NUM_WIN_CELLS",
+  "num_windows_cells": $NUM_WIN_CELLS,
   "skip_ssl_validation": true
 }
 HERE
