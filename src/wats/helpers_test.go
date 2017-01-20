@@ -113,26 +113,29 @@ func pushApp(appName, path string, instances int, memory string) func() error {
 }
 
 func setTotalMemoryLimit(memoryLimit string) {
-	type quotaDefinitions struct {
+	type quotaDefinitionUrl struct {
 		Resources []struct {
 			Entity struct {
-				Name string `json:"name"`
+				QuotaDefinitionUrl string `json:"quota_definition_url"`
 			} `json:"entity"`
 		} `json:"resources"`
 	}
 
-	var response quotaDefinitions
-	ApiRequest("GET", "/v2/quota_definitions", &response, DEFAULT_TIMEOUT)
+	orgEndpoint := fmt.Sprintf("/v2/organizations?q=name%%3A%s", environment.GetOrganizationName())
+	var org quotaDefinitionUrl
+	ApiRequest("GET", orgEndpoint, &org, DEFAULT_TIMEOUT)
+	Expect(org.Resources).ToNot(BeEmpty())
 
-	var quotaDefinitionName string
-	for _, r := range response.Resources {
-		if r.Entity.Name != "default" && r.Entity.Name != "runaway" {
-			quotaDefinitionName = r.Entity.Name
-		}
+	type quotaDefinition struct {
+		Entity struct {
+			Name string `json:"name"`
+		} `json:"entity"`
 	}
-	Expect(quotaDefinitionName).ToNot(BeEmpty())
+	var quota quotaDefinition
+	ApiRequest("GET", org.Resources[0].Entity.QuotaDefinitionUrl, &quota, DEFAULT_TIMEOUT)
+	Expect(quota.Entity.Name).ToNot(BeEmpty())
 
 	AsUser(environment.AdminUserContext(), DEFAULT_TIMEOUT, func() {
-		cf.Cf("update-quota", quotaDefinitionName, "-m", memoryLimit)
+		cf.Cf("update-quota", quota.Entity.Name, "-m", memoryLimit)
 	})
 }
