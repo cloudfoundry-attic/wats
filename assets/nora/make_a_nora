@@ -3,5 +3,5 @@ set -uex
 
 dir=${0%/*}
 APPNAME=${1:-"nora"}
-$dir/../make_an_app $dir/NoraPublished $APPNAME -b https://github.com/greenhouse-org/hwc-buildpack/releases/download/v1.0/hwc-buildpack.zip
+$dir/../make_an_app $dir/NoraPublished $APPNAME -b https://github.com/greenhouse-org/hwc-buildpack/releases/download/v1.0/hwc-buildpack-0.0.1.zip
 cf start $APPNAME
