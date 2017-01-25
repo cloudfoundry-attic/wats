@@ -17,8 +17,9 @@ import (
 )
 
 const (
-	DEFAULT_TIMEOUT = 45 * time.Second
-	CF_PUSH_TIMEOUT = 3 * time.Minute
+	DEFAULT_TIMEOUT   = 45 * time.Second
+	CF_PUSH_TIMEOUT   = 3 * time.Minute
+	HWC_BUILDPACK_URL = "https://github.com/greenhouse-org/hwc-buildpack/releases/download/v1.0/hwc-buildpack.zip"
 )
 
 var (

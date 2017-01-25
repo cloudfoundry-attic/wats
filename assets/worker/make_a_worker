@@ -5,7 +5,7 @@ if ! GOARCH=amd64 GOOS=windows go build -o worker.exe worker.go; then
    exit 1
 fi
 APPNAME=${1:-"worker"}
-../make_an_app . $APPNAME -c ./worker.exe
+../make_an_app . $APPNAME -c ./worker.exe -b https://github.com/greenhouse-org/binary-buildpack#develop
 cf set-health-check worker none
 cf start $APPNAME
 cf logs worker --recent

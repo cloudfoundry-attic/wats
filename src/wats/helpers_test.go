@@ -108,7 +108,7 @@ func pushApp(appName, path string, instances int, memory string) func() error {
 		"--no-start",
 		"-i", strconv.Itoa(instances),
 		"-m", memory,
-		"-b", "binary_buildpack",
+		"-b", HWC_BUILDPACK_URL,
 		"-s", "windows2012R2")
 }
 
