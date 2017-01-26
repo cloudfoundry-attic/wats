@@ -30,13 +30,20 @@ var _ = Describe("Application Lifecycle", func() {
 		return seenComputerNames
 	}
 
+	BeforeEach(func() {
+		memLimit := config.GetNumWindowsCells() * 2 * 4
+		if memLimit < 10 {
+			memLimit = 10
+		}
+		setTotalMemoryLimit(fmt.Sprintf("%dG", memLimit))
+	})
+
+	AfterEach(func() {
+		setTotalMemoryLimit("10G")
+	})
+
 	Describe("An app staged on Diego and running on Diego", func() {
 		It("attempts to forkbomb the environment", func() {
-			if config.GetNumWindowsCells() > 2 {
-				Skip(fmt.Sprintf("Fork bomb test cannot run on more than 2 cells: found: %d\n"+
-					"To run set the 'num_windows_cells' in the integration config JSON to 2 or less", config.GetNumWindowsCells()))
-			}
-
 			src, err := os.Open("../../assets/greenhouse-security-fixtures/bin/BreakoutBomb.exe")
 			Expect(err).NotTo(HaveOccurred())
 			defer src.Close()
