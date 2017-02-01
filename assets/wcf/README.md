@@ -6,7 +6,7 @@ This sample assumes you have an existing Windows 2012R2 cell with .NET 4.5.2 reg
 stack in CloudFoundry. You will also need a Windows development machine to compile the solution.
 
 2. Build the solution using VisualStudio or MSBuild. I used [VisualStudio 2015 Community Edition](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
-3. From the root of the cloned repo where the .sln file is, run: `cf push wcfsample -s windows2012R2 -b https://github.com/greenhouse-org/hwc-buildpack/releases/download/v1.0.0/hwc-buildpack-1.0.0.zip --health-check-type none -p ./Hello.Service.IIS/`
+3. From the root of the cloned repo where the .sln file is, run: `cf push wcfsample -s windows2012R2 -b https://github.com/greenhouse-org/hwc-buildpack/releases/download/v2.0.0/hwc-buildpack-v2.0.0.zip --health-check-type none -p ./Hello.Service.IIS/`
 
 Take particular note of the handler mapping in the web.config and the associated .svc file in the web project. This
 allows the Hostable Web Core to serve the WCF service in the library project.

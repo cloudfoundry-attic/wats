@@ -19,7 +19,7 @@ import (
 const (
 	DEFAULT_TIMEOUT      = 45 * time.Second
 	CF_PUSH_TIMEOUT      = 3 * time.Minute
-	HWC_BUILDPACK_URL    = "https://github.com/greenhouse-org/hwc-buildpack/releases/download/v1.0.0/hwc-buildpack-1.0.0.zip"
+	HWC_BUILDPACK_URL    = "https://github.com/greenhouse-org/hwc-buildpack/releases/download/v2.0.0/hwc-buildpack-v2.0.0.zip"
 	BINARY_BUILDPACK_URL = "https://github.com/greenhouse-org/binary-buildpack/releases/download/develop-v1.0.8-rc.1/binary_buildpack-develop-1.0.8-rc.1.zip"
 )
 
