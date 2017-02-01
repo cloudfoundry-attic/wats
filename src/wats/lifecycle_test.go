@@ -164,6 +164,8 @@ var _ = Describe("Application Lifecycle", func() {
 				Expect(cf.Cf(
 					"push", appName,
 					"-p", "../../assets/webapp",
+					"-c", ".\\webapp.exe",
+					"-b", BINARY_BUILDPACK_URL,
 				).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hi i am a standalone webapp"))

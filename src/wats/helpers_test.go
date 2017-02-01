@@ -20,7 +20,7 @@ import (
 )
 
 func pushNoraWithOptions(appName string, instances int, memory string) func() error {
-	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory)
+	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, HWC_BUILDPACK_URL)
 }
 
 func pushNora(appName string) func() error {
@@ -101,14 +101,14 @@ func pushAndStartNora(appName string) {
 	Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 }
 
-func pushApp(appName, path string, instances int, memory string) func() error {
+func pushApp(appName, path string, instances int, memory, buildpack string) func() error {
 	return runCf(
 		"push", appName,
 		"-p", path,
 		"--no-start",
 		"-i", strconv.Itoa(instances),
 		"-m", memory,
-		"-b", HWC_BUILDPACK_URL,
+		"-b", buildpack,
 		"-s", "windows2012R2")
 }
 

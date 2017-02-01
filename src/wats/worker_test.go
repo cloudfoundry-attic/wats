@@ -30,15 +30,12 @@ func Run(executable string, env []string, args ...string) *gexec.Session {
 	return sess
 }
 
-func pushWorker(appName string) func() error {
-	return pushApp(appName, "../../assets/worker", 1, "256m")
-}
-
 var _ = Describe("apps without a port", func() {
 	var logs *gexec.Session
 
 	BeforeEach(func() {
-		Eventually(pushWorker(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Eventually(runCf("push", appName, "-p", "../../assets/worker", "-c", ".\\worker.exe",
+			"--no-start", "-b", BINARY_BUILDPACK_URL, "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		disableHealthCheck(appName)
 		logs = cf.Cf("logs", appName)
