@@ -19,6 +19,7 @@ type watsConfig struct {
 	NumWindowsCells    int    `json:"num_windows_cells"`
 	ArtifactsDirectory string `json:"artifacts_directory"`
 	UseHttp            bool   `json:"use_http"`
+	ConsulMutualTls    bool   `json:"consul_mutual_tls"`
 }
 
 func LoadWatsConfig() (*watsConfig, error) {
