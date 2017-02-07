@@ -3,5 +3,5 @@ set -uex
 
 dir=${0%/*}
 APPNAME=${1:-"wcf"}
-$dir/../make_an_app $dir/Hello.Service.IIS $APPNAME -b https://github.com/greenhouse-org/hwc-buildpack/releases/download/v2.0.0/hwc-buildpack-v2.0.0.zip
+$dir/../make_an_app $dir/Hello.Service.IIS $APPNAME -b https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.1.0/hwc_buildpack-cached-v2.1.0.zip
 cf start $APPNAME

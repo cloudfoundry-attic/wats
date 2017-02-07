@@ -19,8 +19,8 @@ import (
 const (
 	DEFAULT_TIMEOUT      = 45 * time.Second
 	CF_PUSH_TIMEOUT      = 3 * time.Minute
-	HWC_BUILDPACK_URL    = "https://github.com/greenhouse-org/hwc-buildpack/releases/download/v2.0.0/hwc-buildpack-v2.0.0.zip"
-	BINARY_BUILDPACK_URL = "https://github.com/greenhouse-org/binary-buildpack/releases/download/develop-v1.0.8-rc.1/binary_buildpack-develop-1.0.8-rc.1.zip"
+	HWC_BUILDPACK_URL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.1.0/hwc_buildpack-cached-v2.1.0.zip"
+	BINARY_BUILDPACK_URL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.8/binary_buildpack-cached-v1.0.8.zip"
 )
 
 var (
