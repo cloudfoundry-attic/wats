@@ -37,3 +37,6 @@
 [submodule "src/wats/vendor/github.com/onsi/gomega"]
 	path = src/wats/vendor/github.com/onsi/gomega
 	url = http://github.com/onsi/gomega
+[submodule "src/wats/vendor/gopkg.in/yaml.v2"]
+	path = src/wats/vendor/gopkg.in/yaml.v2
+	url = https://github.com/go-yaml/yaml.git

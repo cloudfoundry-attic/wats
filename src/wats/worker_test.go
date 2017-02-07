@@ -3,6 +3,7 @@ package wats
 import (
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -34,7 +35,9 @@ var _ = Describe("apps without a port", func() {
 	var logs *gexec.Session
 
 	BeforeEach(func() {
-		Eventually(runCf("push", appName, "-p", "../../assets/worker", "-c", ".\\worker.exe",
+		workerPath, err := gexec.BuildWithEnvironment("../../assets/worker/worker.go", []string{"GOARCH=amd64", "GOOS=windows"})
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(runCf("push", appName, "-p", filepath.Dir(workerPath), "-c", ".\\worker.go",
 			"--no-start", "-b", BINARY_BUILDPACK_URL, "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Succeed())
 		enableDiego(appName)
 		disableHealthCheck(appName)
@@ -42,6 +45,10 @@ var _ = Describe("apps without a port", func() {
 		// if healthcheck ran, the following will fail. `cf start` will wait
 		// for the heathcheck to succeed.
 		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+	})
+
+	AfterEach(func() {
+		gexec.CleanupBuildArtifacts()
 	})
 
 	It("run (and don't run healthcheck)", func() {
