@@ -22,11 +22,12 @@ scripts/*_config.json
 x64/
 build/
 [Bb]in/
-# make sure we preserve everything in the NoraPublished directory
+# make sure we preserve everything in the NoraPublished directory except for breakoutbomb
+assets/nora/NoraPublished/bin/breakoutbomb.exe
 !assets/nora/NoraPublished/bin/
 [Oo]bj/
 results/
-# make sure we preserve everything in the NoraPublished directory
+# make sure we preserve everything in the NoraPublished directory except for breakoutbomb
 !assets/wcf/Hello.Service.IIS/bin/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
