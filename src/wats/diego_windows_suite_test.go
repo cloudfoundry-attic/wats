@@ -129,6 +129,9 @@ func getBuildpackVersion(name string) string {
 	}
 	var b Buildpack
 	Expect(json.Unmarshal(buildpack.Out.Contents(), &b)).To(Succeed())
+	if len(b.Resources) == 0 {
+		return "0.0.0"
+	}
 	re := regexp.MustCompile(`[0-9]+\.[0-9]+\.[0-9]+`)
 	return re.FindString(b.Resources[0].Entity.FileName)
 }
