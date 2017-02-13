@@ -20,7 +20,7 @@ import (
 )
 
 func pushNoraWithOptions(appName string, instances int, memory string) func() error {
-	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, HWC_BUILDPACK_URL)
+	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, hwcBuildPackURL)
 }
 
 func pushNora(appName string) func() error {

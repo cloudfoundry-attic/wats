@@ -1,6 +1,10 @@
 package wats
 
 import (
+	"encoding/json"
+	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -17,16 +21,16 @@ import (
 )
 
 const (
-	DEFAULT_TIMEOUT      = 45 * time.Second
-	CF_PUSH_TIMEOUT      = 3 * time.Minute
-	HWC_BUILDPACK_URL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.1.0/hwc_buildpack-cached-v2.1.0.zip"
-	BINARY_BUILDPACK_URL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.8/binary_buildpack-cached-v1.0.8.zip"
+	DEFAULT_TIMEOUT = 45 * time.Second
+	CF_PUSH_TIMEOUT = 3 * time.Minute
 )
 
 var (
-	appName     string
-	config      *watsConfig
-	environment *ReproducibleTestSuiteSetup
+	appName            string
+	config             *watsConfig
+	environment        *ReproducibleTestSuiteSetup
+	hwcBuildPackURL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.1.0/hwc_buildpack-cached-v2.1.0.zip"
+	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.8/binary_buildpack-cached-v1.0.8.zip"
 )
 
 func guidForAppName(appName string) string {
@@ -75,6 +79,16 @@ func TestDiegoWindows(t *testing.T) {
 
 	environment = NewTestSuiteSetup(config)
 
+	binaryBuildpackVersion := getBuildpackVersion("binary_buildpack")
+	if versionGreaterThan(binaryBuildpackVersion, 1, 0, 7) {
+		binaryBuildPackURL = "binary_buildpack"
+	}
+
+	hwcBuildpackVersion := getBuildpackVersion("hwc_buildpack")
+	if versionGreaterThan(hwcBuildpackVersion, 2, 0, 0) {
+		hwcBuildPackURL = "hwc_buildpack"
+	}
+
 	BeforeSuite(func() {
 		environment.Setup()
 	})
@@ -103,4 +117,36 @@ func TestDiegoWindows(t *testing.T) {
 	}
 
 	RunSpecsWithDefaultAndCustomReporters(t, componentName, rs)
+}
+func getBuildpackVersion(name string) string {
+	buildpack := cf.Cf("curl", fmt.Sprintf("/v2/buildpacks?q=name:%s", name))
+	Expect(buildpack.Wait()).To(Exit(0))
+	type Buildpack struct {
+		Resources []struct {
+			Entity struct {
+				FileName string
+			}
+		}
+	}
+	var b Buildpack
+	Expect(json.Unmarshal(buildpack.Out.Contents(), &b)).To(Succeed())
+	re := regexp.MustCompile(`[0-9]+\.[0-9]+\.[0-9]+`)
+	return re.FindString(b.Resources[0].Entity.FileName)
+}
+
+func versionGreaterThan(version string, inputMajor, inputMinor, inputPatch int) bool {
+	versions := strings.Split(version, ".")
+	major, _ := strconv.Atoi(versions[0])
+	if major > inputMajor {
+		return true
+	}
+	minor, _ := strconv.Atoi(versions[1])
+	if minor > inputMinor {
+		return true
+	}
+	patch, _ := strconv.Atoi(versions[2])
+	if patch > inputPatch {
+		return true
+	}
+	return false
 }

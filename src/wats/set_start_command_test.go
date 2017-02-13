@@ -18,7 +18,7 @@ var _ = Describe("Setting an app's start command", func() {
 					"-p", "../../assets/batch-script",
 					"--no-start",
 					"--no-route",
-					"-b", BINARY_BUILDPACK_URL,
+					"-b", binaryBuildPackURL,
 					"-s", "windows2012R2",
 					"-c", "loop.bat Hi there!!!"), CF_PUSH_TIMEOUT).Should(Exit(0))
 			})

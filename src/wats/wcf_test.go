@@ -25,7 +25,7 @@ var _ = Describe("WCF", func() {
 		It("can have multiple routable instances on the same cell", func() {
 			By("pushing multiple instances of it", func() {
 				Eventually(pushApp(appName, "../../assets/wcf/Hello.Service.IIS",
-					config.GetNumWindowsCells()+1, "256m", HWC_BUILDPACK_URL), CF_PUSH_TIMEOUT).Should(Succeed())
+					config.GetNumWindowsCells()+1, "256m", hwcBuildPackURL), CF_PUSH_TIMEOUT).Should(Succeed())
 			})
 
 			enableDiego(appName)
