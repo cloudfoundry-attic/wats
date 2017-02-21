@@ -20,6 +20,7 @@ type watsConfig struct {
 	ArtifactsDirectory string `json:"artifacts_directory"`
 	UseHttp            bool   `json:"use_http"`
 	ConsulMutualTls    bool   `json:"consul_mutual_tls"`
+	HttpHealthcheck    bool   `json:"http_healthcheck"`
 }
 
 func LoadWatsConfig() (*watsConfig, error) {

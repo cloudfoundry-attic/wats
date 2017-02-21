@@ -14,6 +14,8 @@ else
 : ${APPS_DOMAIN:?"Must set app domain url (e.g. 10.244.0.34.xip.io)"}
 : ${SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST:?"Must set address [ip address of Diego ETCD cluster or BOSH Director] (e.g. 10.244.16.2:4001 or 10.0.0.6:25555)"}
 : ${NUM_WIN_CELLS:?"Must provide the number of windows cells in this deploy (e.g. 2)"}
+: ${CONSUL_MUTUAL_TLS:=false}
+: ${HTTP_HEALTHCHECK:=false}
 
 cat > $CONFIG_FILE <<HERE
 {
@@ -23,7 +25,9 @@ cat > $CONFIG_FILE <<HERE
   "apps_domain": "$APPS_DOMAIN",
   "secure_address": "$SOCKET_ADDRESS_FOR_SECURITY_GROUP_TEST",
   "num_windows_cells": $NUM_WIN_CELLS,
-  "skip_ssl_validation": true
+  "skip_ssl_validation": true,
+  "consul_mutual_tls": $CONSUL_MUTUAL_TLS,
+  "http_healthcheck": $HTTP_HEALTHCHECK
 }
 HERE
 fi

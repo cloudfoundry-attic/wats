@@ -70,6 +70,20 @@ namespace nora.Controllers
             }
         }
 
+        [Route("~/healthcheck")]
+        [HttpGet]
+        public IHttpActionResult Healthcheck()
+        {
+            return Ok("Healthcheck passed");
+        }
+
+        [Route("~/redirect/{path}")]
+        [HttpGet]
+        public RedirectResult RedirectTo(string path)
+        {
+            return Redirect(Url.Content("~/" + path));
+        }
+
         [Route("~/inaccessible_file")]
         [HttpPost]
         public IHttpActionResult InaccessibleFiles()
