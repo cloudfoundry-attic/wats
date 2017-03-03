@@ -90,6 +90,14 @@ func TestDiegoWindows(t *testing.T) {
 		if versionGreaterThan(hwcBuildpackVersion, 2, 0, 0) {
 			hwcBuildPackURL = "hwc_buildpack"
 		}
+
+		if config.GetIsolationSegmentName() != "" {
+			AsUser(environment.AdminUserContext(), environment.ShortTimeout(), func() {
+				isoSegGuid := createOrGetIsolationSegment(config.GetIsolationSegmentName())
+				attachIsolationSegmentToOrg(environment, isoSegGuid)
+				attachIsolationSegmentToSpace(environment, isoSegGuid)
+			})
+		}
 	})
 
 	AfterSuite(func() {
@@ -151,4 +159,82 @@ func versionGreaterThan(version string, inputMajor, inputMinor, inputPatch int) 
 		return true
 	}
 	return false
+}
+
+func createOrGetIsolationSegment(isolationSegmentName string) string {
+	// This could go in cf-test-helpers
+	guid := getIsolationSegmentGuid(isolationSegmentName)
+	if guid == "" {
+		Eventually(cf.Cf("curl", "/v3/isolation_segments/", "-X", "POST", "-d", fmt.Sprintf(`{"name":"%s"}`, isolationSegmentName))).Should(Exit(0))
+		guid = getIsolationSegmentGuid(isolationSegmentName)
+	}
+	return guid
+}
+
+func getIsolationSegmentGuid(isolationSegmentName string) string {
+	return getV3ResourceGuid(fmt.Sprintf("/v3/isolation_segments?names=%s", isolationSegmentName))
+}
+
+func attachIsolationSegmentToOrg(environment *ReproducibleTestSuiteSetup, isoSegGuid string) {
+	orgGuid := getOrganizationGuid(environment.GetOrganizationName())
+	response := cf.Cf(
+		"curl",
+		fmt.Sprintf("/v3/isolation_segments/%s/relationships/organizations", isoSegGuid),
+		"-X",
+		"POST",
+		"-d",
+		fmt.Sprintf(`{"data":[{"guid": "%s"}]}`, orgGuid),
+	)
+	Expect(response.Wait()).To(Exit(0))
+}
+
+func attachIsolationSegmentToSpace(environment *ReproducibleTestSuiteSetup, isoSegGuid string) {
+	spaceGuid := getSpaceGuidForOrg(getOrganizationGuid(environment.GetOrganizationName()))
+	response := cf.Cf(
+		"curl",
+		fmt.Sprintf("/v2/spaces/%s", spaceGuid),
+		"-X",
+		"PUT",
+		"-d",
+		fmt.Sprintf(`{"isolation_segment_guid":"%s"}`, isoSegGuid),
+	)
+	Expect(response.Wait()).To(Exit(0))
+}
+
+func getOrganizationGuid(organizationName string) string {
+	return getV2ResourceGuid(fmt.Sprintf("/v2/organizations?q=name:%s", organizationName))
+}
+
+func getSpaceGuidForOrg(orgGuid string) string {
+	return getV2ResourceGuid(fmt.Sprintf("/v2/organizations/%s/spaces", orgGuid))
+}
+
+func getV2ResourceGuid(endpoint string) string {
+	response := cf.Cf("curl", endpoint, "-X", "GET")
+	Expect(response.Wait()).To(Exit(0))
+	var r struct {
+		Resources []struct {
+			Metadata struct {
+				Guid string
+			}
+		}
+	}
+	Expect(json.Unmarshal(response.Out.Contents(), &r)).To(Succeed())
+	Expect(len(r.Resources)).To(Equal(1))
+	return r.Resources[0].Metadata.Guid
+}
+
+func getV3ResourceGuid(endpoint string) string {
+	response := cf.Cf("curl", endpoint, "-X", "GET")
+	Expect(response.Wait()).To(Exit(0))
+	var r struct {
+		Resources []struct {
+			Guid string
+		}
+	}
+	Expect(json.Unmarshal(response.Out.Contents(), &r)).To(Succeed())
+	if len(r.Resources) == 0 {
+		return ""
+	}
+	return r.Resources[0].Guid
 }
