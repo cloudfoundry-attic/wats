@@ -10,17 +10,18 @@ import (
 )
 
 type watsConfig struct {
-	ApiEndpoint        string `json:"api"`
-	AdminUser          string `json:"admin_user"`
-	AdminPassword      string `json:"admin_password"`
-	SecureAddress      string `json:"secure_address"`
-	AppsDomain         string `json:"apps_domain"`
-	SkipSSLValidation  bool   `json:"skip_ssl_validation"`
-	NumWindowsCells    int    `json:"num_windows_cells"`
-	ArtifactsDirectory string `json:"artifacts_directory"`
-	UseHttp            bool   `json:"use_http"`
-	ConsulMutualTls    bool   `json:"consul_mutual_tls"`
-	HttpHealthcheck    bool   `json:"http_healthcheck"`
+	ApiEndpoint          string `json:"api"`
+	AdminUser            string `json:"admin_user"`
+	AdminPassword        string `json:"admin_password"`
+	SecureAddress        string `json:"secure_address"`
+	AppsDomain           string `json:"apps_domain"`
+	SkipSSLValidation    bool   `json:"skip_ssl_validation"`
+	NumWindowsCells      int    `json:"num_windows_cells"`
+	ArtifactsDirectory   string `json:"artifacts_directory"`
+	UseHttp              bool   `json:"use_http"`
+	ConsulMutualTls      bool   `json:"consul_mutual_tls"`
+	HttpHealthcheck      bool   `json:"http_healthcheck"`
+	IsolationSegmentName string `json:"isolation_segment_name"`
 }
 
 func LoadWatsConfig() (*watsConfig, error) {
@@ -128,4 +129,8 @@ func (w *watsConfig) Protocol() string {
 	} else {
 		return "https://"
 	}
+}
+
+func (w *watsConfig) GetIsolationSegmentName() string {
+	return w.IsolationSegmentName
 }

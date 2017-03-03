@@ -7,5 +7,6 @@
   "num_windows_cells": 1,
   "skip_ssl_validation": true,
   "consul_mutual_tls": false,
-  "http_healthcheck": true
+  "http_healthcheck": true,
+  "isolation_segment_name": ""
 }
