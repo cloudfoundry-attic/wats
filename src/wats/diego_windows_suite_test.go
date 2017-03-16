@@ -30,7 +30,7 @@ var (
 	config             *watsConfig
 	environment        *ReproducibleTestSuiteSetup
 	hwcBuildPackURL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.1.2/hwc_buildpack-cached-v2.1.2.zip"
-	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.8/binary_buildpack-cached-v1.0.8.zip"
+	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.10/binary_buildpack-cached-v1.0.10.zip"
 )
 
 func guidForAppName(appName string) string {
