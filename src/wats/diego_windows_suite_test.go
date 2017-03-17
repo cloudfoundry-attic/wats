@@ -82,12 +82,12 @@ func TestDiegoWindows(t *testing.T) {
 	BeforeSuite(func() {
 		environment.Setup()
 		binaryBuildpackVersion := getBuildpackVersion("binary_buildpack")
-		if versionGreaterThan(binaryBuildpackVersion, 1, 0, 7) {
+		if versionGreaterThan(binaryBuildpackVersion, 1, 0, 10) {
 			binaryBuildPackURL = "binary_buildpack"
 		}
 
 		hwcBuildpackVersion := getBuildpackVersion("hwc_buildpack")
-		if versionGreaterThan(hwcBuildpackVersion, 2, 0, 0) {
+		if versionGreaterThan(hwcBuildpackVersion, 2, 3, 2) {
 			hwcBuildPackURL = "hwc_buildpack"
 		}
 
