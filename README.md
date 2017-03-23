@@ -35,4 +35,4 @@ to your config file as well.
 
 ### References
 
-- [cats]: https://github.com/cloudfoundry/cf-acceptance-tests
+- [cats](https://github.com/cloudfoundry/cf-acceptance-tests)
