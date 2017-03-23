@@ -30,7 +30,7 @@ var (
 	config             *watsConfig
 	environment        *ReproducibleTestSuiteSetup
 	hwcBuildPackURL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.3.2/hwc_buildpack-cached-v2.3.2.zip"
-	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.10/binary_buildpack-cached-v1.0.10.zip"
+	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.11/binary_buildpack-cached-v1.0.11.zip"
 )
 
 func guidForAppName(appName string) string {
@@ -82,7 +82,7 @@ func TestDiegoWindows(t *testing.T) {
 	BeforeSuite(func() {
 		environment.Setup()
 		binaryBuildpackVersion := getBuildpackVersion("binary_buildpack")
-		if versionGreaterThan(binaryBuildpackVersion, 1, 0, 10) {
+		if versionGreaterThan(binaryBuildpackVersion, 1, 0, 11) {
 			binaryBuildPackURL = "binary_buildpack"
 		}
 
