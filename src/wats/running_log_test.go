@@ -27,7 +27,6 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 
 		It("captures stdout logs with the correct tag", func() {
 			var message string
-			var logs *Session
 
 			By("logging application stdout")
 			message = "message-from-stdout"
@@ -35,22 +34,25 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 			//TODO: make nora output message
 			//			Eventually(helpers.CurlApp(appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))).Should(ContainSubstring(message))
 
-			logs = cf.Cf("logs", appName, "--recent")
-			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*OUT %s", message)))
+			Eventually(func() *Session {
+				appLogsSession := cf.Cf("logs", "--recent", appName)
+				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+				return appLogsSession
+			}).Should(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*OUT %s", message)))
 		})
 
 		It("captures stderr logs with the correct tag", func() {
 			var message string
-			var logs *Session
 
 			By("logging application stderr")
 			message = "message-from-stderr"
 			helpers.CurlApp(config, appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))
 
-			logs = cf.Cf("logs", appName, "--recent")
-			Eventually(logs).Should(Exit(0))
-			Expect(logs.Out).To(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*ERR %s", message)))
+			Eventually(func() *Session {
+				appLogsSession := cf.Cf("logs", "--recent", appName)
+				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+				return appLogsSession
+			}).Should(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*ERR %s", message)))
 		})
 	})
 })
