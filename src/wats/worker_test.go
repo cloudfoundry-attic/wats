@@ -37,14 +37,14 @@ var _ = Describe("apps without a port", func() {
 	BeforeEach(func() {
 		workerPath, err := gexec.BuildWithEnvironment("../../assets/worker/worker.go", []string{"GOARCH=amd64", "GOOS=windows"})
 		Expect(err).NotTo(HaveOccurred())
-		Eventually(runCf("push", appName, "-p", filepath.Dir(workerPath), "-c", ".\\worker.go",
-			"--no-start", "-b", binaryBuildPackURL, "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("push", appName, "-p", filepath.Dir(workerPath), "-c", ".\\worker.go",
+			"--no-start", "-b", binaryBuildPackURL, "-s", "windows2012R2").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		enableDiego(appName)
 		disableHealthCheck(appName)
 		logs = cf.Cf("logs", appName)
 		// if healthcheck ran, the following will fail. `cf start` will wait
 		// for the heathcheck to succeed.
-		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 	})
 
 	AfterEach(func() {

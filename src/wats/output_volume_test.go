@@ -3,16 +3,18 @@ package wats
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
 var _ = Describe("An application printing a bunch of output", func() {
 
 	BeforeEach(func() {
-		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		enableDiego(appName)
-		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 	})
 
 	It("doesn't die when printing 32MB", func() {

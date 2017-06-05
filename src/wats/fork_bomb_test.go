@@ -8,7 +8,9 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -55,12 +57,12 @@ var _ = Describe("Application Lifecycle", func() {
 			dst.Close()
 
 			By("pushing it", func() {
-				Eventually(pushNoraWithOptions(appName, config.GetNumWindowsCells()*2, "2G"), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(pushNoraWithOptions(appName, config.GetNumWindowsCells()*2, "2G").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("staging and running it on Diego", func() {
 				enableDiego(appName)
-				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("verifying it's up", func() {

@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
-	. "github.com/onsi/gomega/gexec"
+	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("Http Healthcheck", func() {
@@ -20,7 +20,7 @@ var _ = Describe("Http Healthcheck", func() {
 	})
 	testHealthCheck := func(healthCheckType, healthCheckEndpoint string) {
 		healthcheck := cf.Cf("curl", fmt.Sprintf("/v2/apps?q=name:%s", appName))
-		Expect(healthcheck.Wait()).To(Exit(0))
+		Expect(healthcheck.Wait()).To(gexec.Exit(0))
 		type HealthCheck struct {
 			Resources []struct {
 				Entity struct {
@@ -46,7 +46,7 @@ var _ = Describe("Http Healthcheck", func() {
 	Describe("An app staged on Diego and running on Diego", func() {
 		It("should not start with an invalid healthcheck endpoint", func() {
 			By("pushing it")
-			Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting an invalid healthcheck endpoint")
 			cf.Cf("set-health-check", appName, "http", "--endpoint", "/invalidhealthcheck")
@@ -60,14 +60,14 @@ var _ = Describe("Http Healthcheck", func() {
 
 		It("starts with a valid http healthcheck endpoint", func() {
 			By("pushing it")
-			Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
 			cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck")
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
-			Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("ensuring the healthcheck endpoint is set")
 			testHealthCheck("http", "/healthcheck")
@@ -75,14 +75,14 @@ var _ = Describe("Http Healthcheck", func() {
 
 		It("starts with a http healthcheck endpoint that is a redirect", func() {
 			By("pushing it")
-			Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
 			cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/healthcheck")
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
-			Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("ensuring the healthcheck endpoint is set")
 			testHealthCheck("http", "/redirect/healthcheck")
@@ -90,7 +90,7 @@ var _ = Describe("Http Healthcheck", func() {
 
 		It("does not start with a http healthcheck endpoint that is an invalid redirect", func() {
 			By("pushing it")
-			Eventually(pushNoraWithOptions(appName, 1, "2g"), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
 			cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/invalidhealthcheck")

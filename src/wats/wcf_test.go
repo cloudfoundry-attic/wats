@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 )
 
 const soapBody = `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
@@ -24,12 +26,12 @@ var _ = Describe("WCF", func() {
 	Describe("A WCF application", func() {
 		It("can have multiple routable instances on the same cell", func() {
 			By("pushing multiple instances of it", func() {
-				Eventually(pushApp(appName, "../../assets/wcf/Hello.Service.IIS",
-					config.GetNumWindowsCells()+1, "256m", hwcBuildPackURL), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(pushApp(appName, "../../assets/wcf/Hello.Service.IIS",
+					config.GetNumWindowsCells()+1, "256m", hwcBuildPackURL).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			enableDiego(appName)
-			Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("verifying it's up")
 			Eventually(appRunning(appName, config.GetNumWindowsCells()+1, CF_PUSH_TIMEOUT), CF_PUSH_TIMEOUT).Should(Succeed())

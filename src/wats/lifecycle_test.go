@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
-	. "github.com/onsi/gomega/gexec"
+	"github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -44,7 +44,7 @@ func lastAppUsageEvent(appName string, state string) (bool, AppUsageEvent) {
 }
 
 var _ = Describe("Application Lifecycle", func() {
-	apps := func() *Session {
+	apps := func() *gexec.Session {
 		return cf.Cf("apps").Wait()
 	}
 
@@ -81,12 +81,12 @@ var _ = Describe("Application Lifecycle", func() {
 	Describe("An app staged on Diego and running on Diego", func() {
 		It("exercises the app through its lifecycle", func() {
 			By("pushing it", func() {
-				Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("staging and running it on Diego", func() {
 				enableDiego(appName)
-				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("generates an app usage 'started' event", func() {
@@ -122,16 +122,16 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("stopping it", func() {
-				Eventually(runCf("stop", appName)).Should(Succeed())
+				Expect(cf.Cf("stop", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("404"))
 			})
 
 			By("setting an environment variable", func() {
-				Eventually(runCf("set-env", appName, "FOO", "bar")).Should(Succeed())
+				Expect(cf.Cf("set-env", appName, "FOO", "bar").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("starting it", func() {
-				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 			})
 
@@ -142,7 +142,7 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("scaling it", func() {
-				Eventually(runCf("scale", appName, "-i", "2")).Should(Succeed())
+				Expect(cf.Cf("scale", appName, "-i", "2").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 				Eventually(apps).Should(Say("2/2"))
 				Expect(cf.Cf("app", appName).Wait()).ToNot(Say("insufficient resources"))
 			})
@@ -150,7 +150,7 @@ var _ = Describe("Application Lifecycle", func() {
 			By("restarting an instance", func() {
 				idsBefore := reportedIDs(2)
 				Expect(len(idsBefore)).To(Equal(2))
-				Eventually(cf.Cf("restart-app-instance", appName, "1")).Should(Exit(0))
+				Expect(cf.Cf("restart-app-instance", appName, "1").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 				Eventually(func() []string {
 					return differentIDsFrom(idsBefore)
 				}, time.Second*120).Should(HaveLen(1))
@@ -166,15 +166,15 @@ var _ = Describe("Application Lifecycle", func() {
 					"-p", "../../assets/webapp",
 					"-c", ".\\webapp.exe",
 					"-b", binaryBuildPackURL,
-				).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+				).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hi i am a standalone webapp"))
 			})
 
 			By("removing it", func() {
-				Expect(cf.Cf("delete", appName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+				Expect(cf.Cf("delete", appName, "-f").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 				app := cf.Cf("app", appName).Wait(DEFAULT_TIMEOUT)
-				Expect(app).To(Exit(1))
+				Expect(app).To(gexec.Exit(1))
 				Expect(app).To(Say("not found"))
 
 				Eventually(func() string {

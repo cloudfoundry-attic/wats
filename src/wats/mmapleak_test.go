@@ -6,7 +6,9 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -14,9 +16,9 @@ var _ = Describe("Application Lifecycle", func() {
 	Describe("An app staged on Diego and running on Diego", func() {
 		XIt("attempts to leak mmap", func() {
 			By("pushing it", func() {
-				Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 				enableDiego(appName)
-				Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
 			By("verifying it's up", func() {

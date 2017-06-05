@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
-	. "github.com/onsi/gomega/gexec"
+	"github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -15,9 +15,9 @@ import (
 
 var _ = Describe("Logs from apps hosted by Diego", func() {
 	BeforeEach(func() {
-		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		enableDiego(appName)
-		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 	})
 
 	Context("when the app is running", func() {
@@ -34,9 +34,9 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 			//TODO: make nora output message
 			//			Eventually(helpers.CurlApp(appName, fmt.Sprintf("/print/%s", url.QueryEscape(message)))).Should(ContainSubstring(message))
 
-			Eventually(func() *Session {
+			Eventually(func() *gexec.Session {
 				appLogsSession := cf.Cf("logs", "--recent", appName)
-				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 				return appLogsSession
 			}).Should(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*OUT %s", message)))
 		})
@@ -48,9 +48,9 @@ var _ = Describe("Logs from apps hosted by Diego", func() {
 			message = "message-from-stderr"
 			helpers.CurlApp(config, appName, fmt.Sprintf("/print_err/%s", url.QueryEscape(message)))
 
-			Eventually(func() *Session {
+			Eventually(func() *gexec.Session {
 				appLogsSession := cf.Cf("logs", "--recent", appName)
-				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 				return appLogsSession
 			}).Should(Say(fmt.Sprintf("\\[APP(.*)/0\\]\\s*ERR %s", message)))
 		})

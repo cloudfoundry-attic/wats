@@ -17,15 +17,8 @@ import (
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 )
-
-func pushNoraWithOptions(appName string, instances int, memory string) func() error {
-	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, hwcBuildPackURL)
-}
-
-func pushNora(appName string) func() error {
-	return pushNoraWithOptions(appName, 1, "256m")
-}
 
 func appRunning(appName string, instances int, timeout time.Duration) func() error {
 	return func() error {
@@ -64,13 +57,6 @@ func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
 	return nil, errors.New("non zero exit code")
 }
 
-func runCf(values ...string) func() error {
-	return func() error {
-		_, err := runCfWithOutput(values...)
-		return err
-	}
-}
-
 func DopplerUrl() string {
 	doppler := os.Getenv("DOPPLER_URL")
 	if doppler == "" {
@@ -91,18 +77,26 @@ func DopplerUrl() string {
 
 func pushAndStartNora(appName string) {
 	By("pushing it")
-	Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+	Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 	By("staging and running it on Diego")
 	enableDiego(appName)
-	Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+	Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 	By("verifying it's up")
 	Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 }
 
-func pushApp(appName, path string, instances int, memory, buildpack string) func() error {
-	return runCf(
+func pushNora(appName string) *gexec.Session {
+	return pushNoraWithOptions(appName, 1, "256m")
+}
+
+func pushNoraWithOptions(appName string, instances int, memory string) *gexec.Session {
+	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, hwcBuildPackURL)
+}
+
+func pushApp(appName, path string, instances int, memory, buildpack string) *gexec.Session {
+	return cf.Cf(
 		"push", appName,
 		"-p", path,
 		"--no-start",

@@ -8,9 +8,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -60,11 +62,11 @@ var _ = Describe("Security Groups", func() {
 		defer bindSecurityGroups(groups)
 
 		By("pushing it")
-		Eventually(pushNora(appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("staging and running it on Diego")
 		enableDiego(appName)
-		Eventually(runCf("start", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("verifying it's up")
 		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
@@ -95,20 +97,19 @@ var _ = Describe("Security Groups", func() {
 		securityGroupName := fmt.Sprintf("DATS-SG-%s", generator.PrefixedRandomName(config.GetNamePrefix(), "SECURITY-GROUP"))
 
 		AsUser(environment.AdminUserContext(), time.Minute, func() {
-			Eventually(runCf("create-security-group", securityGroupName, rulesPath)).Should(Succeed())
-			Eventually(
-				runCf("bind-security-group",
-					securityGroupName,
-					environment.RegularUserContext().Org,
-					environment.RegularUserContext().Space)).Should(Succeed())
+			Expect(cf.Cf("create-security-group", securityGroupName, rulesPath).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			Expect(cf.Cf("bind-security-group",
+				securityGroupName,
+				environment.RegularUserContext().Org,
+				environment.RegularUserContext().Space).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		})
 		defer func() {
 			AsUser(environment.AdminUserContext(), time.Minute, func() {
-				Eventually(runCf("delete-security-group", securityGroupName, "-f")).Should(Succeed())
+				Expect(cf.Cf("delete-security-group", securityGroupName, "-f").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 		}()
 
-		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("restart", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
@@ -116,15 +117,13 @@ var _ = Describe("Security Groups", func() {
 
 		// unapply security group
 		AsUser(environment.AdminUserContext(), time.Minute, func() {
-			Eventually(
-				runCf("unbind-security-group",
-					securityGroupName, environment.RegularUserContext().Org,
-					environment.RegularUserContext().Space)).
-				Should(Succeed())
+			Expect(cf.Cf("unbind-security-group",
+				securityGroupName, environment.RegularUserContext().Org,
+				environment.RegularUserContext().Space).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		})
 
 		By("restarting it - without security group")
-		Eventually(runCf("restart", appName), CF_PUSH_TIMEOUT).Should(Succeed())
+		Expect(cf.Cf("restart", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
 		// test app egress rules
