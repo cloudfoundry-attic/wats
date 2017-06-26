@@ -34,7 +34,9 @@ func unbindSecurityGroups() []string {
 			entity := foo["entity"].(map[string]interface{})
 			name := entity["name"].(string)
 			securityGroups = append(securityGroups, name)
-			_, err = runCfWithOutput("unbind-running-security-group", name)
+			_, err = runCfWithOutput("unbind-security-group", name,
+				environment.RegularUserContext().Org,
+				environment.RegularUserContext().Space)
 			Expect(err).NotTo(HaveOccurred())
 		}
 	})
@@ -44,8 +46,10 @@ func unbindSecurityGroups() []string {
 func bindSecurityGroups(groups []string) {
 	AsUser(environment.AdminUserContext(), time.Minute, func() {
 		for _, group := range groups {
-			_, err := runCfWithOutput("bind-running-security-group", group)
-			Expect(err).NotTo(HaveOccurred(), fmt.Sprintf("failed to recreate running-security-group %s", group))
+			_, err := runCfWithOutput("bind-security-group", group,
+				environment.RegularUserContext().Org,
+				environment.RegularUserContext().Space)
+			Expect(err).NotTo(HaveOccurred(), fmt.Sprintf("failed to recreate security-group %s", group))
 		}
 	})
 }
