@@ -8,5 +8,6 @@
   "skip_ssl_validation": true,
   "consul_mutual_tls": false,
   "http_healthcheck": true,
+  "test_task": true,
   "isolation_segment_name": ""
 }

@@ -16,6 +16,7 @@ else
 : ${NUM_WIN_CELLS:?"Must provide the number of windows cells in this deploy (e.g. 2)"}
 : ${CONSUL_MUTUAL_TLS:=false}
 : ${HTTP_HEALTHCHECK:=false}
+: ${TEST_TASK:=false}
 
 cat > $CONFIG_FILE <<HERE
 {
@@ -27,7 +28,8 @@ cat > $CONFIG_FILE <<HERE
   "num_windows_cells": $NUM_WIN_CELLS,
   "skip_ssl_validation": true,
   "consul_mutual_tls": $CONSUL_MUTUAL_TLS,
-  "http_healthcheck": $HTTP_HEALTHCHECK
+  "http_healthcheck": $HTTP_HEALTHCHECK,
+  "test_task": $TEST_TASK
 }
 HERE
 fi

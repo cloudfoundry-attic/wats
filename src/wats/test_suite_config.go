@@ -21,6 +21,7 @@ type watsConfig struct {
 	UseHttp              bool   `json:"use_http"`
 	ConsulMutualTls      bool   `json:"consul_mutual_tls"`
 	HttpHealthcheck      bool   `json:"http_healthcheck"`
+	TestTask             bool   `json:"test_task"`
 	IsolationSegmentName string `json:"isolation_segment_name"`
 }
 
