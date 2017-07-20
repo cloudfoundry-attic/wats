@@ -54,7 +54,7 @@ func runCfWithOutput(values ...string) (*gbytes.Buffer, error) {
 		return session.Out, nil
 	}
 
-	return nil, errors.New("non zero exit code")
+	return session.Out, fmt.Errorf("non zero exit code %d", session.ExitCode())
 }
 
 func DopplerUrl() string {
