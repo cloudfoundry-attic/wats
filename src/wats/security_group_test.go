@@ -129,4 +129,57 @@ var _ = Describe("Security Groups", func() {
 		// test app egress rules
 		Eventually(curlResponse).Should(Equal(firstCurlError))
 	})
+
+	Context("when an icmp rule is applied", func() {
+		var (
+			icmpRuleFile      string
+			securityGroupName string
+		)
+
+		BeforeEach(func() {
+			icmpRule := `[{"code": 1,"destination":"0.0.0.0/0","protocol":"icmp","type":0}]`
+			securityGroupName = fmt.Sprintf("DATS-SG-%s", generator.PrefixedRandomName(config.GetNamePrefix(), "SECURITY-GROUP"))
+
+			file, err := ioutil.TempFile("", securityGroupName)
+			Expect(err).ToNot(HaveOccurred())
+			_, err = file.WriteString(icmpRule)
+			Expect(err).ToNot(HaveOccurred())
+			Expect(file.Close()).To(Succeed())
+
+			icmpRuleFile = file.Name()
+
+			AsUser(environment.AdminUserContext(), 2*time.Minute, func() {
+				Expect(cf.Cf("create-security-group", securityGroupName, icmpRuleFile).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+				Expect(cf.Cf("bind-security-group",
+					securityGroupName,
+					environment.RegularUserContext().Org,
+					environment.RegularUserContext().Space).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			})
+		})
+
+		AfterEach(func() {
+			Expect(os.Remove(icmpRuleFile)).To(Succeed())
+			AsUser(environment.AdminUserContext(), 2*time.Minute, func() {
+				Expect(cf.Cf("unbind-security-group",
+					securityGroupName, environment.RegularUserContext().Org,
+					environment.RegularUserContext().Space).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+				Expect(cf.Cf("delete-security-group", securityGroupName, "-f").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			})
+		})
+
+		It("ignores the rule and can push an app", func() {
+			By("pushing it", func() {
+				Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			})
+
+			By("staging and running it on Diego", func() {
+				enableDiego(appName)
+				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			})
+
+			By("verifying it's up", func() {
+				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
+			})
+		})
+	})
 })
