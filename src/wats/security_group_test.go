@@ -58,6 +58,7 @@ var _ = Describe("Security Groups", func() {
 	}
 
 	It("allows traffic and then blocks traffic", func() {
+		Skip("Security groups don't work on windows 2016")
 		groups := unbindSecurityGroups()
 		defer bindSecurityGroups(groups)
 

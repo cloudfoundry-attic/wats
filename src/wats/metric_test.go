@@ -43,7 +43,7 @@ func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan
 }
 
 var _ = Describe("Metrics", func() {
-	It("garden-windows emits metrics to the firehose", func() {
+	FIt("garden-windows emits metrics to the firehose", func() {
 		duration, _ := time.ParseDuration("5s")
 		AsUser(environment.AdminUserContext(), duration, func() {
 			authToken := getOauthToken()

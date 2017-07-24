@@ -103,7 +103,7 @@ func pushApp(appName, path string, instances int, memory, buildpack string) *gex
 		"-i", strconv.Itoa(instances),
 		"-m", memory,
 		"-b", buildpack,
-		"-s", "windows2012R2")
+		"-s", "windows2016")
 }
 
 func setTotalMemoryLimit(memoryLimit string) {

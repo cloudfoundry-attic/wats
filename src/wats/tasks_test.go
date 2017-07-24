@@ -16,7 +16,7 @@ var _ = Describe("Task Lifecycle", func() {
 		}
 		By("pushing it", func() {
 			Eventually(cf.Cf("push", appName, "-p", "../../assets/webapp", "-c", ".\\webapp.exe",
-				"--no-start", "-b", binaryBuildPackURL, "-s", "windows2012R2"), CF_PUSH_TIMEOUT).Should(Exit(0))
+				"--no-start", "-b", binaryBuildPackURL, "-s", "windows2016"), CF_PUSH_TIMEOUT).Should(Exit(0))
 		})
 
 		By("staging and running it on Diego", func() {

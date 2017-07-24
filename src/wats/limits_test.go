@@ -10,7 +10,7 @@ import (
 
 var _ = Describe("Application Lifecycle", func() {
 	Describe("An app staged on Diego and running on Diego", func() {
-		It("exercises the app through its lifecycle", func() {
+		FIt("exercises the app through its lifecycle", func() {
 			By("pushing it")
 			Expect(pushNoraWithOptions(appName, 1, "256m").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 

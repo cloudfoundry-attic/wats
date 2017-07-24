@@ -12,7 +12,7 @@ import (
 
 var _ = Describe("Application environment", func() {
 	Describe("And app staged on Diego and running on Diego", func() {
-		It("should not have too many environment variable exposed", func() {
+		FIt("should not have too many environment variable exposed", func() {
 			By("pushing it")
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			By("staging and running it on Diego")
