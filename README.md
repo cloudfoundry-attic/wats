@@ -10,10 +10,6 @@ To run the Diego Acceptance tests, you will need:
 - credentials for an Admin user
 - an environment variable `$CONFIG` which points to a `.json` file that contains the application domain
 
-You can use `scripts/bosh_lite_config.json` to run the specs against
-[bosh-lite](https://github.com/cloudfoundry/bosh-lite). Replace
-credentials and URLs as appropriate for your environment.
-
 **NOTE**: The secure_address must be some inaccessible endpoint from
   any container, e.g., an etcd endpoint
 
