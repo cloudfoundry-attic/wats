@@ -22,7 +22,7 @@ var _ = Describe("When staging fails", func() {
 			Eventually(cf.Cf("push", appName, "--no-start",
 				"-m", EXCEED_CELL_MEMORY,
 				"-p", "../../assets/nora/NoraPublished",
-				"-s", "windows2012R2",
+				"-s", config.GetStack(),
 				"-b", hwcBuildPackURL,
 			), CF_PUSH_TIMEOUT).Should(Exit(0))
 			enableDiego(appName)

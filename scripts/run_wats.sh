@@ -17,6 +17,7 @@ else
 : ${CONSUL_MUTUAL_TLS:=false}
 : ${HTTP_HEALTHCHECK:=false}
 : ${TEST_TASK:=false}
+: ${STACK:=windows2012R2}
 
 cat > $CONFIG_FILE <<HERE
 {
@@ -29,7 +30,8 @@ cat > $CONFIG_FILE <<HERE
   "skip_ssl_validation": true,
   "consul_mutual_tls": $CONSUL_MUTUAL_TLS,
   "http_healthcheck": $HTTP_HEALTHCHECK,
-  "test_task": $TEST_TASK
+  "test_task": $TEST_TASK,
+  "stack": $STACK
 }
 HERE
 fi
