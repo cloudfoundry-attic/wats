@@ -23,6 +23,7 @@ type watsConfig struct {
 	HttpHealthcheck      bool   `json:"http_healthcheck"`
 	TestTask             bool   `json:"test_task"`
 	IsolationSegmentName string `json:"isolation_segment_name"`
+	Stack                string `json:"stack"`
 }
 
 func LoadWatsConfig() (*watsConfig, error) {
@@ -47,6 +48,12 @@ func LoadWatsConfigFromPath(configPath string) (*watsConfig, error) {
 	err = json.Unmarshal(configContents, &config)
 	if err != nil {
 		return &watsConfig{}, err
+	}
+
+	switch config.GetStack() {
+	case "windows2012R2", "windows2016":
+	default:
+		return &watsConfig{}, errors.New("Invalid stack: " + config.GetStack())
 	}
 
 	return &config, nil
@@ -134,4 +141,8 @@ func (w *watsConfig) Protocol() string {
 
 func (w *watsConfig) GetIsolationSegmentName() string {
 	return w.IsolationSegmentName
+}
+
+func (w *watsConfig) GetStack() string {
+	return w.Stack
 }
