@@ -31,7 +31,7 @@ cat > $CONFIG_FILE <<HERE
   "consul_mutual_tls": $CONSUL_MUTUAL_TLS,
   "http_healthcheck": $HTTP_HEALTHCHECK,
   "test_task": $TEST_TASK,
-  "stack": $STACK
+  "stack": "$STACK"
 }
 HERE
 fi
