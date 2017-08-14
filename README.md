@@ -5,23 +5,28 @@
 
 ### Test Setup
 
-To run the Diego Acceptance tests, you will need:
+To run the Windows Acceptance tests, you will need:
 - a running CF instance
 - credentials for an Admin user
-- an environment variable `$CONFIG` which points to a `.json` file that contains the application domain
+- an environment variable `CONFIG` which points to a `.json` file that contains the application domain
+  - an example configuration can be found [here](scripts/integration_config.json)
 
 **NOTE**: The secure_address must be some inaccessible endpoint from
-  any container, e.g., an etcd endpoint
+  any container, e.g., a BOSH director endpoint
 
-### Running the tests against a bosh-lite
+### Running the tests
 
-`./scripts/bosh_lite_run_wats.sh`
+`./scripts/run_wats.sh ./scripts/integration_config.json`
+
+or
+
+`CONFIG=<path-to-config.json> ginkgo -r`
 
 ### Self signed certificates
 
 If you are running the tests with version newer than `6.0.2-0bba99f`
-of the Go CLI against bosh-lite or any other environment using
-self-signed certificates, add the following
+of the Go CLI against an environment using self-signed certificates,
+add the following:
 
 ```
   "skip_ssl_validation": true
@@ -29,6 +34,3 @@ self-signed certificates, add the following
 
 to your config file as well.
 
-### References
-
-- [cats](https://github.com/cloudfoundry/cf-acceptance-tests)

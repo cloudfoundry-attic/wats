@@ -1,9 +1,9 @@
 {
-  "api": "api.bosh-lite.com",
+  "api": "api.env.cf-app.com",
   "admin_user": "admin",
   "admin_password": "admin",
-  "apps_domain": "bosh-lite.com",
-  "secure_address": "192.168.50.4:25555",
+  "apps_domain": "env.cf-app.com",
+  "secure_address": "10.0.0.6:25555",
   "num_windows_cells": 1,
   "skip_ssl_validation": true,
   "consul_mutual_tls": false,
