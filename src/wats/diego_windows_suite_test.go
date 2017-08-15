@@ -21,8 +21,9 @@ import (
 )
 
 const (
-	DEFAULT_TIMEOUT = 45 * time.Second
-	CF_PUSH_TIMEOUT = 3 * time.Minute
+	DEFAULT_TIMEOUT      = 45 * time.Second
+	DEFAULT_LONG_TIMEOUT = 4 * DEFAULT_TIMEOUT
+	CF_PUSH_TIMEOUT      = 3 * time.Minute
 )
 
 var (
