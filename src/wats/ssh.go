@@ -1,7 +1,13 @@
 package wats
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os/exec"
+	"strings"
+
+	"golang.org/x/crypto/ssh"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -31,7 +37,7 @@ var _ = FDescribe("SSH", func() {
 			})
 
 			It("can ssh to the second instance", func() {
-				envCmd := cf.Cf("ssh", "-v", "-i", "1", appName, "-c", "cmd.exe /C 'set && set 1>&2'")
+				envCmd := cf.Cf("ssh", "-v", "-i", "1", appName, "-c", "set && set 1>&2")
 				Expect(envCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 				output := string(envCmd.Out.Contents())
@@ -43,118 +49,149 @@ var _ = FDescribe("SSH", func() {
 				Expect(string(stdErr)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
 				Expect(string(stdErr)).To(MatchRegexp("INSTANCE_INDEX=1"))
 
-				Expect(cf.Cf("logs", appName, "--recent").Wait(CF_PUSH_TIMEOUT)).To(ContainSubstring("Successful remote access"))
-				Expect(cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)).To(ContainSubstring("audit.app.ssh-authorized"))
+				logCmd := cf.Cf("logs", appName, "--recent")
+				Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+				output = string(logCmd.Out.Contents())
+				Expect(output).To(ContainSubstring("Successful remote access"))
+
+				eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
+				Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+				output = string(eventsCmd.Out.Contents())
+				Expect(output).To(ContainSubstring("audit.app.ssh-authorized"))
 			})
 		})
 
-		// It("can execute a remote command in the container", func() {
-		// 	envCmd := cf.Cf("ssh", "-v", appName, "-c", "/usr/bin/env && /usr/bin/env >&2")
-		// 	Expect(envCmd.Wait(Config.DefaultTimeoutDuration())).To(Exit(0))
+		It("can execute a remote command in the container", func() {
+			envCmd := cf.Cf("ssh", "-v", appName, "-c", "set && set 1>&2")
+			Expect(envCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
-		// 	output := string(envCmd.Out.Contents())
-		// 	stdErr := string(envCmd.Err.Contents())
+			output := string(envCmd.Out.Contents())
+			stdErr := string(envCmd.Err.Contents())
 
-		// 	Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
-		// 	Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
+			Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
+			Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
 
-		// 	Expect(string(stdErr)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
-		// 	Expect(string(stdErr)).To(MatchRegexp("INSTANCE_INDEX=0"))
+			Expect(string(stdErr)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
+			Expect(string(stdErr)).To(MatchRegexp("INSTANCE_INDEX=0"))
 
-		// 	Eventually(cf.Cf("logs", appName, "--recent"), Config.DefaultTimeoutDuration()).Should(Say("Successful remote access"))
-		// 	Eventually(cf.Cf("events", appName), Config.DefaultTimeoutDuration()).Should(Say("audit.app.ssh-authorized"))
-		// })
+			logCmd := cf.Cf("logs", appName, "--recent")
+			Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = string(logCmd.Out.Contents())
+			Expect(output).To(ContainSubstring("Successful remote access"))
 
-		// It("runs an interactive session when no command is provided", func() {
-		// 	envCmd := exec.Command("cf", "ssh", "-v", appName)
+			eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
+			Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = string(eventsCmd.Out.Contents())
+			Expect(output).To(ContainSubstring("audit.app.ssh-authorized"))
+		})
 
-		// 	stdin, err := envCmd.StdinPipe()
-		// 	Expect(err).NotTo(HaveOccurred())
+		It("runs an interactive session when no command is provided", func() {
+			envCmd := exec.Command("cf", "ssh", "-v", appName)
 
-		// 	stdout, err := envCmd.StdoutPipe()
-		// 	Expect(err).NotTo(HaveOccurred())
+			stdin, err := envCmd.StdinPipe()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	err = envCmd.Start()
-		// 	Expect(err).NotTo(HaveOccurred())
+			stdout, err := envCmd.StdoutPipe()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	_, err = stdin.Write([]byte("/usr/bin/env\n"))
-		// 	Expect(err).NotTo(HaveOccurred())
+			err = envCmd.Start()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	err = stdin.Close()
-		// 	Expect(err).NotTo(HaveOccurred())
+			_, err = stdin.Write([]byte("set\n"))
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	output, err := ioutil.ReadAll(stdout)
-		// 	Expect(err).NotTo(HaveOccurred())
+			err = stdin.Close()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	err = envCmd.Wait()
-		// 	Expect(err).NotTo(HaveOccurred())
+			output, err := ioutil.ReadAll(stdout)
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
-		// 	Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
+			err = envCmd.Wait()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	Eventually(cf.Cf("logs", appName, "--recent"), Config.DefaultTimeoutDuration()).Should(Say("Successful remote access"))
-		// 	Eventually(cf.Cf("events", appName), Config.DefaultTimeoutDuration()).Should(Say("audit.app.ssh-authorized"))
-		// })
+			Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
+			Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
 
-		// It("allows local port forwarding", func() {
-		// 	listenCmd := exec.Command("cf", "ssh", "-v", "-L", "127.0.0.1:61007:localhost:8080", appName)
+			logCmd := cf.Cf("logs", appName, "--recent")
+			Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = logCmd.Out.Contents()
+			Expect(string(output)).To(ContainSubstring("Successful remote access"))
 
-		// 	stdin, err := listenCmd.StdinPipe()
-		// 	Expect(err).NotTo(HaveOccurred())
+			eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
+			Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = eventsCmd.Out.Contents()
+			Expect(string(output)).To(ContainSubstring("audit.app.ssh-authorized"))
+		})
 
-		// 	err = listenCmd.Start()
-		// 	Expect(err).NotTo(HaveOccurred())
+		It("allows local port forwarding", func() {
+			listenCmd := exec.Command("cf", "ssh", "-v", "-L", "127.0.0.1:61007:localhost:8080", appName)
 
-		// 	Eventually(func() string {
-		// 		curl := helpers.Curl(Config, "http://127.0.0.1:61007/").Wait(Config.DefaultTimeoutDuration())
-		// 		return string(curl.Out.Contents())
-		// 	}, Config.DefaultTimeoutDuration()).Should(ContainSubstring("Hi, I'm Dora"))
+			stdin, err := listenCmd.StdinPipe()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	err = stdin.Close()
-		// 	Expect(err).NotTo(HaveOccurred())
+			err = listenCmd.Start()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	err = listenCmd.Wait()
-		// 	Expect(err).NotTo(HaveOccurred())
-		// })
+			Eventually(func() string {
+				curl := helpers.Curl(config, "http://127.0.0.1:61007/").Wait(CF_PUSH_TIMEOUT)
+				return string(curl.Out.Contents())
+			}, CF_PUSH_TIMEOUT).Should(ContainSubstring("hello i am nora"))
 
-		// It("records successful ssh attempts", func() {
-		// 	password := sshAccessCode()
+			err = stdin.Close()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	clientConfig := &ssh.ClientConfig{
-		// 		User: fmt.Sprintf("cf:%s/%d", GuidForAppName(appName), 0),
-		// 		Auth: []ssh.AuthMethod{ssh.Password(password)},
-		// 	}
+			err = listenCmd.Wait()
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-		// 	client, err := ssh.Dial("tcp", sshProxyAddress(), clientConfig)
-		// 	Expect(err).NotTo(HaveOccurred())
+		It("records successful ssh attempts", func() {
+			password := sshAccessCode()
 
-		// 	session, err := client.NewSession()
-		// 	Expect(err).NotTo(HaveOccurred())
+			clientConfig := &ssh.ClientConfig{
+				User: fmt.Sprintf("cf:%s/%d", guidForAppName(appName), 0),
+				Auth: []ssh.AuthMethod{ssh.Password(password)},
+			}
 
-		// 	output, err := session.CombinedOutput("/usr/bin/env")
-		// 	Expect(err).NotTo(HaveOccurred())
+			client, err := ssh.Dial("tcp", sshProxyAddress(), clientConfig)
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
-		// 	Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
+			session, err := client.NewSession()
+			Expect(err).NotTo(HaveOccurred())
 
-		// 	Eventually(cf.Cf("logs", appName, "--recent"), Config.DefaultTimeoutDuration()).Should(Say("Successful remote access"))
-		// 	Eventually(cf.Cf("events", appName), Config.DefaultTimeoutDuration()).Should(Say("audit.app.ssh-authorized"))
-		// })
+			output, err := session.CombinedOutput("set")
+			Expect(err).NotTo(HaveOccurred())
 
-		// It("records failed ssh attempts", func() {
-		// 	Eventually(cf.Cf("disable-ssh", appName), Config.DefaultTimeoutDuration()).Should(Exit(0))
+			Expect(string(output)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
+			Expect(string(output)).To(MatchRegexp("INSTANCE_INDEX=0"))
 
-		// 	password := sshAccessCode()
-		// 	clientConfig := &ssh.ClientConfig{
-		// 		User: fmt.Sprintf("cf:%s/%d", GuidForAppName(appName), 0),
-		// 		Auth: []ssh.AuthMethod{ssh.Password(password)},
-		// 	}
+			logCmd := cf.Cf("logs", appName, "--recent")
+			Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = logCmd.Out.Contents()
+			Expect(string(output)).To(ContainSubstring("Successful remote access"))
 
-		// 	_, err := ssh.Dial("tcp", sshProxyAddress(), clientConfig)
-		// 	Expect(err).To(HaveOccurred())
+			eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
+			Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output = eventsCmd.Out.Contents()
+			Expect(string(output)).To(ContainSubstring("audit.app.ssh-authorized"))
+		})
 
-		// 	Eventually(cf.Cf("events", appName), Config.DefaultTimeoutDuration()).Should(Say("audit.app.ssh-unauthorized"))
-		// })
+		It("records failed ssh attempts", func() {
+			Eventually(cf.Cf("disable-ssh", appName), CF_PUSH_TIMEOUT).Should(gexec.Exit(0))
+
+			password := sshAccessCode()
+			clientConfig := &ssh.ClientConfig{
+				User: fmt.Sprintf("cf:%s/%d", guidForAppName(appName), 0),
+				Auth: []ssh.AuthMethod{ssh.Password(password)},
+			}
+
+			_, err := ssh.Dial("tcp", sshProxyAddress(), clientConfig)
+			Expect(err).To(HaveOccurred())
+
+			eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
+			Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+			output := eventsCmd.Out.Contents()
+			Expect(string(output)).To(ContainSubstring("audit.app.ssh-authorized"))
+		})
 	})
 
 })
@@ -163,23 +200,23 @@ func enableSSH(appName string) {
 	Expect(cf.Cf("enable-ssh", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 }
 
-//func sshAccessCode() string {
-//	getCode := cf.Cf("ssh-code")
-//	Eventually(getCode, Config.DefaultTimeoutDuration()).Should(Exit(0))
-//	return strings.TrimSpace(string(getCode.Buffer().Contents()))
-//}
-//
-//func sshProxyAddress() string {
-//	infoCommand := cf.Cf("curl", "/v2/info")
-//	Expect(infoCommand.Wait(Config.DefaultTimeoutDuration())).To(Exit(0))
-//
-//	type infoResponse struct {
-//		AppSSHEndpoint string `json:"app_ssh_endpoint"`
-//	}
-//
-//	var response infoResponse
-//	err := json.Unmarshal(infoCommand.Buffer().Contents(), &response)
-//	Expect(err).NotTo(HaveOccurred())
-//
-//	return response.AppSSHEndpoint
-//}
+func sshAccessCode() string {
+	getCode := cf.Cf("ssh-code")
+	Eventually(getCode, CF_PUSH_TIMEOUT).Should(gexec.Exit(0))
+	return strings.TrimSpace(string(getCode.Buffer().Contents()))
+}
+
+func sshProxyAddress() string {
+	infoCommand := cf.Cf("curl", "/v2/info")
+	Expect(infoCommand.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+
+	type infoResponse struct {
+		AppSSHEndpoint string `json:"app_ssh_endpoint"`
+	}
+
+	var response infoResponse
+	err := json.Unmarshal(infoCommand.Buffer().Contents(), &response)
+	Expect(err).NotTo(HaveOccurred())
+
+	return response.AppSSHEndpoint
+}
