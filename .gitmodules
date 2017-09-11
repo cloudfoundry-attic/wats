@@ -40,3 +40,6 @@
 [submodule "src/wats/vendor/gopkg.in/yaml.v2"]
 	path = src/wats/vendor/gopkg.in/yaml.v2
 	url = https://github.com/go-yaml/yaml.git
+[submodule "src/wats/vendor/golang.org/x/crypto"]
+	path = src/wats/vendor/golang.org/x/crypto
+	url = https://go.googlesource.com/crypto
