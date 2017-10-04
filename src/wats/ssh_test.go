@@ -21,6 +21,9 @@ var _ = Describe("SSH", func() {
 		if config.GetStack() == "windows2012R2" {
 			Skip("cf ssh does not work on windows2012R2")
 		}
+		if config.SkipSSH {
+			Skip("configured to skip SSH tests")
+		}
 
 		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))

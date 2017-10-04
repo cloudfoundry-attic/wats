@@ -9,6 +9,7 @@
   "consul_mutual_tls": false,
   "http_healthcheck": true,
   "test_task": true,
+  "skip_ssh": false,
   "isolation_segment_name": "",
   "stack": "windows2012R2"
 }
