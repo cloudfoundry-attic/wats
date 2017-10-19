@@ -30,6 +30,7 @@ var (
 	appName            string
 	config             *watsConfig
 	environment        *ReproducibleTestSuiteSetup
+	goBuildPackURL     = "https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.11/go-buildpack-v1.8.11.zip"
 	hwcBuildPackURL    = "https://github.com/cloudfoundry-incubator/hwc-buildpack/releases/download/v2.3.2/hwc_buildpack-cached-v2.3.2.zip"
 	binaryBuildPackURL = "https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.11/binary_buildpack-cached-v1.0.11.zip"
 )
@@ -90,6 +91,11 @@ func TestDiegoWindows(t *testing.T) {
 		hwcBuildpackVersion := getBuildpackVersion("hwc_buildpack")
 		if versionGreaterThan(hwcBuildpackVersion, 2, 3, 2) {
 			hwcBuildPackURL = "hwc_buildpack"
+		}
+
+		goBuildpackVersion := getBuildpackVersion("go_buildpack")
+		if versionGreaterThan(goBuildpackVersion, 1, 8, 11) {
+			goBuildPackURL = "go_buildpack"
 		}
 
 		if config.GetIsolationSegmentName() != "" {

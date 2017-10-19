@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+const (
+	CredhubAssistedMode    = "assisted"
+	CredhubNonAssistedMode = "non-assisted"
+)
+
 type watsConfig struct {
 	ApiEndpoint          string `json:"api"`
 	AdminUser            string `json:"admin_user"`
@@ -25,6 +30,7 @@ type watsConfig struct {
 	SkipSSH              bool   `json:"skip_ssh"`
 	IsolationSegmentName string `json:"isolation_segment_name"`
 	Stack                string `json:"stack"`
+	CredhubMode          string `json:"credhub_mode"`
 }
 
 func LoadWatsConfig() (*watsConfig, error) {
@@ -58,6 +64,14 @@ func LoadWatsConfigFromPath(configPath string) (*watsConfig, error) {
 	}
 
 	return &config, nil
+}
+
+func (w *watsConfig) GetIncludeCredhubAssisted() bool {
+	return w.CredhubMode == CredhubAssistedMode
+}
+
+func (w *watsConfig) GetIncludeCredhubNonAssisted() bool {
+	return w.CredhubMode == CredhubNonAssistedMode
 }
 
 func (w *watsConfig) GetApiEndpoint() string {

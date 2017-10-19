@@ -10,6 +10,7 @@
   "http_healthcheck": true,
   "test_task": true,
   "skip_ssh": false,
+  "credhub_mode": "non-assisted",
   "isolation_segment_name": "",
   "stack": "windows2012R2"
 }

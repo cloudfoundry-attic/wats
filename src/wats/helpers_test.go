@@ -20,6 +20,13 @@ import (
 	"github.com/onsi/gomega/gexec"
 )
 
+const SkipCredhubMessage = `Skipping this test because Config.CredhubMode is not set to either 'assisted' or 'non-assisted'.
+NOTE: Ensure instance identity credential is turned on and CredHub is deployed before enabling this test`
+const SkipAssistedCredhubMessage = `Skipping this test because Config.CredhubMode is not set to 'assisted'.
+NOTE: Ensure instance identity credential is turned on and CredHub is deployed before enabling this test`
+const SkipNonAssistedCredhubMessage = `Skipping this test because Config.CredhubMode is not set to 'non-assisted'.
+NOTE: Ensure instance identity credential is turned on and CredHub is deployed before enabling this test`
+
 func appRunning(appName string, instances int, timeout time.Duration) func() error {
 	return func() error {
 		type StatsResponse map[string]struct {
@@ -73,6 +80,39 @@ func DopplerUrl() string {
 		doppler = cfInfo.DopplerLoggingEndpoint
 	}
 	return doppler
+}
+
+func CredhubDescribe(description string, callback func()) bool {
+	return Describe("[credhub]", func() {
+		BeforeEach(func() {
+			if config, err := LoadWatsConfig(); err == nil && !config.GetIncludeCredhubAssisted() && !config.GetIncludeCredhubNonAssisted() {
+				Skip(SkipCredhubMessage)
+			}
+		})
+		Describe(description, callback)
+	})
+}
+
+func AssistedCredhubDescribe(description string, callback func()) bool {
+	return Describe("[assisted credhub]", func() {
+		BeforeEach(func() {
+			if config, err := LoadWatsConfig(); err == nil && !config.GetIncludeCredhubAssisted() {
+				Skip(SkipAssistedCredhubMessage)
+			}
+		})
+		Describe(description, callback)
+	})
+}
+
+func NonAssistedCredhubDescribe(description string, callback func()) bool {
+	return Describe("[non-assisted credhub]", func() {
+		BeforeEach(func() {
+			if config, err := LoadWatsConfig(); err == nil && !config.GetIncludeCredhubNonAssisted() {
+				Skip(SkipNonAssistedCredhubMessage)
+			}
+		})
+		Describe(description, callback)
+	})
 }
 
 func pushAndStartNora(appName string) {

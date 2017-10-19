@@ -43,3 +43,6 @@
 [submodule "src/wats/vendor/golang.org/x/crypto"]
 	path = src/wats/vendor/golang.org/x/crypto
 	url = https://go.googlesource.com/crypto
+[submodule "src/wats/vendor/code.cloudfoundry.org/archiver"]
+	path = src/wats/vendor/code.cloudfoundry.org/archiver
+	url = https://github.com/cloudfoundry/archiver
