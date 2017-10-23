@@ -63,7 +63,7 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
-			cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck")
+			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck")).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
