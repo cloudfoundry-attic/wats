@@ -49,7 +49,7 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting an invalid healthcheck endpoint")
-			cf.Cf("set-health-check", appName, "http", "--endpoint", "/invalidhealthcheck")
+			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/invalidhealthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
@@ -63,7 +63,7 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
-			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck")).To(gexec.Exit(0))
+			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
@@ -78,7 +78,7 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
-			cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/healthcheck")
+			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/healthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
@@ -93,7 +93,7 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("setting the healthcheck endpoint")
-			cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/invalidhealthcheck")
+			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/invalidhealthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
 			enableDiego(appName)
