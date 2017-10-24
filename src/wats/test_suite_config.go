@@ -19,7 +19,6 @@ type watsConfig struct {
 	NumWindowsCells      int    `json:"num_windows_cells"`
 	ArtifactsDirectory   string `json:"artifacts_directory"`
 	UseHttp              bool   `json:"use_http"`
-	ConsulMutualTls      bool   `json:"consul_mutual_tls"`
 	HttpHealthcheck      bool   `json:"http_healthcheck"`
 	TestTask             bool   `json:"test_task"`
 	SkipSSH              bool   `json:"skip_ssh"`
