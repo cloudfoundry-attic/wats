@@ -19,6 +19,7 @@ else
 : ${TEST_TASK:=false}
 : ${SKIP_SSH:=false}
 : ${STACK:=windows2012R2}
+: ${CREDHUB_MODE:=none}
 
 cat > $CONFIG_FILE <<HERE
 {
@@ -33,7 +34,8 @@ cat > $CONFIG_FILE <<HERE
   "http_healthcheck": $HTTP_HEALTHCHECK,
   "test_task": $TEST_TASK,
   "skip_ssh": $SKIP_SSH,
-  "stack": "$STACK"
+  "stack": "$STACK",
+  "credhub_mode": "$CREDHUB_MODE"
 }
 HERE
 fi
