@@ -65,7 +65,6 @@ var _ = Describe("Application Lifecycle", func() {
 			})
 
 			By("staging and running it on Diego", func() {
-				enableDiego(appName)
 				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 

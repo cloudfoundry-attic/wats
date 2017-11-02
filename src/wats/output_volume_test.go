@@ -13,7 +13,6 @@ var _ = Describe("An application printing a bunch of output", func() {
 
 	BeforeEach(func() {
 		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-		enableDiego(appName)
 		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 	})
 

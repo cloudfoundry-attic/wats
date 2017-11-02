@@ -20,7 +20,6 @@ var _ = Describe("Application environment", func() {
 			By("pushing it")
 			Expect(pushNoraWithOptions(appName, 1, "2g").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			excludedList := []string{

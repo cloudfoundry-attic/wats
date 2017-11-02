@@ -15,7 +15,6 @@ var _ = Describe("Application Lifecycle", func() {
 			Expect(pushNoraWithOptions(appName, 1, "256m").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("attempting to leak more memory than allowed")

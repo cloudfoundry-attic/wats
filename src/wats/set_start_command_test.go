@@ -24,7 +24,6 @@ var _ = Describe("Setting an app's start command", func() {
 			})
 
 			By("staging and running it on Diego", func() {
-				enableDiego(appName)
 				disableHealthCheck(appName)
 				session := cf.Cf("start", appName)
 				Eventually(session, CF_PUSH_TIMEOUT).Should(Exit(0))

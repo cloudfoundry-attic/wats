@@ -52,7 +52,6 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/invalidhealthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			start := cf.Cf("start", appName)
 			defer start.Kill()
 			Eventually(cfLogs(appName), CF_PUSH_TIMEOUT).Should(Say("health check never passed."))
@@ -66,7 +65,6 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/healthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("ensuring the healthcheck endpoint is set")
@@ -81,7 +79,6 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/healthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 			By("ensuring the healthcheck endpoint is set")
@@ -96,7 +93,6 @@ var _ = Describe("Http Healthcheck", func() {
 			Expect(cf.Cf("set-health-check", appName, "http", "--endpoint", "/redirect/invalidhealthcheck").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 
 			By("staging and running it on Diego")
-			enableDiego(appName)
 			start := cf.Cf("start", appName)
 			defer start.Kill()
 			Eventually(cfLogs(appName), CF_PUSH_TIMEOUT).Should(Say("health check never passed."))

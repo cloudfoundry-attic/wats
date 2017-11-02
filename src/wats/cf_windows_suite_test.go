@@ -53,17 +53,12 @@ func guidForSpaceName(spaceName string) string {
 	return spaceGuid
 }
 
-func enableDiego(appName string) {
-	guid := guidForAppName(appName)
-	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"diego": true}`)).Should(Exit(0))
-}
-
 func disableHealthCheck(appName string) {
 	guid := guidForAppName(appName)
 	Eventually(cf.Cf("curl", "/v2/apps/"+guid, "-X", "PUT", "-d", `{"health_check_type":"none"}`)).Should(Exit(0))
 }
 
-func TestDiegoWindows(t *testing.T) {
+func TestCFWindows(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	SetDefaultEventuallyTimeout(time.Minute)
@@ -121,7 +116,7 @@ func TestDiegoWindows(t *testing.T) {
 		Eventually(cf.Cf("delete", appName, "-f")).Should(Exit(0))
 	})
 
-	componentName := "DiegoWindows"
+	componentName := "CF Windows"
 
 	rs := []Reporter{}
 

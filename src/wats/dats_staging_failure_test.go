@@ -25,7 +25,6 @@ var _ = Describe("When staging fails", func() {
 				"-s", config.GetStack(),
 				"-b", hwcBuildPackURL,
 			), CF_PUSH_TIMEOUT).Should(Exit(0))
-			enableDiego(appName)
 		})
 
 		AfterEach(func() {

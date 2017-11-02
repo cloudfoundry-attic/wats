@@ -65,7 +65,6 @@ var _ = Describe("Security Groups", func() {
 		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("staging and running it on Diego")
-		enableDiego(appName)
 		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("verifying it's up")
@@ -173,7 +172,6 @@ var _ = Describe("Security Groups", func() {
 			})
 
 			By("staging and running it on Diego", func() {
-				enableDiego(appName)
 				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 

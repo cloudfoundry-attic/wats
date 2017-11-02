@@ -14,7 +14,6 @@ var _ = Describe("ASP classic applications", func() {
 		Expect(pushApp(appName, "../../assets/asp-classic", 1, "256m", hwcBuildPackURL).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("staging and running it on Diego")
-		enableDiego(appName)
 		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 
 		By("verifying it's up")

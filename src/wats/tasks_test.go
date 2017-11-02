@@ -20,7 +20,6 @@ var _ = Describe("Task Lifecycle", func() {
 		})
 
 		By("staging and running it on Diego", func() {
-			enableDiego(appName)
 			session := cf.Cf("start", appName)
 			Eventually(session, CF_PUSH_TIMEOUT).Should(Exit(0))
 		})

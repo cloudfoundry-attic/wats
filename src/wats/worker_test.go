@@ -39,7 +39,6 @@ var _ = Describe("apps without a port", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(cf.Cf("push", appName, "-p", filepath.Dir(workerPath), "-c", ".\\worker.go",
 			"--no-start", "-b", binaryBuildPackURL, "-s", config.GetStack()).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-		enableDiego(appName)
 		disableHealthCheck(appName)
 		logs = cf.Cf("logs", appName)
 		// if healthcheck ran, the following will fail. `cf start` will wait

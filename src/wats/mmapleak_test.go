@@ -17,7 +17,6 @@ var _ = Describe("Application Lifecycle", func() {
 		XIt("attempts to leak mmap", func() {
 			By("pushing it", func() {
 				Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-				enableDiego(appName)
 				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			})
 
