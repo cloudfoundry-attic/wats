@@ -52,10 +52,11 @@ var _ = Describe("SSH", func() {
 				Expect(string(stdErr)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
 				Expect(string(stdErr)).To(MatchRegexp("INSTANCE_INDEX=1"))
 
-				logCmd := cf.Cf("logs", appName, "--recent")
-				Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-				output = string(logCmd.Out.Contents())
-				Expect(output).To(ContainSubstring("Successful remote access"))
+				Eventually(func() string {
+					appLogsSession := cf.Cf("logs", "--recent", appName)
+					Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
+					return string(appLogsSession.Out.Contents())
+				}).Should(ContainSubstring("Successful remote access"))
 
 				eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
 				Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
@@ -77,10 +78,11 @@ var _ = Describe("SSH", func() {
 			Expect(string(stdErr)).To(MatchRegexp(fmt.Sprintf(`VCAP_APPLICATION=.*"application_name":"%s"`, appName)))
 			Expect(string(stdErr)).To(MatchRegexp("INSTANCE_INDEX=0"))
 
-			logCmd := cf.Cf("logs", appName, "--recent")
-			Expect(logCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-			output = string(logCmd.Out.Contents())
-			Expect(output).To(ContainSubstring("Successful remote access"))
+			Eventually(func() string {
+				appLogsSession := cf.Cf("logs", "--recent", appName)
+				Expect(appLogsSession.Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
+				return string(appLogsSession.Out.Contents())
+			}).Should(ContainSubstring("Successful remote access"))
 
 			eventsCmd := cf.Cf("events", appName).Wait(CF_PUSH_TIMEOUT)
 			Expect(eventsCmd.Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
