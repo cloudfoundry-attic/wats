@@ -12,7 +12,7 @@ import (
 var _ = Describe("An application printing a bunch of output", func() {
 
 	BeforeEach(func() {
-		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
+		Expect(pushNoraWithOptions(appName, 1, "1G").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 	})
 
