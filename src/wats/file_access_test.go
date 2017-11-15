@@ -29,6 +29,10 @@ var _ = Describe("File ACLs", func() {
 	}
 
 	BeforeEach(func() {
+		if config.GetStack() == "windows2016" {
+			Skip("n/a on windows2016")
+		}
+
 		pushAndStartNora(appName)
 		Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 	})
