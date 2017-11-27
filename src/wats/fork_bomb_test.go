@@ -33,10 +33,6 @@ var _ = Describe("Application Lifecycle", func() {
 	}
 
 	BeforeEach(func() {
-		if config.GetStack() == "windows2016" {
-			Skip("this test may not pass on windows2016")
-		}
-
 		memLimit := config.GetNumWindowsCells() * 2 * 4
 		if memLimit < 10 {
 			memLimit = 10
