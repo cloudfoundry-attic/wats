@@ -61,7 +61,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 export GOPATH=$DIR
 export GOBIN=$GOPATH/bin
 export PATH=$GOBIN:$PATH
-export GO15VENDOREXPERIMENT=1
 export CF_DIAL_TIMEOUT=30
 
 go install wats/vendor/github.com/onsi/ginkgo/ginkgo
