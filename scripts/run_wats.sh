@@ -4,6 +4,7 @@ set -ex
 
 if [ -f "$1" ]; then
   CONFIG_FILE=$PWD/$1
+  shift || true
 else
   CONFIG_FILE=`mktemp -t watsXXXXX`
   trap "rm -f $CONFIG_FILE" EXIT
@@ -65,5 +66,4 @@ export CF_DIAL_TIMEOUT=30
 
 go install wats/vendor/github.com/onsi/ginkgo/ginkgo
 
-shift || true
 CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ $DIR
