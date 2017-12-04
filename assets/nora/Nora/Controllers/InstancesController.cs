@@ -142,7 +142,7 @@ namespace nora.Controllers
         public IHttpActionResult Curl(string host, int port)
         {
             var req = WebRequest.Create("http://" + host + ":" + port);
-            req.Timeout = 1000;
+            req.Timeout = 10000;
             try
             {
                 var resp = (HttpWebResponse)req.GetResponse();
