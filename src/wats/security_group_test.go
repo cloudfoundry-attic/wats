@@ -75,6 +75,9 @@ func noraTCPConnectResponse(appName, host, port string) int {
 
 var _ = Describe("Security Groups", func() {
 	BeforeEach(func() {
+		if config.GetStack() == "windows2016" {
+			Skip("waiting for a patch from MSFT on windows2016")
+		}
 		By("pushing it")
 		Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 

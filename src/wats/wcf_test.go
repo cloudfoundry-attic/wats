@@ -25,6 +25,9 @@ const soapBody = `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/
 var _ = Describe("WCF", func() {
 	Describe("A WCF application", func() {
 		It("can have multiple routable instances on the same cell", func() {
+			if config.GetStack() == "windows2016" {
+				Skip("waiting for a patch from MSFT on windows2016")
+			}
 			By("pushing multiple instances of it", func() {
 				Expect(pushApp(appName, "../../assets/wcf/Hello.Service.IIS",
 					config.GetNumWindowsCells()+1, "256m", hwcBuildPackURL).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
