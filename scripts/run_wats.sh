@@ -66,4 +66,6 @@ export CF_DIAL_TIMEOUT=30
 
 go install wats/vendor/github.com/onsi/ginkgo/ginkgo
 
-CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@ $DIR
+pushd $DIR/src/wats
+  CONFIG=$CONFIG_FILE ginkgo ${ginkgo_args} -r -slowSpecThreshold=120 $@
+popd

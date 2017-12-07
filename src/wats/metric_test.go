@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry/noaa"
+	"github.com/cloudfoundry/noaa/consumer"
 	"github.com/cloudfoundry/sonde-go/events"
 
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
@@ -25,15 +25,17 @@ func getOauthToken() string {
 	return authToken
 }
 
-func createNoaaClient(dopplerUrl, authToken string) (chan *events.Envelope, chan error) {
-	connection := noaa.NewConsumer(dopplerUrl, &tls.Config{InsecureSkipVerify: true}, nil)
-	msgChan := make(chan *events.Envelope)
-	errorChan := make(chan error)
+func createNoaaClient(dopplerUrl, authToken string) (<-chan *events.Envelope, <-chan error) {
+	connection := consumer.New(dopplerUrl, &tls.Config{InsecureSkipVerify: true}, nil)
+
+	var (
+		msgChan   <-chan *events.Envelope
+		errorChan <-chan error
+	)
+
+	msgChan, errorChan = connection.Firehose("firehose-a", authToken)
 
 	go func() {
-		defer close(msgChan)
-		go connection.Firehose("firehose-a", authToken, msgChan, errorChan)
-
 		for err := range errorChan {
 			fmt.Fprintf(os.Stderr, "%v\n", err.Error())
 		}

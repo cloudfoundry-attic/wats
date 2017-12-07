@@ -161,3 +161,19 @@ func (w *watsConfig) GetIsolationSegmentName() string {
 func (w *watsConfig) GetStack() string {
 	return w.Stack
 }
+
+func (w *watsConfig) GetUseExistingOrganization() bool {
+	return false
+}
+
+func (w *watsConfig) GetExistingOrganization() string {
+	return ""
+}
+
+func (w *watsConfig) GetUseExistingSpace() bool {
+	return false
+}
+
+func (w *watsConfig) GetExistingSpace() string {
+	return ""
+}

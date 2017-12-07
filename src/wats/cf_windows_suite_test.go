@@ -67,7 +67,7 @@ func TestCFWindows(t *testing.T) {
 	var err error
 	config, err = LoadWatsConfig()
 	if err != nil {
-		t.Fatalf("could not load WATS config", err)
+		t.Fatalf("could not load WATS config: %s", err.Error())
 	}
 
 	if config.NumWindowsCells == 0 {
