@@ -44,10 +44,10 @@
   revision = "32fa128f234d041f196a9f3e0fea5ac9772c08e1"
 
 [[projects]]
-  branch = "master"
   name = "github.com/onsi/ginkgo"
   packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
-  revision = "80b77f9ea7cc6116bb2f3e24b953f464adb63570"
+  revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
+  version = "v1.4.0"
 
 [[projects]]
   name = "github.com/onsi/gomega"
@@ -88,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4567bd1dc5ecee339fa2dd0f2314b85cc9a3d2b51d2dd3b93a8008734f2320c7"
+  inputs-digest = "a17a3fe1f1f575c9570111da5d9ef8b98dbfcc4fc639689e87ea74371906dde0"
   solver-name = "gps-cdcl"
   solver-version = 1
