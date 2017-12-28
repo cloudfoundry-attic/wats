@@ -8,7 +8,7 @@ import (
 	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
@@ -142,8 +142,8 @@ var _ = Describe("Application Lifecycle", func() {
 
 			By("scaling it", func() {
 				Expect(cf.Cf("scale", appName, "-i", "2").Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-				Eventually(apps).Should(Say("2/2"))
-				Expect(cf.Cf("app", appName).Wait()).ToNot(Say("insufficient resources"))
+				Eventually(apps).Should(gbytes.Say("2/2"))
+				Expect(cf.Cf("app", appName).Wait()).ToNot(gbytes.Say("insufficient resources"))
 			})
 
 			By("restarting an instance", func() {
@@ -174,7 +174,7 @@ var _ = Describe("Application Lifecycle", func() {
 				Expect(cf.Cf("delete", appName, "-f").Wait(DEFAULT_TIMEOUT)).To(gexec.Exit(0))
 				app := cf.Cf("app", appName).Wait(DEFAULT_TIMEOUT)
 				Expect(app).To(gexec.Exit(1))
-				Expect(app).To(Say("not found"))
+				Expect(app.Err).To(gbytes.Say("not found"))
 
 				Eventually(func() string {
 					return helpers.CurlAppRoot(config, appName)

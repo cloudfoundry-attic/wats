@@ -32,13 +32,12 @@ var _ = Describe("When staging fails", func() {
 		})
 
 		It("informs the user in the CLI output and the logs", func() {
-
 			start := cf.Cf("start", appName)
 			Eventually(start, CF_PUSH_TIMEOUT).Should(Exit(1))
 
 			app := cf.Cf("app", appName)
 			Eventually(app).Should(Exit(0))
-			Expect(app.Out).To(gbytes.Say("requested state: stopped"))
+			Expect(app.Out).To(gbytes.Say(`requested state:\s+stopped`))
 		})
 	})
 })

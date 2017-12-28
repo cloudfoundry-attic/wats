@@ -41,16 +41,6 @@ cat > $CONFIG_FILE <<HERE
 HERE
 fi
 
-pushd `dirname $0`
-if [[ "$(uname)" = "Darwin" ]]; then
-  ln -sf cf-darwin ../bin/cf
-else
-  ln -sf cf-linux ../bin/cf
-fi
-popd
-
-export PATH=$PWD/../bin:$PATH
-
 uname_s=$(uname -s | cut -d_ -f1)
 win_uname="MINGW32"
 if [ "x${uname_s}" == "x${win_uname}" ]; then
