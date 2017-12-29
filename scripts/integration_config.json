@@ -9,7 +9,6 @@
   "consul_mutual_tls": false,
   "http_healthcheck": true,
   "test_task": true,
-  "skip_ssh": false,
   "credhub_mode": "none",
   "isolation_segment_name": "",
   "stack": "windows2012R2"

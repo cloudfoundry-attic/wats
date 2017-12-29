@@ -27,7 +27,6 @@ type watsConfig struct {
 	ConsulMutualTls      bool   `json:"consul_mutual_tls"`
 	HttpHealthcheck      bool   `json:"http_healthcheck"`
 	TestTask             bool   `json:"test_task"`
-	SkipSSH              bool   `json:"skip_ssh"`
 	IsolationSegmentName string `json:"isolation_segment_name"`
 	Stack                string `json:"stack"`
 	CredhubMode          string `json:"credhub_mode"`
