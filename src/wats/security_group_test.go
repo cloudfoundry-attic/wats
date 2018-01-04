@@ -60,17 +60,17 @@ func deleteSecurityGroup(securityGroupName string) {
 	})
 }
 
-type NoraCurlResponse struct {
+type NoraTCPConnectResponse struct {
 	Stdout     string
 	Stderr     string
 	ReturnCode int `json:"return_code"`
 }
 
-func noraCurlResponse(appName, host, port string) int {
-	var noraCurlResponse NoraCurlResponse
-	resp := helpers.CurlApp(config, appName, fmt.Sprintf("/curl/%s/%s", host, port))
-	Expect(json.Unmarshal([]byte(resp), &noraCurlResponse)).To(Succeed())
-	return noraCurlResponse.ReturnCode
+func noraTCPConnectResponse(appName, host, port string) int {
+	var noraTCPConnectResponse NoraTCPConnectResponse
+	resp := helpers.CurlApp(config, appName, fmt.Sprintf("/connect/%s/%s", host, port))
+	Expect(json.Unmarshal([]byte(resp), &noraTCPConnectResponse)).To(Succeed())
+	return noraTCPConnectResponse.ReturnCode
 }
 
 var _ = Describe("Security Groups", func() {
@@ -98,10 +98,10 @@ var _ = Describe("Security Groups", func() {
 			secureAddress := config.GetSecureAddress()
 			secureHost, securePort, err = net.SplitHostPort(secureAddress)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(noraCurlResponse(appName, secureHost, securePort)).ShouldNot(Equal(0))
+			Expect(noraTCPConnectResponse(appName, secureHost, securePort)).Should(Equal(1))
 
 			By("Asserting default running security group configuration from a running container to a public ip")
-			Expect(noraCurlResponse(appName, "www.google.com", "80")).Should(Equal(0))
+			Expect(noraTCPConnectResponse(appName, "8.8.8.8", "53")).Should(Equal(0))
 		})
 
 		AfterEach(func() {
@@ -116,14 +116,14 @@ var _ = Describe("Security Groups", func() {
 			Expect(cf.Cf("restart", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
-			Expect(noraCurlResponse(appName, secureHost, securePort)).Should(Equal(0))
+			Expect(noraTCPConnectResponse(appName, secureHost, securePort)).Should(Equal(0))
 
 			unbindSecurityGroup(securityGroupName, environment.RegularUserContext().Org, environment.RegularUserContext().Space)
 
 			Expect(cf.Cf("restart", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
 			Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
 
-			Expect(noraCurlResponse(appName, secureHost, securePort)).ShouldNot(Equal(0))
+			Expect(noraTCPConnectResponse(appName, secureHost, securePort)).Should(Equal(1))
 		})
 	})
 
