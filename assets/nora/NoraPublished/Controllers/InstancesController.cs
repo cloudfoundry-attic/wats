@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -142,7 +143,7 @@ namespace nora.Controllers
         public IHttpActionResult Curl(string host, int port)
         {
             var req = WebRequest.Create("http://" + host + ":" + port);
-            req.Timeout = 1000;
+            req.Timeout = 10000;
             try
             {
                 var resp = (HttpWebResponse)req.GetResponse();
@@ -162,6 +163,38 @@ namespace nora.Controllers
                     return_code = ex.Response != null ? 0 : 1,
                 });
             }
+        }
+
+        [Route("~/connect/{host}/{port}")]
+        [HttpGet]
+        public IHttpActionResult Connect(string host, int port)
+        {
+            string stdout = "", stderr = "";
+            int return_code = 0;
+            TcpClient client = new TcpClient();
+            try
+            {
+                client.Connect(host, port);
+                return_code = 0;
+                stdout = string.Format("Successful TCP connection to {0}:{1}", host, port);
+            }
+            catch (SocketException)
+            {
+                stderr = string.Format("Unable to make TCP connection to {0}:{1}", host, port);
+                return_code = 1;
+            }
+            catch (Exception e)
+            {
+                stderr = e.Message;
+                return_code = 2;
+            }
+
+            return Json(new
+            {
+                stdout = stdout,
+                stderr = stderr,
+                return_code = return_code
+            });
         }
 
         [Route("~/env/{name}")]
