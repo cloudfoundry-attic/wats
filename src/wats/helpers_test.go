@@ -130,19 +130,26 @@ func pushNora(appName string) *gexec.Session {
 	return pushNoraWithOptions(appName, 1, "256m")
 }
 
+func pushNoraWithNoRoute(appName string) *gexec.Session {
+	return pushApp(appName, "../../assets/nora/NoraPublished", 1, "256m", hwcBuildPackURL, "--no-route")
+}
+
 func pushNoraWithOptions(appName string, instances int, memory string) *gexec.Session {
 	return pushApp(appName, "../../assets/nora/NoraPublished", instances, memory, hwcBuildPackURL)
 }
 
-func pushApp(appName, path string, instances int, memory, buildpack string) *gexec.Session {
-	return cf.Cf(
+func pushApp(appName, path string, instances int, memory, buildpack string, args ...string) *gexec.Session {
+	cfArgs := []string{
 		"push", appName,
 		"-p", path,
 		"--no-start",
 		"-i", strconv.Itoa(instances),
 		"-m", memory,
 		"-b", buildpack,
-		"-s", config.GetStack())
+		"-s", config.GetStack(),
+	}
+	cfArgs = append(cfArgs, args...)
+	return cf.Cf(cfArgs...)
 }
 
 func setTotalMemoryLimit(memoryLimit string) {
