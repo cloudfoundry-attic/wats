@@ -9,8 +9,14 @@
 
 [[projects]]
   branch = "master"
+  name = "code.cloudfoundry.org/cf-routing-test-helpers"
+  packages = [".","helpers","schema"]
+  revision = "62eff3f1ed1cf200bda4b58eac500f8fc26cfc2c"
+
+[[projects]]
+  branch = "master"
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  packages = ["cf","commandreporter","commandstarter","generator","helpers","helpers/internal","internal","workflowhelpers","workflowhelpers/internal"]
+  packages = ["cf","commandreporter","commandstarter","config","generator","helpers","helpers/internal","internal","workflowhelpers","workflowhelpers/internal"]
   revision = "820a007a30e27f0a63666254fc19d1198536eb33"
 
 [[projects]]
@@ -88,6 +94,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a17a3fe1f1f575c9570111da5d9ef8b98dbfcc4fc639689e87ea74371906dde0"
+  inputs-digest = "f59379b37a4d366aadd61a7cdda87b9d3faaa9363b385b330badbe7f11b4ad5b"
   solver-name = "gps-cdcl"
   solver-version = 1
