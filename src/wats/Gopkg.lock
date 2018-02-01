@@ -10,18 +10,37 @@
 [[projects]]
   branch = "master"
   name = "code.cloudfoundry.org/cf-routing-test-helpers"
-  packages = [".","helpers","schema"]
+  packages = [
+    "helpers",
+    "schema"
+  ]
   revision = "62eff3f1ed1cf200bda4b58eac500f8fc26cfc2c"
 
 [[projects]]
   branch = "master"
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  packages = ["cf","commandreporter","commandstarter","config","generator","helpers","helpers/internal","internal","workflowhelpers","workflowhelpers/internal"]
+  packages = [
+    "cf",
+    "commandreporter",
+    "commandstarter",
+    "config",
+    "generator",
+    "helpers",
+    "helpers/internal",
+    "internal",
+    "workflowhelpers",
+    "workflowhelpers/internal"
+  ]
   revision = "820a007a30e27f0a63666254fc19d1198536eb33"
 
 [[projects]]
   name = "github.com/cloudfoundry/noaa"
-  packages = [".","consumer","consumer/internal","errors"]
+  packages = [
+    ".",
+    "consumer",
+    "consumer/internal",
+    "errors"
+  ]
   revision = "a1d4a94e2be6711111893c59538976d07ef7ea98"
   version = "v2.1.0"
 
@@ -33,7 +52,11 @@
 
 [[projects]]
   name = "github.com/gogo/protobuf"
-  packages = ["gogoproto","proto","protoc-gen-gogo/descriptor"]
+  packages = [
+    "gogoproto",
+    "proto",
+    "protoc-gen-gogo/descriptor"
+  ]
   revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
   version = "v0.5"
 
@@ -46,31 +69,86 @@
 [[projects]]
   branch = "master"
   name = "github.com/mailru/easyjson"
-  packages = [".","buffer","jlexer","jwriter"]
+  packages = [
+    ".",
+    "buffer",
+    "jlexer",
+    "jwriter"
+  ]
   revision = "32fa128f234d041f196a9f3e0fea5ac9772c08e1"
 
 [[projects]]
   name = "github.com/onsi/ginkgo"
-  packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
+  packages = [
+    ".",
+    "config",
+    "ginkgo",
+    "ginkgo/convert",
+    "ginkgo/interrupthandler",
+    "ginkgo/nodot",
+    "ginkgo/testrunner",
+    "ginkgo/testsuite",
+    "ginkgo/watch",
+    "internal/codelocation",
+    "internal/containernode",
+    "internal/failer",
+    "internal/leafnodes",
+    "internal/remote",
+    "internal/spec",
+    "internal/spec_iterator",
+    "internal/specrunner",
+    "internal/suite",
+    "internal/testingtproxy",
+    "internal/writer",
+    "reporters",
+    "reporters/stenographer",
+    "reporters/stenographer/support/go-colorable",
+    "reporters/stenographer/support/go-isatty",
+    "types"
+  ]
   revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
   version = "v1.4.0"
 
 [[projects]]
   name = "github.com/onsi/gomega"
-  packages = [".","format","gbytes","gexec","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
+  packages = [
+    ".",
+    "format",
+    "gbytes",
+    "gexec",
+    "internal/assertion",
+    "internal/asyncassertion",
+    "internal/oraclematcher",
+    "internal/testingtsupport",
+    "matchers",
+    "matchers/support/goraph/bipartitegraph",
+    "matchers/support/goraph/edge",
+    "matchers/support/goraph/node",
+    "matchers/support/goraph/util",
+    "types"
+  ]
   revision = "c893efa28eb45626cdaa76c9f653b62488858837"
   version = "v1.2.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["curve25519","ed25519","ed25519/internal/edwards25519","ssh"]
+  packages = [
+    "curve25519",
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "ssh"
+  ]
   revision = "94eea52f7b742c7cbe0b03b22f0c4c8631ece122"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["html","html/atom","html/charset"]
+  packages = [
+    "html",
+    "html/atom",
+    "html/charset"
+  ]
   revision = "a8b9294777976932365dabb6640cf1468d95c70f"
 
 [[projects]]
@@ -82,7 +160,25 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["encoding","encoding/charmap","encoding/htmlindex","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","encoding/unicode","internal/gen","internal/tag","internal/utf8internal","language","runes","transform","unicode/cldr"]
+  packages = [
+    "encoding",
+    "encoding/charmap",
+    "encoding/htmlindex",
+    "encoding/internal",
+    "encoding/internal/identifier",
+    "encoding/japanese",
+    "encoding/korean",
+    "encoding/simplifiedchinese",
+    "encoding/traditionalchinese",
+    "encoding/unicode",
+    "internal/gen",
+    "internal/tag",
+    "internal/utf8internal",
+    "language",
+    "runes",
+    "transform",
+    "unicode/cldr"
+  ]
   revision = "57961680700a5336d15015c8c50686ca5ba362a4"
 
 [[projects]]
@@ -94,6 +190,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f59379b37a4d366aadd61a7cdda87b9d3faaa9363b385b330badbe7f11b4ad5b"
+  inputs-digest = "af3ad604dbb36ddf683e4156cf5466aaea99deb34d8c3a83e68b882908def6eb"
   solver-name = "gps-cdcl"
   solver-version = 1
