@@ -127,7 +127,7 @@ var _ = Describe("SSH", func() {
 		})
 
 		It("allows local port forwarding", func() {
-			listenCmd := exec.Command("cf", "ssh", "-v", "-L", "127.0.0.1:61007:localhost:8080", appName)
+			listenCmd := exec.Command("cf", "ssh", "-v", "-L", "127.0.0.1:61007:127.0.0.1:8080", appName)
 
 			stdin, err := listenCmd.StdinPipe()
 			Expect(err).NotTo(HaveOccurred())
