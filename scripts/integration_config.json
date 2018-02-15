@@ -6,7 +6,6 @@
   "secure_address": "10.0.0.6:25555",
   "num_windows_cells": 1,
   "skip_ssl_validation": true,
-  "consul_mutual_tls": false,
   "http_healthcheck": true,
   "test_task": true,
   "context_path": false,
