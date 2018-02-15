@@ -126,35 +126,4 @@ var _ = Describe("Security Groups", func() {
 			Expect(noraTCPConnectResponse(appName, secureHost, securePort)).Should(Equal(1))
 		})
 	})
-
-	Context("when an icmp rule is applied", func() {
-		var (
-			icmpGroupName string
-		)
-
-		BeforeEach(func() {
-			rule := Destination{IP: "0.0.0.0/0", Protocol: "icmp", Code: -1, Type: -1}
-			icmpGroupName = createSecurityGroup(rule)
-			bindSecurityGroup(icmpGroupName, environment.RegularUserContext().Org, environment.RegularUserContext().Space)
-		})
-
-		AfterEach(func() {
-			unbindSecurityGroup(icmpGroupName, environment.RegularUserContext().Org, environment.RegularUserContext().Space)
-			deleteSecurityGroup(icmpGroupName)
-		})
-
-		It("ignores the rule and can push an app", func() {
-			By("pushing it", func() {
-				Expect(pushNora(appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-			})
-
-			By("staging and running it on Diego", func() {
-				Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(gexec.Exit(0))
-			})
-
-			By("verifying it's up", func() {
-				Eventually(helpers.CurlingAppRoot(config, appName)).Should(ContainSubstring("hello i am nora"))
-			})
-		})
-	})
 })

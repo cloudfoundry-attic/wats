@@ -24,6 +24,7 @@ const (
 	DEFAULT_TIMEOUT      = 45 * time.Second
 	DEFAULT_LONG_TIMEOUT = 4 * DEFAULT_TIMEOUT
 	CF_PUSH_TIMEOUT      = 3 * time.Minute
+	EXCEED_CELL_MEMORY   = "900g"
 )
 
 var (
