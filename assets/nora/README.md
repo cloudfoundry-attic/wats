@@ -9,12 +9,7 @@ A sister app of Dora
 Install
 =======
 
-To install you will have to get cf 6.10+ and run the following commands:
-
-```sh
-cf add-plugin-repo CF-Community http://plugins.cloudfoundry.org/
-cf install-plugin Diego-Beta -r CF-Community
-```
+To install you will have to get cf 6.10+
 
 Run the following command to deploy nora:
 
