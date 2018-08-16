@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("nora")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Vagrant")]
+[assembly: AssemblyCompany("Pivotal")]
 [assembly: AssemblyProduct("nora")]
-[assembly: AssemblyCopyright("Copyright © Vagrant 2018")]
+[assembly: AssemblyCopyright("Copyright © Pivotal 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
