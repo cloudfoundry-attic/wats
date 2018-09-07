@@ -89,7 +89,11 @@ namespace nora.Controllers
         [HttpGet]
         public RedirectResult RedirectTo(string path)
         {
-            return Redirect(Url.Content("~/" + path));
+            var builder = new UriBuilder(Url.Request.RequestUri.DnsSafeHost)
+            {
+                Path = path,
+            };
+            return Redirect(builder.ToString());
         }
 
         [Route("~/print/{output}")]
