@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Net;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Web;
 using System.Web.Http;
@@ -176,6 +175,25 @@ namespace nora.Controllers
             return Ok("Started: " + path);
         }
 
+        [Route("~/existsonpath")]
+        [HttpPost]
+        public IHttpActionResult existsOnPath()
+        {
+            var result = Request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            Console.WriteLine(result);
+            if (File.Exists(result))
+                return Ok(Path.GetFullPath(result));
+
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(';'))
+            {
+                var fullPath = Path.Combine(path, result);
+                if (File.Exists(fullPath))
+                    return Ok(fullPath);
+            }
+            return Ok();
+        }
+
         [Route("~/commitcharge")]
         [HttpGet]
         public IHttpActionResult GetCommitCharge()
@@ -223,8 +241,5 @@ namespace nora.Controllers
             _leakedPointers.Add(System.Runtime.InteropServices.Marshal.AllocHGlobal(bytes));
             return Ok();
         }
-
     }
-
-
 }
